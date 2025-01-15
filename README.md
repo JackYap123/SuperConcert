@@ -14,3 +14,28 @@ SuperConcert is a web-based platform designed to managed and optimize ticket sel
 - **Back-end:** PHP
 - **Database:** MySQL (via phpMyAdmin)
 - **Hosting:** Localhost (XAMPP)
+
+#Installation
+1. **Install XAMPP :** Download and install [XAMPP](https://www.apachefriends.org/index.html) to set up a local server.
+
+2. **Clone the Repository:**
+   ```bash
+   git clone https://github.com/UeslessShyt/eco-waste-system.git
+Set Up Database:
+
+Open phpMyAdmin from XAMPP control panel.
+Create a new database called SuperConcert.
+Import the provided SQL file (SuperConcert.sql) into the new database.
+Configure the Project:
+
+Move the project folder into the htdocs directory in your XAMPP installation.
+Ensure the database connection details are correct in the PHP configuration file (e.g., config.php).
+Start the Server:
+
+Open the XAMPP control panel and start Apache and MySQL.
+Navigate to http://localhost/SuperConcert in your browser to view the project.
+Usage
+
+
+
+
