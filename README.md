@@ -20,7 +20,7 @@ SuperConcert is a web-based platform designed to managed and optimize ticket sel
 
 2. **Clone the Repository:**
    ```bash
-   git clone https://github.com/UeslessShyt/eco-waste-system.git
+   git clone https://github.com/JackYap123/SuperConcert.git
 Set Up Database:
 
 Open phpMyAdmin from XAMPP control panel.
