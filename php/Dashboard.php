@@ -23,10 +23,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
     if ($new_password === $confirm_password)
     {
         $email = $_SESSION['email'];
-        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
 
+        // 不再对密码进行哈希处理，直接存储
         $stmt = $conn->prepare("UPDATE Organisers SET password = ?, is_first_login = FALSE WHERE email = ?");
-        $stmt->bind_param("ss", $hashed_password, $email);
+        $stmt->bind_param("ss", $new_password, $email);
 
         if ($stmt->execute())
         {

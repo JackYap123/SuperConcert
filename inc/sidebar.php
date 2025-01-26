@@ -6,6 +6,6 @@
         <li><a href="#">Website Settings</a></li>
         <li><a href="#">Shop Settings</a></li>
         <li><a href="#">Product Management</a></li>
-        <li><a href="#">Profile</a></li>
+        <li><a href="../php/Profile.php">Profile</a></li>
     </ul>
 </div>
