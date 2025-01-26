@@ -9,9 +9,11 @@ use PHPMailer\PHPMailer\Exception;
 require '../vendor/autoload.php';
 
 // 连接数据库
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
     // 处理注册请求
-    if (isset($_POST['register'])) {
+    if (isset($_POST['register']))
+    {
         $name = $_POST['name'];
         $email = $_POST['email'];
         $phone_number = $_POST['phone_number'];
@@ -24,10 +26,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $checkStmt->execute();
         $checkStmt->store_result();
 
-        if ($checkStmt->num_rows > 0) {
+        if ($checkStmt->num_rows > 0)
+        {
             echo "<p style='color:red;'>The email address is already registered. Please use a different email or log in.</p>";
             $checkStmt->close();
-        } else {
+        }
+        else
+        {
             // 生成随机密码（明文存储）
             $default_password = bin2hex(random_bytes(4));
 
@@ -35,10 +40,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt = $conn->prepare("INSERT INTO Organisers (name, email, phone_number, organization_name, password) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("sssss", $name, $email, $phone_number, $organization_name, $default_password);
 
-            if ($stmt->execute()) {
+            if ($stmt->execute())
+            {
                 // 使用 PHPMailer 发送电子邮件
                 $mail = new PHPMailer(true);
-                try {
+                try
+                {
                     $mail->isSMTP();
                     $mail->Host = 'smtp.gmail.com';
                     $mail->SMTPAuth = true;
@@ -67,10 +74,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     $mail->send();
                     echo "<p style='color:green;'>Registration successful. Please check your email.</p>";
-                } catch (Exception $e) {
+                }
+                catch (Exception $e)
+                {
                     echo "<p style='color:red;'>Registration successful, but email could not be sent. Error: {$mail->ErrorInfo}</p>";
                 }
-            } else {
+            }
+            else
+            {
                 echo "<p style='color:red;'>Error: " . $stmt->error . "</p>";
             }
             $stmt->close();
@@ -78,37 +89,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // 处理登录请求
-    if (isset($_POST['login'])) {
+    if (isset($_POST['login']))
+    {
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        // 管理员登录
-        if ($email === "admin@example.com" && $password === "admin123") {
-            session_start();
-            $_SESSION['email'] = $email;
-            header("Location: admin_dashboard.php");
-            exit();
-        }
-
-        // 普通用户登录
-        $stmt = $conn->prepare("SELECT password FROM Organisers WHERE email = ?");
+        $stmt = $conn->prepare("SELECT password, is_first_login FROM Organisers WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $stmt->store_result();
 
-        if ($stmt->num_rows > 0) {
-            $stmt->bind_result($db_password);
+        if ($stmt->num_rows > 0)
+        {
+            $stmt->bind_result($db_password, $is_first_login);
             $stmt->fetch();
 
-            if ($password === $db_password) {
+            if ($password === $db_password)
+            {
                 session_start();
                 $_SESSION['email'] = $email;
+                $_SESSION['is_first_login'] = $is_first_login; // 存储首次登录状态
                 header("Location: Dashboard.php");
                 exit();
-            } else {
+            }
+            else
+            {
                 echo "<p style='color:red;'>Invalid password. Please try again.</p>";
             }
-        } else {
+        }
+        else
+        {
             echo "<p style='color:red;'>No account found with that email.</p>";
         }
 
@@ -148,7 +158,8 @@ $conn->close();
                 </div>
                 <div class="form-group">
                     <label for="login-password">Password</label>
-                    <input type="password" id="login-password" name="password" placeholder="Enter your password" required>
+                    <input type="password" id="login-password" name="password" placeholder="Enter your password"
+                        required>
                 </div>
                 <button type="submit">Login</button>
             </form>
@@ -170,11 +181,13 @@ $conn->close();
                 </div>
                 <div class="form-group">
                     <label for="register-phone">Phone Number</label>
-                    <input type="text" id="register-phone" name="phone_number" placeholder="Enter your phone number" required>
+                    <input type="text" id="register-phone" name="phone_number" placeholder="Enter your phone number"
+                        required>
                 </div>
                 <div class="form-group">
                     <label for="register-organization">Organization Name</label>
-                    <input type="text" id="register-organization" name="organization_name" placeholder="Enter organization name">
+                    <input type="text" id="register-organization" name="organization_name"
+                        placeholder="Enter organization name">
                 </div>
                 <button type="submit">Register</button>
             </form>
