@@ -1,5 +1,4 @@
 <?php
-// 引入 PHPMailer
 session_start(); // 启用会话
 require '../inc/config.php';
 
@@ -8,9 +7,56 @@ use PHPMailer\PHPMailer\Exception;
 
 require '../vendor/autoload.php';
 
-// 连接数据库
+// 定义管理员默认账号和密码
+$admin_email = "admin@superconcert.com";
+$admin_password = "Admin123"; // 默认密码
+
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
+    // 处理登录请求
+    if (isset($_POST['login']))
+    {
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+        // 检查是否是管理员登录
+        if ($email === $admin_email && $password === $admin_password)
+        {
+            $_SESSION['is_admin'] = true;
+            header("Location: admin_Dashboard.php");
+            exit();
+        }
+
+        // 普通组织者登录逻辑
+        $stmt = $conn->prepare("SELECT password FROM Organisers WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+
+        if ($stmt->num_rows > 0)
+        {
+            $stmt->bind_result($db_password);
+            $stmt->fetch();
+
+            if ($password === $db_password)
+            {
+                $_SESSION['email'] = $email;
+                header("Location: Dashboard.php");
+                exit();
+            }
+            else
+            {
+                echo "<p style='color:red;'>Invalid password. Please try again.</p>";
+            }
+        }
+        else
+        {
+            echo "<p style='color:red;'>No account found with that email.</p>";
+        }
+
+        $stmt->close();
+    }
+
     // 处理注册请求
     if (isset($_POST['register']))
     {
@@ -87,43 +133,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             $stmt->close();
         }
     }
-
-    // 处理登录请求
-    if (isset($_POST['login']))
-    {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-
-        $stmt = $conn->prepare("SELECT password, is_first_login FROM Organisers WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows > 0)
-        {
-            $stmt->bind_result($db_password, $is_first_login);
-            $stmt->fetch();
-
-            if ($password === $db_password)
-            {
-                session_start();
-                $_SESSION['email'] = $email;
-                $_SESSION['is_first_login'] = $is_first_login; // 存储首次登录状态
-                header("Location: Dashboard.php");
-                exit();
-            }
-            else
-            {
-                echo "<p style='color:red;'>Invalid password. Please try again.</p>";
-            }
-        }
-        else
-        {
-            echo "<p style='color:red;'>No account found with that email.</p>";
-        }
-
-        $stmt->close();
-    }
 }
 
 $conn->close();
@@ -138,9 +147,6 @@ $conn->close();
     <link rel="stylesheet" href="../css/Register_Login.css">
     <link rel="icon" type="image/x-icon" href="../img/Logo.webp">
     <title>SuperConcert</title>
-    <style>
-
-    </style>
 </head>
 
 <body>
