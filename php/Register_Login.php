@@ -1,5 +1,5 @@
 <?php
-session_start(); // 启用会话
+session_start();
 require '../inc/config.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -13,13 +13,12 @@ $admin_password = "Admin123"; // 默认密码
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-    // 处理登录请求
+    // 登录逻辑
     if (isset($_POST['login']))
     {
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        // 检查是否是管理员登录
         if ($email === $admin_email && $password === $admin_password)
         {
             $_SESSION['is_admin'] = true;
@@ -27,21 +26,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             exit();
         }
 
-        // 普通组织者登录逻辑
-        $stmt = $conn->prepare("SELECT password FROM Organisers WHERE email = ?");
+        $stmt = $conn->prepare("SELECT password, is_first_login FROM Organisers WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $stmt->store_result();
 
         if ($stmt->num_rows > 0)
         {
-            $stmt->bind_result($db_password);
+            $stmt->bind_result($db_password, $is_first_login);
             $stmt->fetch();
-
             if ($password === $db_password)
             {
                 $_SESSION['email'] = $email;
-                header("Location: Dashboard.php");
+                $_SESSION['is_first_login'] = $is_first_login; // 存储首次登录状态
+                if($is_first_login){
+                    header("Location: Dashboard.php?first_login=1"); // 跳转并提示用户更改密码
+                }else{
+                    header("Location: Dashboard.php");
+                }
                 exit();
             }
             else
@@ -53,11 +55,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         {
             echo "<p style='color:red;'>No account found with that email.</p>";
         }
-
         $stmt->close();
     }
 
-    // 处理注册请求
+    // 注册逻辑
     if (isset($_POST['register']))
     {
         $name = $_POST['name'];
@@ -65,7 +66,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         $phone_number = $_POST['phone_number'];
         $organization_name = $_POST['organization_name'] ?? null;
 
-        // 检查邮箱是否已存在
         $checkEmailQuery = "SELECT email FROM Organisers WHERE email = ?";
         $checkStmt = $conn->prepare($checkEmailQuery);
         $checkStmt->bind_param("s", $email);
@@ -75,20 +75,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         if ($checkStmt->num_rows > 0)
         {
             echo "<p style='color:red;'>The email address is already registered. Please use a different email or log in.</p>";
-            $checkStmt->close();
         }
         else
         {
-            // 生成随机密码（明文存储）
-            $default_password = bin2hex(random_bytes(4));
-
-            // 插入数据到数据库
-            $stmt = $conn->prepare("INSERT INTO Organisers (name, email, phone_number, organization_name, password) VALUES (?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssss", $name, $email, $phone_number, $organization_name, $default_password);
+            $stmt = $conn->prepare("INSERT INTO Organisers (name, email, phone_number, organization_name, status) VALUES (?, ?, ?, ?, 'pending')");
+            $stmt->bind_param("ssss", $name, $email, $phone_number, $organization_name);
 
             if ($stmt->execute())
             {
-                // 使用 PHPMailer 发送电子邮件
+                // 发送邮件给管理员
                 $mail = new PHPMailer(true);
                 try
                 {
@@ -108,22 +103,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     $mail->Body = "
                         <html>
                         <body>
-                        <h1>Welcome, $name!</h1>
-                        <p>Thank you for registering with SuperConcert. Here are your login details:</p>
-                        <p><strong>Email:</strong> $email</p>
-                        <p><strong>Password:</strong> $default_password</p>
-                        <p><a href='http://localhost/SuperConcert/php/Register_Login.php'>Login to SuperConcert</a></p>
-                        <p>Thank you,<br>SuperConcert Team</p>
+                        <h1>New Registration Request</h1>
+                        <p>Name: $name</p>
+                        <p>Email: $email</p>
+                        <p>Organization: $organization_name</p>
+                        <p>Please review the request in the Admin Dashboard.</p>
                         </body>
                         </html>
                     ";
 
                     $mail->send();
-                    echo "<p style='color:green;'>Registration successful. Please check your email.</p>";
+                    echo "<p style='color:green;'>Registration request submitted successfully.</p>";
                 }
                 catch (Exception $e)
                 {
-                    echo "<p style='color:red;'>Registration successful, but email could not be sent. Error: {$mail->ErrorInfo}</p>";
+                    echo "<p style='color:red;'>Error in sending email to admin: {$mail->ErrorInfo}</p>";
                 }
             }
             else
@@ -132,11 +126,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             }
             $stmt->close();
         }
+        $checkStmt->close();
     }
 }
 
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
