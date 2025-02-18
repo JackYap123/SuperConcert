@@ -1,0 +1,184 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #0d1b2a;
+    color: white;
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar h1 {
+    font-size: 24px;
+    color: #f4d160;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar ul li a i {
+    margin-right: 10px;
+}
+
+.sidebar ul li a:hover {
+    color: #f4d160;
+}
+
+.sidebar .logout {
+    text-align: center;
+    margin-top: auto;
+}
+
+.sidebar .logout a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    background-color: #f4d160;
+    border-radius: 5px;
+}
+
+.sidebar .logout a:hover {
+    background-color: #e4c150;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 2px solid #e4e4e4;
+}
+
+.main-header h2 {
+    color: #0d1b2a;
+}
+
+.main-header button {
+    background-color: #f4d160;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.main-header button:hover {
+    background-color: #e4c150;
+}
+
+/* Table Section */
+.table-section {
+    margin-top: 30px;
+}
+
+.table-section table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-section table th,
+.table-section table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e4e4e4;
+}
+
+.table-section table th {
+    background-color: #0d1b2a;
+    color: white;
+}
+
+.table-section table tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Status Labels */
+/* Status Labels */
+.table-section table .action-btn {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
+    min-width: 80px;
+    /* Ensures uniform width */
+}
+
+/* Accepted - Green */
+.table-section table .accepted {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Pending - Orange */
+.table-section table .pending {
+    background-color: #FFA500;
+    color: white;
+}
+
+
+/* Ensure text visibility */
+.table-section table td {
+    color: #333;
+    /* Dark text for better contrast */
+}
+
+
+.table-section table .edit-btn {
+    background-color: #4CAF50;
+}
+
+.table-section table .delete-btn {
+    background-color: #f44336;
+}
+
+.table-section table .edit-btn:hover {
+    background-color: #45a049;
+}
+
+.table-section table .delete-btn:hover {
+    background-color: #e53935;
+}
