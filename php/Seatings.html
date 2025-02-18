@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Booking System</title>
+    <link rel="stylesheet" href="seating.css">
+</head>
+<body>
+
+    <h1>Auditorium Seat Booking</h1>
+
+    <!-- Seat Legend -->
+    <div class="legend">
+        <div><span class="seat available"></span> Normal Seat ($150)</div>
+        <div><span class="seat vip"></span> VIP Seat ($200)</div>
+        <div><span class="seat balcony"></span> Balcony Seat ($125)</div>
+    </div>
+
+    <!-- Stage -->
+    <div class="stage">Stage</div>
+
+    <!-- Auditorium Container -->
+    <div class="cinema-container">
+        <div class="row-labels">
+            <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span>
+            <span>I</span><span>J</span><span>K</span>
+        </div>
+        <div class="seats" id="seatingArea"></div>
+    </div>
+
+    <button id="purchaseButton">Purchase Tickets</button>
+
+    <script src="seatScript.js"></script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    margin-top: 20px;
+}
+
+/* Legend Styles */
+.legend {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.legend div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.legend .seat {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* Stage */
+.stage {
+    width: 70%;
+    height: 30px;
+    border-radius: 15px;
+    background: linear-gradient(to bottom, #fff, #bbb);
+    margin: 20px auto;
+    text-align: center;
+    color: #000;
+    font-weight: bold;
+    line-height: 30px;
+}
+
+/* Cinema Layout */
+.cinema-container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.row-labels {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.row-labels span {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Seat Grid */
+.seats {
+    display: grid;
+    grid-template-columns: repeat(12, 40px);
+    gap: 10px;
+    justify-content: center;
+}
+
+/* Seat Styles */
+.seat {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+/* Seat Categories */
+.seat.available {  /* Normal Seats */
+    background-color: #4caf50;
+    color: #fff;
+}
+
+.seat.vip {  /* VIP Seats */
+    background-color: #9575cd;
+    color: #fff;
+}
+
+.seat.balcony {  /* Balcony Seats */
+    background-color: #ff9800;
+    color: #fff;
+}
+
+.seat.taken {
+    background-color: #f44336;
+    color: #000;
+    cursor: not-allowed;
+}
+
+.seat:hover:not(.taken) {
+    transform: scale(1.1);
+}
+
+.seat.selected {
+    background-color: #ffeb3b;
+    color: #000;
+}
+
+/* Button */
+#purchaseButton {
+    margin: 20px; 
+    padding: 10px 20px; 
+    font-size: 16px; 
+    border-radius: 25px;
+}
+#purchaseButton:hover{
+    transition: transform 0.2s;
+    background-color: #ffeb3b;
+}
