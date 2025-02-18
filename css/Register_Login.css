@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #001f3f;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('concert-background.jpg');
+    /* Replace with a suitable concert-themed image */
+    background-size: cover;
+    background-position: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    background: rgba(0, 31, 63, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    text-align: center;
+}
+
+.form-section {
+    display: none;
+}
+
+.form-section.active {
+    display: block;
+}
+
+.form-section h2 {
+    color: #ffd700;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    margin-right: 10px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #ffd700;
+    color: #001f3f;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #e6c300;
+}
+
+.toggle-button {
+    background: none;
+    color: #ffd700;
+    border: none;
+    font-size: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.toggle-button:hover {
+    color: #e6c300;
+}
