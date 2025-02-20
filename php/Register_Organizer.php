@@ -111,7 +111,7 @@ $conn->close();
     <div class="container">
         <!-- Register Form -->
         <div id="register-section" class="form-section">
-            <h2>Register</h2>
+            <h2>Register Organiser</h2>
             <form id="register-form" action="Register_Organizer.php" method="POST">
                 <input type="hidden" name="register" value="1">
                 <div class="form-group">

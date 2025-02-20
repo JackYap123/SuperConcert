@@ -5,7 +5,7 @@ require '../inc/config.php';
 // 检查是否登录
 if (!isset($_SESSION['email']))
 {
-    header("Location: Register_Login.php");
+    header("Location: organiser_login.php");
     exit();
 }
 
