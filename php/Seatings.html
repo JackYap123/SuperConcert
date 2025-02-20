@@ -10,11 +10,34 @@
 
     <h1>Auditorium Seat Booking</h1>
 
+    <div class="selection-container">
+        <!-- Seat Selection Mode -->
+        <label for="selectMode">Selection Mode:</label>
+        <select id="selectMode">
+            <option value="single">Single Seat</option>
+            <option value="row">Entire Row</option>
+        </select>
+    
+        <!-- Seat Category & Price Input -->
+        <label for="seatCategory">Seat Category:</label>
+        <select id="seatCategory">
+            <option value="available">Public</option>
+            <option value="vip">VIP</option>
+            <option value="balcony">Balcony</option>
+        </select>
+    
+        <label for="seatPrice">Set Price:</label>
+        <input type="number" id="seatPrice" placeholder="Enter price">
+    </div>
+    
+    <button id="setCategoryButton">Set Category</button>
+    
+
     <!-- Seat Legend -->
     <div class="legend">
-        <div><span class="seat available"></span> Normal Seat ($150)</div>
-        <div><span class="seat vip"></span> VIP Seat ($200)</div>
-        <div><span class="seat balcony"></span> Balcony Seat ($125)</div>
+        <div><span class="seat available"></span> Normal</div>
+        <div><span class="seat vip"></span> VIP</div>
+        <div><span class="seat balcony"></span> Balcony</div>
     </div>
 
     <!-- Stage -->
