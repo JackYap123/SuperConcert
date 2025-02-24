@@ -3,7 +3,7 @@ session_start();
 require '../inc/config.php';
 
 // 检查是否登录
-if (!isset($_SESSION['email']))
+if (!isset($_SESSION['organiser_email']))
 {
     header("Location: organiser_login.php");
     exit();

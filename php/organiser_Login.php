@@ -1,50 +1,63 @@
 <?php
 session_start();
-require '../inc/config.php';
+require '../inc/config.php'; // Ensure this file connects to the database
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login']))
-{
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
 
-    // 查询管理员数据库
-    $stmt = $conn->prepare("SELECT password FROM organisers WHERE email = ?");
+    if (isset($_POST['login_organiser'])) {
+        // Organiser Login
+        $stmt = $conn->prepare("SELECT password FROM organisers WHERE email = ?");
+    } elseif (isset($_POST['login_attendee'])) {
+        // Attendee Login
+        $stmt = $conn->prepare("SELECT password FROM attendees WHERE email = ?");
+    } else {
+        exit("<p style='color:red;'>Invalid login attempt.</p>");
+    }
+
+    // Bind parameter and execute query
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
 
-    if ($stmt->num_rows > 0)
-    {
-        $stmt->bind_result($db_password);
+    // Check if user exists
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result( $db_password);
         $stmt->fetch();
 
-        // DEBUG: Check password retrieval
-        var_dump($db_password);
-        exit();
-
-        // 验证密码
-        if (password_verify($password, $db_password))
-        { // Ensure database passwords are hashed
-            $_SESSION['organiser_logged_in'] = true;
-            $_SESSION['organiser_email'] = $email;
-
-            header("Location: Dashboard.php");
+        // **Simple string comparison (No hashing)**
+        if ($password === $db_password) {
+            if (isset($_POST['login_organiser'])) {
+                $_SESSION['organiser_logged_in'] = true;
+                $_SESSION['organiser_id'] = $user_id;
+                $_SESSION['organiser_email'] = $email;
+                session_write_close();
+                header("Location: Dashboard.php");
+                exit();
+            } elseif (isset($_POST['login_attendee'])) {
+                $_SESSION['attendee_logged_in'] = true;
+                $_SESSION['attendee_id'] = $user_id;
+                $_SESSION['attendee_email'] = $email;
+                session_write_close();
+                header("Location: Attendee_Home.php");
+                exit();
+            }
+        } else {
+            echo "<script>alert('Invalid password. Please try again.'); window.location.href='login.php';</script>";
             exit();
         }
-        else
-        {
-            echo "<p style='color:red;'>Invalid password. Please try again.</p>";
-        }
-    }
-    else
-    {
-        echo "<p style='color:red;'>No account found with that email.</p>";
+    } else {
+        echo "<script>alert('No account found with that email.'); window.location.href='login.php';</script>";
+        exit();
     }
 
     $stmt->close();
 }
 $conn->close();
 ?>
+
+
 
 
 
@@ -57,32 +70,104 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/Register_Login.css">
     <link rel="icon" type="image/x-icon" href="../img/Logo.webp">
-    <title>SuperConcert</title>
+    <title>SuperConcert - Login</title>
+    <style>
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tab-buttons button {
+            background-color: #ccc;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 5px;
+            transition: background 0.3s;
+        }
+
+        .tab-buttons button.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
+
     <div class="container">
         <h1>SuperConcert</h1>
 
-        <!-- Login Form -->
-        <div id="login-section" class="form-section active">
+        <!-- Tab Buttons -->
+        <div class="tab-buttons">
+            <button class="tab-link active" onclick="openTab('organiser')">Organiser Login</button>
+            <button class="tab-link" onclick="openTab('attendee')">Attendee Login</button>
+        </div>
+
+        <!-- Organiser Login Form -->
+        <div id="organiser" class="form-section active">
             <h2>Organiser Login</h2>
-            <form id="login-form" action="organiser_login.php" method="POST">
-                <input type="hidden" name="login" value="1">
+            <form action="organiser_login.php" method="POST">
+                <input type="hidden" name="login_organiser" value="1">
                 <div class="form-group">
-                    <label for="login-email">Email</label>
-                    <input type="email" id="login-email" name="email" placeholder="Enter your email" required>
+                    <label for="organiser-email">Email</label>
+                    <input type="email" id="organiser-email" name="email" placeholder="Enter your email" required>
                 </div>
                 <div class="form-group">
-                    <label for="login-password">Password</label>
-                    <input type="password" id="login-password" name="password" placeholder="Enter your password"
+                    <label for="organiser-password">Password</label>
+                    <input type="password" id="organiser-password" name="password" placeholder="Enter your password"
                         required>
                 </div>
                 <button type="submit">Login</button>
             </form>
         </div>
+
+        <!-- Attendee Login Form -->
+        <div id="attendee" class="form-section">
+            <h2>Attendee Login</h2>
+            <form action="organiser_login.php" method="POST">
+                <input type="hidden" name="login_attendee" value="1">
+                <div class="form-group">
+                    <label for="attendee-email">Email</label>
+                    <input type="email" id="attendee-email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="attendee-password">Password</label>
+                    <input type="password" id="attendee-password" name="password" placeholder="Enter your password"
+                        required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+
     </div>
-    <script src="../javascript/Register_Login.js"></script>
+
+    <script>
+        function openTab(tabName) {
+            document.querySelectorAll(".form-section").forEach(section => {
+                section.classList.remove("active");
+            });
+
+            document.getElementById(tabName).classList.add("active");
+
+            document.querySelectorAll(".tab-link").forEach(button => {
+                button.classList.remove("active");
+            });
+
+            document.querySelector(`button[onclick="openTab('${tabName}')"]`).classList.add("active");
+        }
+    </script>
+
 </body>
 
 </html>
