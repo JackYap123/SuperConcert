@@ -30,25 +30,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // Handle form submission
     if (eventForm) {
         eventForm.addEventListener("submit", function (e) {
-            e.preventDefault();
-            const date = document.getElementById("eventDate").value;
-            const time = document.getElementById("eventTime").value;
-            const duration = document.getElementById("eventDuration").value;
-            const description = document.getElementById("eventDescription").value;
-            const imageSrc = imagePreview.querySelector("img") ? imagePreview.querySelector("img").src : "";
-
-            const eventData = { date, time, duration, description, imageSrc };
-
-            // Save event to localStorage
-            const storedEvents = JSON.parse(localStorage.getItem("events")) || [];
-            storedEvents.push(eventData);
-            localStorage.setItem("events", JSON.stringify(storedEvents));
-
-            alert("Event Created!");
-            eventForm.reset();
-            imagePreview.innerHTML = "";
+            // Ensure form submits only to the server
+            eventForm.submit(); // Allow default form submission to backend
         });
     }
+    
 
     // Function to add events to the existing events page
     function addEventToPage(event, index) {
