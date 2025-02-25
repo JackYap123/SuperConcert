@@ -85,23 +85,41 @@ function setSeatCategory() {
     selectedSeats = [];
 }
 
-document.getElementById("setCategoryButton").addEventListener("click", setSeatCategory);
-
 document.getElementById("purchaseButton").addEventListener("click", () => {
     if (selectedSeats.length === 0) {
         alert("Please select at least one seat.");
         return;
     }
-    
-    let total = selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
-    alert(`You have selected ${selectedSeats.length} seat(s). Total Price: $${total}`);
-    
-    selectedSeats.forEach(seat => {
-        let seatElement = document.querySelector(`[data-row='${seat.id.charAt(0)}'][data-col='${seat.id.slice(1)}']`);
-        if (seatElement) {
-            seatElement.classList.add("taken");
-            seatElement.classList.remove("selected");
+
+    let eventId = "E1234567"; // Replace with the actual event ID
+
+    let seatData = selectedSeats.map(seat => ({
+        seat_id: seat.id,
+        category: document.querySelector(`[data-row='${seat.id.charAt(0)}'][data-col='${seat.id.slice(1)}']`).dataset.category,
+        price: seat.price
+    }));
+
+    fetch("../php/insertSeats.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ event_id: eventId, seats: seatData })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Tickets purchased successfully!");
+            selectedSeats.forEach(seat => {
+                let seatElement = document.querySelector(`[data-row='${seat.id.charAt(0)}'][data-col='${seat.id.slice(1)}']`);
+                if (seatElement) {
+                    seatElement.classList.add("taken");
+                    seatElement.classList.remove("selected");
+                }
+            });
+            selectedSeats = [];
+        } else {
+            alert("Error: " + data.message);
         }
-    });
-    selectedSeats = [];
+    })
+    .catch(error => console.error("Error:", error));
 });
+
