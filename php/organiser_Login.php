@@ -1,37 +1,48 @@
 <?php
 session_start();
-require '../inc/config.php'; // Ensure this file connects to the database
+require '../inc/config.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
     if (isset($_POST['login_organiser'])) {
-        // Organiser Login
-        $stmt = $conn->prepare("SELECT password FROM organisers WHERE email = ?");
+        // 查询 Organiser 的信息
+        $stmt = $conn->prepare("SELECT id, password, is_first_login FROM Organisers WHERE email = ?");
     } elseif (isset($_POST['login_attendee'])) {
-        // Attendee Login
-        $stmt = $conn->prepare("SELECT password FROM attendees WHERE email = ?");
+        // 查询 Attendee 的信息
+        $stmt = $conn->prepare("SELECT id, password FROM Attendees WHERE email = ?");
     } else {
         exit("<p style='color:red;'>Invalid login attempt.</p>");
     }
 
-    // Bind parameter and execute query
+    // 绑定参数并执行查询
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
 
-    // Check if user exists
     if ($stmt->num_rows > 0) {
-        $stmt->bind_result( $db_password);
+        if (isset($_POST['login_organiser'])) {
+            $stmt->bind_result($user_id, $db_password, $is_first_login);
+        } else {
+            $stmt->bind_result($user_id, $db_password);
+        }
         $stmt->fetch();
 
-        // **Simple string comparison (No hashing)**
+        // **密码验证**
         if ($password === $db_password) {
             if (isset($_POST['login_organiser'])) {
                 $_SESSION['organiser_logged_in'] = true;
                 $_SESSION['organiser_id'] = $user_id;
                 $_SESSION['organiser_email'] = $email;
+                $_SESSION['is_first_login'] = $is_first_login; // ✅ 添加此项
+
+                if ($is_first_login == 1) {
+                    session_write_close();
+                    header("Location: Dashboard.php"); // ✅ 让 Dashboard.php 处理弹窗
+                    exit();
+                }
+
                 session_write_close();
                 header("Location: Dashboard.php");
                 exit();
@@ -56,6 +67,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 $conn->close();
 ?>
+
+
 
 
 

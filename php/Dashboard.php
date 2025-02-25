@@ -2,17 +2,14 @@
 session_start();
 require '../inc/config.php';
 
-// 检查是否登录
 if (!isset($_SESSION['organiser_email']))
 {
     header("Location: organiser_login.php");
     exit();
 }
 
-// 检测首次登录状态
 $is_first_login = $_SESSION['is_first_login'] ?? false;
 
-// 处理密码更改请求
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
 {
     $response = ["success" => false, "message" => "Unknown error occurred."];
@@ -22,15 +19,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
 
     if ($new_password === $confirm_password)
     {
-        $email = $_SESSION['email'];
+        $email = $_SESSION['organiser_email']; 
 
-        // 不再对密码进行哈希处理，直接存储
-        $stmt = $conn->prepare("UPDATE Organisers SET password = ?, is_first_login = FALSE WHERE email = ?");
+        $stmt = $conn->prepare("UPDATE Organisers SET password = ?, is_first_login = 0 WHERE email = ?");
         $stmt->bind_param("ss", $new_password, $email);
 
         if ($stmt->execute())
         {
-            $_SESSION['is_first_login'] = false;
+            $_SESSION['is_first_login'] = 0; // 
             $response["success"] = true;
             $response["message"] = "Password updated successfully!";
         }
@@ -58,6 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/Dashboard.css">
     <link rel="icon" type="image/x-icon" href="../img/Logo.webp">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <title>Dashboard</title>
     <style>
 
@@ -77,48 +74,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
 
         <div class="dashboard">
             <div class="card">
-                <h2>20</h2>
-                <p>Products</p>
+                <i class="fas fa-calendar-plus fa-3x" style="color: black;"></i>
+                <h2>Create Event</h2>
+                <p>Manage and set up new events</p>
             </div>
             <div class="card">
-                <h2>0</h2>
-                <p>Pending Orders</p>
+                <i class="fas fa-ticket-alt fa-3x" style="color: black;"></i>
+                <h2>Ticket Setup</h2>
+                <p>Configure ticketing options</p>
             </div>
             <div class="card">
-                <h2>4</h2>
-                <p>Completed Orders</p>
+                <i class="fas fa-users fa-3x" style="color: black;"></i>
+                <h2>Waiting List</h2>
+                <p>Manage event waiting lists</p>
             </div>
             <div class="card">
-                <h2>3</h2>
-                <p>Completed Shipping</p>
-            </div>
-            <div class="card">
-                <h2>1</h2>
-                <p>Pending Shippings</p>
-            </div>
-            <div class="card">
-                <h2>12</h2>
-                <p>Active Customers</p>
-            </div>
-            <div class="card">
-                <h2>6</h2>
-                <p>Subscribers</p>
-            </div>
-            <div class="card">
-                <h2>4</h2>
-                <p>Available Shippings</p>
-            </div>
-            <div class="card">
-                <h2>5</h2>
-                <p>Top Categories</p>
-            </div>
-            <div class="card">
-                <h2>15</h2>
-                <p>Mid Categories</p>
-            </div>
-            <div class="card">
-                <h2>78</h2>
-                <p>End Categories</p>
+                <i class="fas fa-bullhorn fa-3x" style="color: black;"></i>
+                <h2>Create Promotion</h2>
+                <p>Set up promotional campaigns</p>
             </div>
         </div>
     </div>
@@ -146,4 +119,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
     <?php endif; ?>
     <script src="../javascript/Dashboard.js"></script>
 
-</html>
+</html>s
