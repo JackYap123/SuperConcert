@@ -59,9 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <h1>Create Event</h1>
         <form id="eventForm" action="" method="POST" enctype="multipart/form-data">
-            <label for="eventImage">Upload Image:</label>
-            <input type="file" id="eventImage" name="eventImage" accept="image/*">
-            <div class="image-preview" id="imagePreview"></div>
+
 
             <label for="eventName">Event Name:</label>
             <input type="name" id="eventName" name="eventName" required>
