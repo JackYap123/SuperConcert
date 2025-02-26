@@ -7,64 +7,15 @@ use PHPMailer\PHPMailer\Exception;
 
 require '../vendor/autoload.php';
 
-// 定义管理员默认账号和密码
-$admin_email = "admin@superconcert.com";
-$admin_password = "Admin123"; // 默认密码
-
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-    // 登录逻辑
-    if (isset($_POST['login']))
-    {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-
-        if ($email === $admin_email && $password === $admin_password)
-        {
-            $_SESSION['is_admin'] = true;
-            header("Location: admin_Dashboard.php");
-            exit();
-        }
-
-        $stmt = $conn->prepare("SELECT password, is_first_login FROM Organisers WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows > 0)
-        {
-            $stmt->bind_result($db_password, $is_first_login);
-            $stmt->fetch();
-            if ($password === $db_password)
-            {
-                $_SESSION['email'] = $email;
-                $_SESSION['is_first_login'] = $is_first_login; // 存储首次登录状态
-                if($is_first_login){
-                    header("Location: Dashboard.php?first_login=1"); // 跳转并提示用户更改密码
-                }else{
-                    header("Location: Dashboard.php");
-                }
-                exit();
-            }
-            else
-            {
-                echo "<p style='color:red;'>Invalid password. Please try again.</p>";
-            }
-        }
-        else
-        {
-            echo "<p style='color:red;'>No account found with that email.</p>";
-        }
-        $stmt->close();
-    }
-
-    // 注册逻辑
     if (isset($_POST['register']))
     {
         $name = $_POST['name'];
         $email = $_POST['email'];
         $phone_number = $_POST['phone_number'];
         $organization_name = $_POST['organization_name'] ?? null;
+        $default_password = substr(md5(uniqid()), 0, 8); // 生成8位随机默认密码
 
         $checkEmailQuery = "SELECT email FROM Organisers WHERE email = ?";
         $checkStmt = $conn->prepare($checkEmailQuery);
@@ -78,12 +29,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         }
         else
         {
-            $stmt = $conn->prepare("INSERT INTO Organisers (name, email, phone_number, organization_name, status) VALUES (?, ?, ?, ?, 'pending')");
-            $stmt->bind_param("ssss", $name, $email, $phone_number, $organization_name);
+            $stmt = $conn->prepare("INSERT INTO Organisers (name, email, phone_number, organization_name, password) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssss", $name, $email, $phone_number, $organization_name, $default_password);
 
             if ($stmt->execute())
             {
-                // 发送邮件给管理员
+                // 发送邮件给用户
                 $mail = new PHPMailer(true);
                 try
                 {
@@ -103,21 +54,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     $mail->Body = "
                         <html>
                         <body>
-                        <h1>New Registration Request</h1>
-                        <p>Name: $name</p>
+                        <h1>Welcome to SuperConcert!</h1>
+                        <p>Dear $name,</p>
+                        <p>Your account has been created successfully. Below are your login details:</p>
                         <p>Email: $email</p>
-                        <p>Organization: $organization_name</p>
-                        <p>Please review the request in the Admin Dashboard.</p>
+                        <p>Password: <strong>$default_password</strong></p>
+                        <p>Please log in and change your password for security purposes.</p>
+                        <p><a href='http://localhost/SuperConcert/php/Register_Login.php'>Login Now</a></p>
                         </body>
                         </html>
                     ";
 
                     $mail->send();
-                    echo "<p style='color:green;'>Registration request submitted successfully.</p>";
+                    echo "<p style='color:green;'>Registration successful. Please check your email for login details.</p>";
                 }
                 catch (Exception $e)
                 {
-                    echo "<p style='color:red;'>Error in sending email to admin: {$mail->ErrorInfo}</p>";
+                    echo "<p style='color:red;'>Error in sending email: {$mail->ErrorInfo}</p>";
                 }
             }
             else
@@ -129,10 +82,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         $checkStmt->close();
     }
 }
-
 $conn->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -140,38 +91,28 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/Register_Login.css">
+    <link rel="stylesheet" href="../css/Register_Organizer.css">
     <link rel="icon" type="image/x-icon" href="../img/Logo.webp">
     <title>SuperConcert</title>
 </head>
 
 <body>
-    <div class="container">
-        <h1>SuperConcert</h1>
-
-        <!-- Login Form -->
-        <div id="login-section" class="form-section active">
-            <h2>Login</h2>
-            <form id="login-form" action="Register_Login.php" method="POST">
-                <input type="hidden" name="login" value="1">
-                <div class="form-group">
-                    <label for="login-email">Email</label>
-                    <input type="email" id="login-email" name="email" placeholder="Enter your email" required>
-                </div>
-                <div class="form-group">
-                    <label for="login-password">Password</label>
-                    <input type="password" id="login-password" name="password" placeholder="Enter your password"
-                        required>
-                </div>
-                <button type="submit">Login</button>
-            </form>
-            <button class="toggle-button" onclick="toggleForm('register')">Don't have an account? Register</button>
+    <div class="sidebar">
+        <h1>Admin Dashboard</h1>
+        <ul>
+            <li><a href="../php/admin_Dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="../php/Register_Organizer.php"><i class="fas fa-users"></i> Create Organiser</a></li>
+            <li><a href="#"><i class="fas fa-users"></i> Generate Report</a></li>
+        </ul>
+        <div class="logout">
+            <a href="../logout.php">Logout</a>
         </div>
-
+    </div>
+    <div class="container">
         <!-- Register Form -->
         <div id="register-section" class="form-section">
-            <h2>Register</h2>
-            <form id="register-form" action="Register_Login.php" method="POST">
+            <h2>Register Organiser</h2>
+            <form id="register-form" action="Register_Organizer.php" method="POST">
                 <input type="hidden" name="register" value="1">
                 <div class="form-group">
                     <label for="register-name">Full Name</label>
@@ -193,10 +134,8 @@ $conn->close();
                 </div>
                 <button type="submit">Register</button>
             </form>
-            <button class="toggle-button" onclick="toggleForm('login')">Already have an account? Login</button>
         </div>
     </div>
-    <script src="../javascript/Register_Login.js"></script>
 </body>
 
 </html>

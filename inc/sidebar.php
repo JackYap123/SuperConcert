@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="../css/Sidebar.css">
 <div class="sidebar">
-    <h2>eCommerce PHP</h2>
+    <h2>SuperConcert</h2>
     <ul>
         <li><a href="#">Dashboard</a></li>
         <li><a href="#">Website Settings</a></li>

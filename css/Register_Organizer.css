@@ -1,0 +1,151 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #001f3f;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('concert-background.jpg');
+    /* Replace with a suitable concert-themed image */
+    background-size: cover;
+    background-position: center;
+}
+.sidebar {
+    background-color: #0d1b2a;
+    color: white;
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar h1 {
+    font-size: 24px;
+    color: #f4d160;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar ul li a i {
+    margin-right: 10px;
+}
+
+.sidebar ul li a:hover {
+    color: #f4d160;
+}
+
+.sidebar .logout {
+    text-align: center;
+    margin-top: auto;
+}
+
+.sidebar .logout a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    background-color: #f4d160;
+    border-radius: 5px;
+}
+
+.sidebar .logout a:hover {
+    background-color: #e4c150;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    background: rgba(0, 31, 63, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    text-align: center;
+    margin-left: 300px;
+}
+
+
+.form-section.active {
+    display: block;
+}
+
+.form-section h2 {
+    color: #ffd700;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    margin-right: 10px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #ffd700;
+    color: #001f3f;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #e6c300;
+}
+
+.toggle-button {
+    background: none;
+    color: #ffd700;
+    border: none;
+    font-size: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.toggle-button:hover {
+    color: #e6c300;
+}
+
