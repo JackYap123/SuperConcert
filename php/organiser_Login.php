@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $conn->prepare("SELECT id, password, is_first_login FROM Organisers WHERE email = ?");
     } elseif (isset($_POST['login_attendee'])) {
         // 查询 Attendee 的信息
-        $stmt = $conn->prepare("SELECT id, password FROM Attendees WHERE email = ?");
+        $stmt = $conn->prepare("SELECT attendee_id, password FROM Attendee WHERE email = ?");
     } else {
         exit("<p style='color:red;'>Invalid login attempt.</p>");
     }
@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['attendee_id'] = $user_id;
                 $_SESSION['attendee_email'] = $email;
                 session_write_close();
-                header("Location: Attendee_Home.php");
+                header("Location: Attendee_Dashboard.php");
                 exit();
             }
         } else {
@@ -82,40 +82,9 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/Register_Login.css">
+    <link rel="stylesheet" href="../css/organiser_Login.css">
     <link rel="icon" type="image/x-icon" href="../img/Logo.webp">
     <title>SuperConcert - Login</title>
-    <style>
-        .tab-buttons {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .tab-buttons button {
-            background-color: #ccc;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 0 5px;
-            transition: background 0.3s;
-        }
-
-        .tab-buttons button.active {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .form-section {
-            display: none;
-        }
-
-        .form-section.active {
-            display: block;
-        }
-    </style>
-</head>
-
 <body>
 
     <div class="container">
@@ -158,6 +127,9 @@ $conn->close();
                     <label for="attendee-password">Password</label>
                     <input type="password" id="attendee-password" name="password" placeholder="Enter your password"
                         required>
+                </div>
+                <div class="form-group">
+                    <a href="attendee_register.php">Don't have account? Click me register</a>
                 </div>
                 <button type="submit">Login</button>
             </form>
