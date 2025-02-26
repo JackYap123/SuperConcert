@@ -13,17 +13,61 @@ $result = $conn->query($query);
     <title>Event Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        body {
+            background-color: #0a0f2d;
+            color: white;
+        }
+        .sidebar {
+            width: 250px;
+            position: fixed;
+            height: 100%;
+            background-color: #1a237e;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            padding: 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: gold;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #3949ab;
+        }
+        .main-content {
+            margin-left: 260px;
+            padding: 20px;
+        }
         .event-card {
-            margin-bottom: 20px;
+            background-color: #1e3a5f;
+            border: 1px solid gold;
+            color: white;
         }
         .event-image {
             height: 200px;
             object-fit: cover;
         }
+        .btn-primary {
+            background-color: gold;
+            border-color: gold;
+            color: #0a0f2d;
+        }
+        .btn-primary:hover {
+            background-color: #ffd700;
+            border-color: #ffd700;
+        }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="sidebar">
+        <h2 class="text-center text-white">Menu</h2>
+        <a href="#">Dashboard</a>
+        <a href="#">Create Event</a>
+        <a href="#">Manage Tickets</a>
+        <a href="#">Logout</a>
+    </div>
+    
+    <div class="main-content">
         <h1 class="text-center mb-4">Event Dashboard</h1>
         <div class="row row-cols-1 row-cols-md-2 g-4">
             <?php while ($row = $result->fetch_assoc()) { ?>
