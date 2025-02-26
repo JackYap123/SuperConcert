@@ -37,7 +37,7 @@ $result = $conn->query($query);
     <div class="sidebar">
         <h2 class="text-center text-white">Menu</h2>
         <a href="#">Dashboard</a>
-        <a href="#">Create Event</a>
+        <a href="eventCreation.php">Create Event</a>
         <a href="#">Manage Tickets</a>
         <a href="#">Logout</a>
     </div>

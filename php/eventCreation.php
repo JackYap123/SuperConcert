@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit">Create Event</button>
         </form>
 
-        <a href="existsEvent.php" class="view-events">View Existing Events</a>
+        <a href="browseEvent.php" class="view-events">View Existing Events</a>
     </div>
 
     <script src="../javascript/eventScript.js"></script>
