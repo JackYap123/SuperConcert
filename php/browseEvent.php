@@ -42,6 +42,7 @@ $result = $conn->query($query);
                                 <strong>Description:</strong> <?php echo htmlspecialchars($row['event_description']); ?>
                             </p>
                             <a href="#" class="btn btn-primary">Set Up Seats</a>
+                            <button class="btn btn-danger" onclick="deleteEvent('<?php echo $row['event_id']; ?>')">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -50,6 +51,13 @@ $result = $conn->query($query);
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function deleteEvent(eventId) {
+            if (confirm("Are you sure you want to delete this event?")) {
+                window.location.href = 'deleteEvent.php?event_id=' + eventId;
+            }
+        }
+    </script>
 </body>
 </html>
 
