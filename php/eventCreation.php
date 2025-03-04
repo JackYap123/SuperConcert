@@ -39,7 +39,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <h1>Create Event</h1>
         <form id="eventForm" action="" method="POST" enctype="multipart/form-data">
-
             <label for="eventName">Event Name:</label>
             <input type="name" id="eventName" name="eventName" required>
 
@@ -58,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit">Create Event</button>
         </form>
 
-        <a href="existsEvent.php" class="view-events">View Existing Events</a>
+        <a href="browseEvent.php" class="view-events">View Existing Events</a>
     </div>
 
     <script src="../javascript/eventScript.js"></script>
