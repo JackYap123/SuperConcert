@@ -9,7 +9,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     $event_duration = $_POST['eventDuration'];
     $event_description = $_POST['eventDescription'];
     $organizer_id = 1;
-
     // Handle image upload
     if (isset($_FILES["eventImage"]) && $_FILES["eventImage"]["error"] == 0)
     {
@@ -33,7 +32,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             die("Error uploading image.");
         }
     }
-
     //INSERT db
     $stmt = $conn->prepare("INSERT INTO event (event_name, event_date, event_time, event_duration, event_description, organizer_id) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssss", $event_name, $event_date, $event_time, $event_duration, $event_description, $organizer_id);
@@ -66,6 +64,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 </head>
 
 <body>
+    <div class="container">
+        <h1>Create Event</h1>
+        <form id="eventForm" action="" method="POST" enctype="multipart/form-data">
+            <label for="eventName">Event Name:</label>
+            <input type="name" id="eventName" name="eventName" required>
+=======
     <div class="big-container">
         <div class="container">
             <h1>Create Event</h1>
