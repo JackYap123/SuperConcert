@@ -1,3 +1,14 @@
+<?php
+session_start();
+if (!isset($_SESSION['attendee_logged_in']) || !$_SESSION['attendee_logged_in']) {
+    header("Location: organiser_login.php"); // ✅ 未登录时跳转回登录页
+    exit();
+}
+
+$attendee_id = $_SESSION['attendee_id']; // ✅ 获取当前登录用户的ID
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
