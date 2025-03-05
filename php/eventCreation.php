@@ -64,12 +64,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 </head>
 
 <body>
-    <div class="container">
-        <h1>Create Event</h1>
-        <form id="eventForm" action="" method="POST" enctype="multipart/form-data">
-            <label for="eventName">Event Name:</label>
-            <input type="name" id="eventName" name="eventName" required>
-=======
     <div class="big-container">
         <div class="container">
             <h1>Create Event</h1>
