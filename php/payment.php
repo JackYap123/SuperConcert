@@ -1,5 +1,5 @@
 <?php
-// payment.php - Frontend for Payment Page
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
