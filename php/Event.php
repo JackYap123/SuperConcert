@@ -60,7 +60,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
 
     </style>
 </head>
-
 <body>
     <?php
         include "../inc/sidebar.php";
@@ -73,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
         </div>
 
         <div class="dashboard">
-            <a href="eventCreation.php" class="card-link">
+            <a href="eventCreation.html" class="card-link">
                 <div class="card">
                     <i class="fas fa-calendar-plus fa-3x" style="color: black;"></i>
                     <h2>Event</h2>
@@ -88,23 +87,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
                     <p>Configure ticketing options</p>
                 </div>
             </a>
-
-            <a href="waiting_list.php" class="card-link">
-                <div class="card">
-                    <i class="fas fa-users fa-3x" style="color: black;"></i>
-                    <h2>Waiting List</h2>
-                    <p>Manage event waiting lists</p>
-                </div>
-            </a>
-
-            <a href="create_promotion.php" class="card-link">
-                <div class="card">
-                    <i class="fas fa-bullhorn fa-3x" style="color: black;"></i>
-                    <h2>Create Promotion</h2>
-                    <p>Set up promotional campaigns</p>
-                </div>
-            </a>
-
         </div>
     </div>
     <?php if ($is_first_login): ?>

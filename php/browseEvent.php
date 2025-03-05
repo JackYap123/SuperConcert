@@ -34,13 +34,7 @@ $result = $conn->query($query);
     </script>
 </head>
 <body>
-    <div class="sidebar">
-        <h2 class="text-center text-white">Menu</h2>
-        <a href="#">Dashboard</a>
-        <a href="eventCreation.php">Create Event</a>
-        <a href="#">Manage Tickets</a>
-        <a href="#">Logout</a>
-    </div>
+    <?php include "../inc/sidebar.php" ?>
     
     <div class="main-content">
         <h1 class="text-center mb-4">Event Dashboard</h1>
@@ -59,7 +53,7 @@ $result = $conn->query($query);
                                 <strong>Duration:</strong> <?php echo $row['event_duration']; ?> hours<br>
                                 <strong>Description:</strong> <?php echo htmlspecialchars($row['event_description']); ?>
                             </p>
-                            <a href="#" class="btn btn-primary">Set Up Seats</a>
+                            <a href="../" class="btn btn-primary">Set Up Seats</a>
                             <form method="POST" id="delete-form-<?php echo $row['event_id']; ?>" style="display:inline;">
                                 <input type="hidden" name="delete_event_id" value="<?php echo $row['event_id']; ?>">
                                 <button type="button" class="btn btn-danger" onclick="confirmDelete('<?php echo $row['event_id']; ?>')">Delete</button>
