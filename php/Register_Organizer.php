@@ -25,7 +25,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
         if ($checkStmt->num_rows > 0)
         {
-            echo "<p style='color:red;'>The email address is already registered. Please use a different email or log in.</p>";
+            echo "<script> 
+                alert('The email address is already registered. Please use a different email or log in.');
+                window.location.href='Register_Organizer.php';
+            </script>";
         }
         else
         {
@@ -66,16 +69,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     ";
 
                     $mail->send();
-                    echo "<p style='color:green;'>Registration successful. Please check your email for login details.</p>";
+                    echo "<script> 
+                            alert('Registration Successful! Your account has been created successfully.</p><p>Please check your email for login details.');
+                            window.location.href='Register_Organizer.php';
+                        </script>";
                 }
                 catch (Exception $e)
                 {
-                    echo "<p style='color:red;'>Error in sending email: {$mail->ErrorInfo}</p>";
+                    echo "<script> 
+                    alert('Error in sending email: {$mail->ErrorInfo}');
+                    window.location.href='Register_Organizer.php';
+                  </script>";
                 }
             }
             else
             {
-                echo "<p style='color:red;'>Error: " . $stmt->error . "</p>";
+                echo "<script> 
+                    alert('Error: " . $stmt->error ."');
+                    window.location.href='Register_Organizer.php';
+                  </script>";
             }
             $stmt->close();
         }

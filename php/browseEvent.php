@@ -1,5 +1,12 @@
 <?php
-include 'conn_dB.php';
+session_start();
+include '../inc/config.php';
+
+if (!isset($_SESSION['organiser_id'])) {
+    die("Access denied. Please log in as an organizer.");
+}
+
+$organizer_id = $_SESSION['organiser_id']; // ✅ 获取当前登录的organizer_id
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_event_id'])) {
     $event_id = $_POST['delete_event_id'];
@@ -12,8 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_event_id'])) {
     }
 }
 
-$query = "SELECT event_id, event_name, event_date, event_time, event_duration, event_description, file_name FROM Event";
-$result = $conn->query($query);
+$query = "SELECT event_id, event_name, event_date, event_time, event_duration, event_description, file_name 
+          FROM Event WHERE organizer_id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("s", $organizer_id);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -53,7 +64,7 @@ $result = $conn->query($query);
                                 <strong>Duration:</strong> <?php echo $row['event_duration']; ?> hours<br>
                                 <strong>Description:</strong> <?php echo htmlspecialchars($row['event_description']); ?>
                             </p>
-                            <a href="../" class="btn btn-primary">Set Up Seats</a>
+                            <a href="#" class="btn btn-primary">Set Up Seats</a>
                             <form method="POST" id="delete-form-<?php echo $row['event_id']; ?>" style="display:inline;">
                                 <input type="hidden" name="delete_event_id" value="<?php echo $row['event_id']; ?>">
                                 <button type="button" class="btn btn-danger" onclick="confirmDelete('<?php echo $row['event_id']; ?>')">Delete</button>
