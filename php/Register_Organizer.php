@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                         <p>Email: $email</p>
                         <p>Password: <strong>$default_password</strong></p>
                         <p>Please log in and change your password for security purposes.</p>
-                        <p><a href='http://localhost/SuperConcert/php/Register_Login.php'>Login Now</a></p>
+                        <p><a href='http://localhost/SuperConcert/php/organiser_Login.php'>Login Now</a></p>
                         </body>
                         </html>
                     ";
