@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $file_name = ""; // Default empty string in case no file is uploaded
     if (isset($_FILES['eventCover']) && $_FILES['eventCover']['error'] === UPLOAD_ERR_OK) {
         $file_name = basename($_FILES['eventCover']['name']); // Get original file name
-        $target_directory = "uploads/";
+        $target_directory = "../img/";
         $target_file = $target_directory . $file_name;
 
         // Ensure the uploads directory exists
