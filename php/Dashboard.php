@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
 
     if ($new_password === $confirm_password)
     {
-        $email = $_SESSION['organiser_email']; 
+        $email = $_SESSION['organiser_email'];
 
         $stmt = $conn->prepare("UPDATE Organisers SET password = ?, is_first_login = 0 WHERE email = ?");
         $stmt->bind_param("ss", $new_password, $email);
@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
 
 <body>
     <?php
-    include "../inc/sidebar.php";
+        include "../inc/sidebar.php";
     ?>
 
     <div class="content">
@@ -73,26 +73,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
         </div>
 
         <div class="dashboard">
-            <div class="card">
-                <i class="fas fa-calendar-plus fa-3x" style="color: black;"></i>
-                <h2>Create Event</h2>
-                <p>Manage and set up new events</p>
-            </div>
-            <div class="card">
-                <i class="fas fa-ticket-alt fa-3x" style="color: black;"></i>
-                <h2>Ticket Setup</h2>
-                <p>Configure ticketing options</p>
-            </div>
-            <div class="card">
-                <i class="fas fa-users fa-3x" style="color: black;"></i>
-                <h2>Waiting List</h2>
-                <p>Manage event waiting lists</p>
-            </div>
-            <div class="card">
-                <i class="fas fa-bullhorn fa-3x" style="color: black;"></i>
-                <h2>Create Promotion</h2>
-                <p>Set up promotional campaigns</p>
-            </div>
+            <a href="eventCreation.php" class="card-link">
+                <div class="card">
+                    <i class="fas fa-calendar-plus fa-3x" style="color: black;"></i>
+                    <h2>Event</h2>
+                    <p>Manage and set up new events</p>
+                </div>
+            </a>
+
+            <a href="ticket_setup.php" class="card-link">
+                <div class="card">
+                    <i class="fas fa-ticket-alt fa-3x" style="color: black;"></i>
+                    <h2>Ticket Setup</h2>
+                    <p>Configure ticketing options</p>
+                </div>
+            </a>
+
+            <a href="waiting_list.php" class="card-link">
+                <div class="card">
+                    <i class="fas fa-users fa-3x" style="color: black;"></i>
+                    <h2>Waiting List</h2>
+                    <p>Manage event waiting lists</p>
+                </div>
+            </a>
+
+            <a href="create_promotion.php" class="card-link">
+                <div class="card">
+                    <i class="fas fa-bullhorn fa-3x" style="color: black;"></i>
+                    <h2>Create Promotion</h2>
+                    <p>Set up promotional campaigns</p>
+                </div>
+            </a>
+
         </div>
     </div>
     <?php if ($is_first_login): ?>
