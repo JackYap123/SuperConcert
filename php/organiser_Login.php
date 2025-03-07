@@ -55,11 +55,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit();
             }
         } else {
-            echo "<script>alert('Invalid password. Please try again.'); window.location.href='login.php';</script>";
+            echo "<script>alert('Invalid password. Please try again.'); window.location.href='organiser_login.php';</script>";
             exit();
         }
     } else {
-        echo "<script>alert('No account found with that email.'); window.location.href='login.php';</script>";
+        echo "<script>alert('No account found with that email.'); window.location.href='organiser_login.php';</script>";
         exit();
     }
 
