@@ -1,6 +1,7 @@
 <?php
 include 'conn_dB.php';
 
+// Delete event logic
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_event_id'])) {
     $event_id = $_POST['delete_event_id'];
     $query = "DELETE FROM Event WHERE event_id = ?";
@@ -12,6 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_event_id'])) {
     }
 }
 
+// Fetch events from DB
 $query = "SELECT event_id, event_name, event_date, event_time, event_duration, event_description, file_name FROM Event";
 $result = $conn->query($query);
 ?>
@@ -44,27 +46,24 @@ $result = $conn->query($query);
     
     <div class="main-content">
         <h1 class="text-center mb-4">Event Dashboard</h1>
-        <div class="row row-cols-1 row-cols-md-2 g-4">
+        
+        <div class="event-grid">
             <?php while ($row = $result->fetch_assoc()) { ?>
-                <div class="col">
-                    <div class="card event-card">
-                        <?php if (!empty($row['file_name'])) { ?>
-                            <img src="uploads/<?php echo $row['file_name']; ?>" class="card-img-top event-image" alt="Event Image">
-                        <?php } ?>
-                        <div class="card-body">
-                            <h5 class="card-title"><?php echo htmlspecialchars($row['event_name']); ?></h5>
-                            <p class="card-text">
-                                <strong>Date:</strong> <?php echo $row['event_date']; ?><br>
-                                <strong>Time:</strong> <?php echo $row['event_time']; ?><br>
-                                <strong>Duration:</strong> <?php echo $row['event_duration']; ?> hours<br>
-                                <strong>Description:</strong> <?php echo htmlspecialchars($row['event_description']); ?>
-                            </p>
-                            <a href="#" class="btn btn-primary">Set Up Seats</a>
-                            <form method="POST" id="delete-form-<?php echo $row['event_id']; ?>" style="display:inline;">
-                                <input type="hidden" name="delete_event_id" value="<?php echo $row['event_id']; ?>">
-                                <button type="button" class="btn btn-danger" onclick="confirmDelete('<?php echo $row['event_id']; ?>')">Delete</button>
-                            </form>
-                        </div>
+                <div class="card event-card">
+                <img src="uploads/<?php echo htmlspecialchars($row['file_name']); ?>" class="event-image" alt="Event Image">
+                <div class="card-body">
+                        <h5 class="card-title"><?php echo htmlspecialchars($row['event_name']); ?></h5>
+                        <p class="card-text">
+                            <strong>Date:</strong> <?php echo $row['event_date']; ?><br>
+                            <strong>Time:</strong> <?php echo $row['event_time']; ?><br>
+                            <strong>Duration:</strong> <?php echo $row['event_duration']; ?> hours<br>
+                            <strong>Description:</strong> <?php echo htmlspecialchars($row['event_description']); ?>
+                        </p>
+                        <a href="#" class="btn btn-primary">Set Up Seats</a>
+                        <form method="POST" id="delete-form-<?php echo $row['event_id']; ?>" style="display:inline;">
+                            <input type="hidden" name="delete_event_id" value="<?php echo $row['event_id']; ?>">
+                            <button type="button" class="btn btn-danger" onclick="confirmDelete('<?php echo $row['event_id']; ?>')">Delete</button>
+                        </form>
                     </div>
                 </div>
             <?php } ?>
