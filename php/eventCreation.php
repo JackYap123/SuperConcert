@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Handle image upload
     if (isset($_FILES["eventImage"]) && $_FILES["eventImage"]["error"] == 0) {
-        $uploadDir = "uploads/";
+        $uploadDir = "../img/";
         $imageName = basename($_FILES["eventImage"]["name"]);
         $targetPath = $uploadDir . $imageName;
 
