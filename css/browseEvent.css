@@ -39,6 +39,8 @@ body {
 
 /* Event Cards */
 .event-card {
+    width: 300px; /* Fixed width for uniformity */
+    height: 420px; /* Fixed height to maintain consistency */
     background-color: #1e3a5f;
     border: 2px solid gold;
     color: white;
@@ -46,20 +48,35 @@ body {
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-.event-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(255, 215, 0, 0.4);
+    display: flex;
+    flex-direction: column; /* Ensure image and content stack properly */
+    align-items: center;
 }
 
 /* Event Images */
 .event-image {
     width: 100%;
-    height: 200px;
-    object-fit: cover;
+    height: 200px; /* Fixed height for images */
+    object-fit: cover; /* Ensures image fills the space without distortion */
     border-bottom: 2px solid gold;
 }
+
+/* Grid Layout */
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Ensures uniform sizing */
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Card Content */
+.card-body {
+    text-align: center;
+    padding: 15px;
+    flex-grow: 1; /* Ensures consistent spacing */
+}
+
 
 /* Buttons */
 .btn-primary {
@@ -89,13 +106,13 @@ body {
     transform: scale(1.05);
 }
 
-/* Grid Layout */
+/* Grid Layout
 .event-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
     padding: 20px;
-}
+} */
 
 /* Responsive Design */
 @media (max-width: 768px) {

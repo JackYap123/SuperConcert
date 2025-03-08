@@ -50,7 +50,7 @@ $result = $conn->query($query);
         <div class="event-grid">
             <?php while ($row = $result->fetch_assoc()) { ?>
                 <div class="card event-card">
-                <img src="uploads/<?php echo htmlspecialchars($row['file_name']); ?>" class="event-image" alt="Event Image">
+                <img src="../img/<?php echo htmlspecialchars($row['file_name']); ?>" class="event-image" alt="Event Image">
                 <div class="card-body">
                         <h5 class="card-title"><?php echo htmlspecialchars($row['event_name']); ?></h5>
                         <p class="card-text">
