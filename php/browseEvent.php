@@ -1,7 +1,6 @@
 <?php
 include 'conn_dB.php';
 
-// Delete event logic
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_event_id'])) {
     $event_id = $_POST['delete_event_id'];
     $query = "DELETE FROM Event WHERE event_id = ?";
