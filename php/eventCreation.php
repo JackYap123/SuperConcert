@@ -2,45 +2,60 @@
 include 'conn_dB.php'; // Ensure you have a database connection
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $eventName = $_POST["eventName"];
+    $eventName = trim($_POST["eventName"]); // Trim to avoid unnecessary spaces
     $eventDate = $_POST["eventDate"];
     $eventTime = $_POST["eventTime"];
     $eventDuration = $_POST["eventDuration"];
     $eventDescription = $_POST["eventDescription"];
     $organizerId = 1; // Change this to the actual organizer ID (or get from session)
 
-    // Handle Image Upload
-    $targetDir = "../img/"; // Directory to store images
-    $fileName = basename($_FILES["eventCover"]["name"]);
-    $uniqueFileName = time() . "_" . $fileName; // Unique filename to avoid conflicts
-    $targetFilePath = $targetDir . $uniqueFileName;
-    $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
+    // Check if event name already exists
+    $checkQuery = "SELECT COUNT(*) FROM event WHERE event_name = ?";
+    $stmt = $conn->prepare($checkQuery);
+    $stmt->bind_param("s", $eventName);
+    $stmt->execute();
+    $stmt->bind_result($count);
+    $stmt->fetch();
+    $stmt->close();
 
-    // Allowed file types
-    $allowedTypes = array("jpg", "jpeg", "png", "gif");
+    if ($count > 0) {
+        // Event name already exists
+        echo "<script>alert('Error: Event name already exists. Please choose a different name.');</script>";
+    } else {
+        // Handle Image Upload
+        $targetDir = "../img/"; // Directory to store images
+        $fileName = basename($_FILES["eventCover"]["name"]);
+        $uniqueFileName = time() . "_" . $fileName; // Unique filename to avoid conflicts
+        $targetFilePath = $targetDir . $uniqueFileName;
+        $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
 
-    if (in_array($fileType, $allowedTypes)) {
-        if (move_uploaded_file($_FILES["eventCover"]["tmp_name"], $targetFilePath)) {
-            // Insert event into the database
-            $sql = "INSERT INTO event (organizer_id, event_name, event_date, event_time, event_duration, event_description, file_name) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("issssss", $organizerId, $eventName, $eventDate, $eventTime, $eventDuration, $eventDescription, $uniqueFileName);
-            
-            if ($stmt->execute()) {
-                echo "Event added successfully!";
-                exit();
+        // Allowed file types
+        $allowedTypes = array("jpg", "jpeg", "png", "gif");
+
+        if (in_array($fileType, $allowedTypes)) {
+            if (move_uploaded_file($_FILES["eventCover"]["tmp_name"], $targetFilePath)) {
+                // Insert event into the database
+                $sql = "INSERT INTO event (organizer_id, event_name, event_date, event_time, event_duration, event_description, file_name) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?)";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("issssss", $organizerId, $eventName, $eventDate, $eventTime, $eventDuration, $eventDescription, $uniqueFileName);
+
+                if ($stmt->execute()) {
+                    echo "<script>alert('Event added successfully!'); window.location.href='existsEvent.php';</script>";
+                    exit();
+                } else {
+                    echo "<script>alert('Error: " . $stmt->error . "');</script>";
+                }
             } else {
-                echo "Error: " . $stmt->error;
+                echo "<script>alert('File upload failed.');</script>";
             }
         } else {
-            echo "File upload failed.";
+            echo "<script>alert('Invalid file type. Only JPG, JPEG, PNG, and GIF files are allowed.');</script>";
         }
-    } else {
-        echo "Invalid file type. Only JPG, JPEG, PNG, and GIF files are allowed.";
     }
 }
 ?>
+
 
 
 <!DOCTYPE html>
