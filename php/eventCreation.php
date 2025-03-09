@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->bind_param("issssss", $organizerId, $eventName, $eventDate, $eventTime, $eventDuration, $eventDescription, $uniqueFileName);
 
                 if ($stmt->execute()) {
-                    echo "<script>alert('Event added successfully!'); window.location.href='existsEvent.php';</script>";
+                    echo 'Event added successfully!';
                     exit();
                 } else {
                     echo "<script>alert('Error: " . $stmt->error . "');</script>";
