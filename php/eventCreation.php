@@ -1,5 +1,5 @@
 <?php
-include 'conn_dB.php'; // Ensure you have a database connection
+include 'conn_dB.php'; 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $eventName = trim($_POST["eventName"]); // Trim to avoid unnecessary spaces
