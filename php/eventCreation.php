@@ -1,5 +1,5 @@
 <?php
-include 'conn_dB.php'; 
+include '../inc/config.php'; 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $eventName = trim($_POST["eventName"]); // Trim to avoid unnecessary spaces
