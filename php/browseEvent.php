@@ -15,6 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_event_id'])) {
 // Fetch events from DB
 $query = "SELECT event_id, event_name, event_date, event_time, event_duration, event_description, file_name FROM Event";
 $result = $conn->query($query);
+
 ?>
 
 <!DOCTYPE html>
