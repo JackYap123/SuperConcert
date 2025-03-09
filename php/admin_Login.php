@@ -29,12 +29,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login']))
         }
         else
         {
-            echo "<p style='color:red;'>Invalid password. Please try again.</p>";
+            echo "<script>alert('Invalid password. Please try again.'); window.location.href='admin_Login.php';</script>";
         }
     }
     else
     {
-        echo "<p style='color:red;'>No account found with that email.</p>";
+        echo "<script>alert('No account found with that email..'); window.location.href='admin_Login.php';</script>";
     }
 
     $stmt->close();
