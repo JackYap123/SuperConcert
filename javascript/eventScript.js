@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const eventForm = document.getElementById("eventForm");
-    const imageInput = document.getElementById("eventImage");
+    const imageInput = document.getElementById("eventCover"); // Corrected ID
     const imagePreview = document.getElementById("imagePreview");
     const eventsList = document.getElementById("eventsList");
 
@@ -30,11 +30,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Handle form submission
     if (eventForm) {
         eventForm.addEventListener("submit", function (e) {
-            // Ensure form submits only to the server
-            eventForm.submit(); // Allow default form submission to backend
+            // Allow default form submission to backend
+            eventForm.submit();
         });
     }
-    
 
     // Function to add events to the existing events page
     function addEventToPage(event, index) {
@@ -59,4 +58,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Load events on page load
     loadEvents();
+
 });
