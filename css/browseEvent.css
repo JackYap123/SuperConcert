@@ -1,26 +1,136 @@
 body {
     background-color: #001f3f;
     color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    position: fixed;
+    height: 100%;
+    background-color: #1a237e;
+    padding-top: 20px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar a {
+    padding: 15px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: gold;
+    display: block;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.sidebar a:hover {
+    background-color: #3949ab;
+    color: white;
+}
+
+/* Main Content */
 .main-content {
     margin-left: 260px;
     padding: 20px;
 }
+
+/* Event Cards */
 .event-card {
-    background-color: #001f3f;
-    border: 1px solid gold;
+    width: 300px; /* Fixed width for uniformity */
+    height: 420px; /* Fixed height to maintain consistency */
+    background-color: #1e3a5f;
+    border: 2px solid gold;
     color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column; /* Ensure image and content stack properly */
+    align-items: center;
 }
+
+/* Event Images */
 .event-image {
-    height: 200px;
-    object-fit: cover;
+    width: 100%;
+    height: 200px; /* Fixed height for images */
+    object-fit: cover; /* Ensures image fills the space without distortion */
+    border-bottom: 2px solid gold;
 }
+
+/* Grid Layout */
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Ensures uniform sizing */
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Card Content */
+.card-body {
+    text-align: center;
+    padding: 15px;
+    flex-grow: 1; /* Ensures consistent spacing */
+}
+
+
+/* Buttons */
 .btn-primary {
     background-color: gold;
     border-color: gold;
     color: #0a0f2d;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
 }
+
 .btn-primary:hover {
     background-color: #ffd700;
     border-color: #ffd700;
+    transform: scale(1.05);
+}
+
+.btn-danger {
+    background-color: #b71c1c;
+    border-color: #b71c1c;
+    color: white;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.btn-danger:hover {
+    background-color: #ff5252;
+    border-color: #ff5252;
+    transform: scale(1.05);
+}
+
+/* Grid Layout
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+} */
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        position: relative;
+        height: auto;
+        text-align: center;
+        padding-bottom: 10px;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    .event-grid {
+        padding: 10px;
+        grid-template-columns: 1fr;
+    }
 }
