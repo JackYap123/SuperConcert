@@ -76,7 +76,7 @@ $result = $stmt->get_result();
                                 <strong>Duration:</strong> <?php echo $row['event_duration']; ?> hours<br>
                                 <strong>Description:</strong> <?php echo htmlspecialchars($row['event_description']); ?>
                             </p>
-                            <a href="#" class="btn btn-primary">Set Up Seats</a>
+                            <a href="#" class="btn btn-primary">Set Up Tickets</a>
                             <form method="POST" id="delete-form-<?php echo $row['event_id']; ?>" style="display:inline;">
                                 <input type="hidden" name="delete_event_id" value="<?php echo $row['event_id']; ?>">
                                 <button type="button" class="btn btn-danger"
