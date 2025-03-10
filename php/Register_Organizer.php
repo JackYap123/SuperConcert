@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         $email = $_POST['email'];
         $phone_number = $_POST['phone_number'];
         $organization_name = $_POST['organization_name'] ?? null;
-        $default_password = substr(md5(uniqid()), 0, 8); // 生成8位随机默认密码
+        $default_password = substr(md5(uniqid()), 0, 8); 
 
         $checkEmailQuery = "SELECT email FROM Organisers WHERE email = ?";
         $checkStmt = $conn->prepare($checkEmailQuery);

@@ -7,8 +7,9 @@ if (!isset($_SESSION['organiser_email']))
     header("Location: organiser_login.php");
     exit();
 }
-
+$organiser_id = $_SESSION['organiser_id'];
 $is_first_login = $_SESSION['is_first_login'] ?? false;
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
 {
