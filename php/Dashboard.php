@@ -105,7 +105,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
             <a href="eventCreation.php" class="card-link">
                 <div class="card">
                     <i class="fas fa-calendar-plus fa-3x" style="color: black;"></i>
-                    <h2>Event</h2>
+                    <h2>Create Events</h2>
+                    <p>Manage and set up new events</p>
+                </div>
+            </a>
+
+            <a href="browseEvent.php" class="card-link">
+                <div class="card">
+                    <i class="fas fa-magnifying-glass fa-3x" style="color: black;"></i>
+                    <h2>Events</h2>
                     <p>Manage and set up new events</p>
                 </div>
             </a>
@@ -121,7 +129,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
             <a href="waiting_list.php" class="card-link">
                 <div class="card">
                     <i class="fas fa-users fa-3x" style="color: black;"></i>
-                    <h2>Waiting List</h2>
+                    <h2>Wait List</h2>
                     <p>Manage event waiting lists</p>
                 </div>
             </a>
