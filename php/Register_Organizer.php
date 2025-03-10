@@ -117,7 +117,6 @@ $conn->close();
             <li><a href="#"><i class="fas fa-users"></i> Generate Report</a></li>
         </ul>
         <div class="logout">
-            <a href="../logout.php">Logout</a>
         </div>
     </div>
     <div class="container">
