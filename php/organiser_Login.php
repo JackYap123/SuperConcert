@@ -7,16 +7,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = trim($_POST['password']);
 
     if (isset($_POST['login_organiser'])) {
-        // 查询 Organiser 的信息
         $stmt = $conn->prepare("SELECT id, password, is_first_login FROM Organisers WHERE email = ?");
     } elseif (isset($_POST['login_attendee'])) {
-        // 查询 Attendee 的信息
         $stmt = $conn->prepare("SELECT attendee_id, password FROM Attendee WHERE email = ?");
     } else {
         exit("<p style='color:red;'>Invalid login attempt.</p>");
     }
 
-    // 绑定参数并执行查询
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
@@ -29,17 +26,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         $stmt->fetch();
 
-        // **密码验证**
         if ($password === $db_password) {
             if (isset($_POST['login_organiser'])) {
                 $_SESSION['organiser_logged_in'] = true;
                 $_SESSION['organiser_id'] = $user_id;
                 $_SESSION['organiser_email'] = $email;
-                $_SESSION['is_first_login'] = $is_first_login; // ✅ 添加此项
+                $_SESSION['is_first_login'] = $is_first_login; 
 
                 if ($is_first_login == 1) {
                     session_write_close();
-                    header("Location: Dashboard.php"); // ✅ 让 Dashboard.php 处理弹窗
+                    header("Location: Dashboard.php"); 
                     exit();
                 }
 
