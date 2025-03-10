@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         $email = $_POST['email'];
         $phone_number = $_POST['phone_number'];
         $organization_name = $_POST['organization_name'] ?? null;
-        $default_password = substr(md5(uniqid()), 0, 8); 
+        $default_password = substr(md5(uniqid()), 0, 8);
 
         $checkEmailQuery = "SELECT email FROM Organisers WHERE email = ?";
         $checkStmt = $conn->prepare($checkEmailQuery);
@@ -70,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
                     $mail->send();
                     echo "<script> 
-                            alert('Registration Successful! Your account has been created successfully.</p><p>Please check your email for login details.');
+                            alert('Registration Successful! Your account has been created successfully.Please check your email for login details.');
                             window.location.href='Register_Organizer.php';
                         </script>";
                 }
@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             else
             {
                 echo "<script> 
-                    alert('Error: " . $stmt->error ."');
+                    alert('Error: " . $stmt->error . "');
                     window.location.href='Register_Organizer.php';
                   </script>";
             }
@@ -117,8 +117,10 @@ $conn->close();
             <li><a href="#"><i class="fas fa-users"></i> Generate Report</a></li>
         </ul>
         <div class="logout">
-            <a href="../logout.php">Logout</a>
+            <a href="#" onclick="confirmLogout();">Logout</a>
         </div>
+
+    </div>
     </div>
     <div class="container">
         <!-- Register Form -->
@@ -149,5 +151,13 @@ $conn->close();
         </div>
     </div>
 </body>
+<script>
+    function confirmLogout() {
+        let confirmAction = confirm("Are you sure you want to logout?");
+        if (confirmAction) {
+            window.location.href = '../php/admin_Login.php'; 
+        }
+    }
+</script>
 
 </html>
