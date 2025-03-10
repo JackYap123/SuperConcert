@@ -37,6 +37,7 @@ $organisers = $result->fetch_all(MYSQLI_ASSOC);
             <li><a href="#"><i class="fas fa-users"></i> Generate Report</a></li>
         </ul>
         <div class="logout">
+            <a href="#" onclick="confirmLogout();">Logout</a>
         </div>
     </div>
 
@@ -73,6 +74,14 @@ $organisers = $result->fetch_all(MYSQLI_ASSOC);
             </table>
         </div>
     </div>
+    <script>
+        function confirmLogout() {
+            let confirmAction = confirm("Are you sure you want to logout?");
+            if (confirmAction) {
+                window.location.href = '../php/admin_Login.php';
+            }
+        }
+    </script>
 </body>
 
 </html>
