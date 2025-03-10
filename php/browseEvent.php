@@ -1,5 +1,11 @@
 <?php
-include 'conn_dB.php';
+include '../inc/config.php';
+
+if (!isset($_SESSION['organiser_id'])) {
+    die("Access denied. Please log in as an organizer.");
+}
+
+$organizer_id = $_SESSION['organiser_id']; // ✅ 获取当前登录的organizer_id
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_event_id'])) {
     $event_id = $_POST['delete_event_id'];
