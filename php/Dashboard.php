@@ -10,6 +10,15 @@ if (!isset($_SESSION['organiser_email']))
 $organiser_id = $_SESSION['organiser_id'];
 $is_first_login = $_SESSION['is_first_login'] ?? false;
 
+// Check if the organiser has existing events
+$stmt = $conn->prepare("SELECT COUNT(*) AS event_count FROM event WHERE organizer_id = ?");
+$stmt->bind_param("i", $organiser_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+$event_count = $row['event_count'] ?? 0;
+$stmt->close();
+$show_modal = (!$is_first_login && $event_count == 0);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
 {
@@ -56,6 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
     <link rel="stylesheet" href="../css/Dashboard.css">
     <link rel="icon" type="image/x-icon" href="../img/Logo.webp">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Dashboard</title>
     <style>
 
@@ -66,6 +76,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
     <?php
         include "../inc/sidebar.php";
     ?>
+    <?php if ($show_modal): ?>
+        <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="eventModalLabel">No Events Found</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>You have not created any events yet. Please create an event to continue.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="eventCreation.php" class="btn btn-primary">Create Event</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
 
     <div class="content">
         <div class="header">
@@ -130,5 +159,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
         </div>
     <?php endif; ?>
     <script src="../javascript/Dashboard.js"></script>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-</html>s
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        <?php if ($show_modal): ?>
+            var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
+            myModal.show();
+        <?php endif; ?>
+    });
+    </script>
+
+
+</html>
