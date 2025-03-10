@@ -19,8 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
 
     if ($count > 0) {
-        // Event name already exists
-        echo "<script>alert('Error: Event name already exists. Please choose a different name.');</script>";
+        echo "<script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var eventExistsModal = new bootstrap.Modal(document.getElementById('eventExistsModal'));
+                eventExistsModal.show();
+            });
+        </script>";    
     } else {
         // Handle Image Upload
         $targetDir = "../img/"; // Directory to store images
@@ -41,11 +45,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->bind_param("issssss", $organizerId, $eventName, $eventDate, $eventTime, $eventDuration, $eventDescription, $uniqueFileName);
 
                 if ($stmt->execute()) {
-                    echo 'Event added successfully!';
-                    exit();
+                    echo "<script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                            successModal.show();
+                        });
+                    </script>";
                 } else {
                     echo "<script>alert('Error: " . $stmt->error . "');</script>";
                 }
+                
             } else {
                 echo "<script>alert('File upload failed.');</script>";
             }
@@ -69,6 +78,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
+    <!-- Success Modal -->
+<div id="successModal" class="modal fade" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Success!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Event created successfully!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Event Name Exists Modal -->
+<div id="eventExistsModal" class="modal fade" tabindex="-1" aria-labelledby="eventExistsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventExistsModalLabel">Event Name Taken</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Error: Event name already exists. Please choose a different name.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Sidebar Navigation -->
 <div class="sidebar">
     <h2>Event Menu</h2>
@@ -130,6 +174,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <script src="../javascript/eventScript.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
     flatpickr("#eventDate", {
@@ -139,6 +184,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         altInput: true,
         altFormat: "F j, Y",
         theme: "material_blue"
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        if (document.getElementById('successModal')) {
+            successModal.show();
+        }
     });
 });
 </script>
