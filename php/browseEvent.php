@@ -41,7 +41,8 @@ $result = $conn->query($query);
         <a href="#">Dashboard</a>
         <a href="eventCreation.php">Create Event</a>
         <a href="#">Manage Tickets</a>
-        <a href="#">Logout</a>
+        <a href="#">Waiting List</a>
+        <a href="#">Create Promotion</a>
     </div>
     
     <div class="main-content">
