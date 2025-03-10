@@ -18,7 +18,7 @@ $result = $stmt->get_result();
 $row = $result->fetch_assoc();
 $event_count = $row['event_count'] ?? 0;
 $stmt->close();
-$show_modal = ($event_count == 0); 
+$show_modal = (!$is_first_login && $event_count == 0);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
 {
