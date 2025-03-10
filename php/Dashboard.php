@@ -69,7 +69,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
     <div class="content">
         <div class="header">
             <h1>Dashboard</h1>
-            <p>Administrator</p>
         </div>
 
         <div class="dashboard">

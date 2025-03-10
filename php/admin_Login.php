@@ -7,7 +7,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login']))
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // 查询管理员数据库
     $stmt = $conn->prepare("SELECT password FROM admin WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -15,15 +14,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login']))
 
     if ($stmt->num_rows > 0)
     {
-        // 绑定查询结果
         $stmt->bind_result($db_password);
         $stmt->fetch();
 
-        // 验证密码
-        if ($password === $db_password) // 确保数据库中的密码是哈希存储的
+        if ($password === $db_password) 
         {
-            $_SESSION['is_admin'] = true;  // 登录状态
-            $_SESSION['admin_email'] = $email; // 存储管理员邮箱
+            $_SESSION['is_admin'] = true;  
+            $_SESSION['admin_email'] = $email; 
             header("Location: admin_Dashboard.php");
             exit();
         }
