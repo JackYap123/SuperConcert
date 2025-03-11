@@ -1,7 +1,7 @@
 <?php
 include 'conn_dB.php';
 
-// Handle POST request to insert data into the database
+// Handle POST request to insert seat categories and prices
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $data = json_decode(file_get_contents("php://input"), true);
 
@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         $conn->commit();
-        echo json_encode(["success" => true, "message" => "Seats booked successfully"]);
+        echo json_encode(["success" => true, "message" => "Seats saved successfully"]);
         exit;
     } catch (Exception $e) {
         $conn->rollback();
@@ -38,57 +38,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cinema Booking System</title>
+    <title>Seat Management</title>
     <link rel="stylesheet" href="../css/seating.css">
 </head>
 <body>
 
-    <h1>Auditorium Seat Booking</h1>
+<h1>Auditorium Seat Management</h1>
 
-    <div class="selection-container">
-        <label for="selectMode">Selection Mode:</label>
-        <select id="selectMode">
-            <option value="single">Single Seat</option>
-            <option value="row">Entire Row</option>
-        </select>
-    
-        <label for="seatCategory">Seat Category:</label>
-        <select id="seatCategory">
-            <option value="available">Public</option>
-            <option value="vip">VIP</option>
-            <option value="balcony">Balcony</option>
-        </select>
-    
-        <label for="seatPrice">Set Price:</label>
-        <input type="number" id="seatPrice" placeholder="Enter price">
+<div class="selection-container">
+    <label for="selectMode">Selection Mode:</label>
+    <select id="selectMode">
+        <option value="single">Single Seat</option>
+        <option value="row">Entire Row</option>
+    </select>
+
+    <label for="seatCategory">Seat Category:</label>
+    <select id="seatCategory">
+        <option value="">Select Category</option>
+        <option value="available">Normal</option>
+        <option value="vip">VIP</option>
+        <option value="balcony">Balcony</option>
+    </select>
+
+    <label for="seatPrice">Set Price:</label>
+    <input type="number" id="seatPrice" placeholder="Enter price" min="1">
+</div>
+
+<div class="legend">
+    <div><span class="seat available"></span> Normal</div>
+    <div><span class="seat vip"></span> VIP</div>
+    <div><span class="seat balcony"></span> Balcony</div>
+</div>
+
+<button id="setCategoryButton" disabled>Set Category</button>
+
+<div class="stage">Stage</div>
+
+<div class="cinema-container">
+    <div class="row-labels">
+        <?php
+        $rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"];
+        foreach ($rows as $row) {
+            echo "<span>$row</span>";
+        }
+        ?>
     </div>
-    
-    <button id="setCategoryButton">Set Category</button>
+    <div class="seats" id="seatingArea"></div>
+</div>
 
-    <div class="legend">
-        <div><span class="seat available"></span> Normal</div>
-        <div><span class="seat vip"></span> VIP</div>
-        <div><span class="seat balcony"></span> Balcony</div>
-    </div>
+<button id="confirmButton" disabled>Confirm</button>
 
-    <div class="stage">Stage</div>
-
-    <div class="cinema-container">
-        <div class="row-labels">
-            <?php
-            $rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"];
-            foreach ($rows as $row) {
-                echo "<span>$row</span>";
-            }
-            ?>
-        </div>
-        <div class="seats" id="seatingArea"></div>
-    </div>
-
-    <button id="purchaseButton">Purchase Tickets</button>
-
-    <script src="../javascript/seatScript.js"></script>
-
+<script src="../javascript/seatScript.js"></script>
 </body>
 </html>
