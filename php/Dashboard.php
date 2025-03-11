@@ -113,8 +113,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
             <a href="browseEvent.php" class="card-link">
                 <div class="card">
                     <i class="fas fa-magnifying-glass fa-3x" style="color: black;"></i>
-                    <h2>Events</h2>
-                    <p>Manage and set up new events</p>
+                    <h2>Browse Events</h2>
+                    <p>Browse through existing events</p>
                 </div>
             </a>
 
