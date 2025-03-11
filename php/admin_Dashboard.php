@@ -30,7 +30,7 @@ $organisers = $result->fetch_all(MYSQLI_ASSOC);
 
 <body>
     <div class="sidebar">
-        <h1>Admin Dashboard</h1>
+        <h2>Admin Dashboard</h2>
         <ul>
             <li><a href="../php/admin_Dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
             <li><a href="../php/Register_Organizer.php"><i class="fas fa-users"></i> Create Organiser</a></li>

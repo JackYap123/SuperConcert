@@ -109,18 +109,14 @@ $conn->close();
 </head>
 
 <body>
+    
     <div class="sidebar">
-        <h1>Admin Dashboard</h1>
+        <h2>SuperConcert</h2>
         <ul>
             <li><a href="../php/admin_Dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
             <li><a href="../php/Register_Organizer.php"><i class="fas fa-users"></i> Create Organiser</a></li>
             <li><a href="#"><i class="fas fa-users"></i> Generate Report</a></li>
         </ul>
-        <div class="logout">
-            <a href="#" onclick="confirmLogout();">Logout</a>
-        </div>
-
-    </div>
     </div>
     <div class="container">
         <!-- Register Form -->
@@ -155,7 +151,7 @@ $conn->close();
     function confirmLogout() {
         let confirmAction = confirm("Are you sure you want to logout?");
         if (confirmAction) {
-            window.location.href = '../php/admin_Login.php'; 
+            window.location.href = '../php/admin_Login.php';
         }
     }
 </script>
