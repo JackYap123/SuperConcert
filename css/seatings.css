@@ -1,0 +1,82 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #001f3f;
+    color: white;
+    margin: 0;
+    padding: 20px;
+}
+.stage {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.seat-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.section {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 10px 0;
+}
+.section-label {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 5px;
+}
+.row {
+    display: flex;
+    align-items: center;
+    margin: 2px;
+}
+.row-label {
+    width: 30px;
+    text-align: center;
+    font-weight: bold;
+}
+.seat {
+    width: 33px;
+    height: 40px;
+    background-color: white;
+    border: 2px solid gold;
+    text-align: center;
+    line-height: 40px;
+    font-weight: bold;
+    color: #001f3f;
+    border-radius: 5px;
+    margin: 3px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+}
+.seat:hover {
+    transform: scale(1.1);
+}
+.seat.selected {
+    background-color: green;
+    color: white;
+}
+.seat.reserved {
+    background-color: red;
+    cursor: not-allowed;
+}
+.seat.vip {
+    background-color: gold;
+}
+.seat.general {
+    background-color: blue;
+    color: white;
+}
+.seat.balcony {
+    background-color: purple;
+    color: white;
+}
+.row-container {
+    display: flex;
+    align-items: center;
+}
