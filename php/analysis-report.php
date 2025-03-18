@@ -137,11 +137,12 @@ $organiser_id = $_SESSION['organiser_id'];
                         responsive: true,  // 保持响应式
                         maintainAspectRatio: false, // 允许调整宽高
                         layout: {
-                            padding: {
+                            padding:{
                                 left: 20,
-                                right: 20,
-                                top: 10,
-                                bottom: 10
+                                right: 50,
+                                top: 20,
+                                bottom: 20,
+                                padding: 20,
                             }
                         },
                         plugins: {
