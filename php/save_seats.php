@@ -1,35 +1,32 @@
 <?php
-include '../inc/config.php'; 
+session_start();
+include '../inc/config.php';
 
-// Get JSON data from the request
-$data = json_decode(file_get_contents("php://input"), true);
-
-if (!$data) {
-    echo "No data received.";
-    exit;
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['success' => false, 'error' => 'Invalid request']);
+    exit();
 }
 
-try {
-    $pdo->beginTransaction(); // Start a transaction
+$data = json_decode(file_get_contents('php://input'), true);
+$event_id = $data['event_id'];
+$seats = $data['seats'];
 
-    $stmt = $pdo->prepare("INSERT INTO seats (event_id, seat_row, seat_number, category, price)
-                           VALUES (:event_id, :seat_row, :seat_number, :category, :price)
-                           ON DUPLICATE KEY UPDATE category = VALUES(category), price = VALUES(price)");
-
-    foreach ($data as $seat) {
-        $stmt->execute([
-            ':event_id' => $seat['event_id'],
-            ':seat_row' => $seat['seat_row'],
-            ':seat_number' => $seat['seat_number'],
-            ':category' => $seat['category'],
-            ':price' => $seat['price']
-        ]);
-    }
-
-    $pdo->commit();
-    echo "Seats successfully saved.";
-} catch (Exception $e) {
-    $pdo->rollBack();
-    echo "Error saving seats: " . $e->getMessage();
+if (!$event_id || empty($seats)) {
+    echo json_encode(['success' => false, 'error' => 'Missing event ID or seats data']);
+    exit();
 }
+
+$stmt = $conn->prepare("INSERT INTO event_seats (event_id, row_label, seat_number, category, price) 
+                        VALUES (?, ?, ?, ?, ?) 
+                        ON DUPLICATE KEY UPDATE category = VALUES(category), price = VALUES(price)");
+
+foreach ($seats as $seat) {
+    $stmt->bind_param("isssd", $event_id, $seat['row'], $seat['seat_number'], $seat['category'], $seat['price']);
+    $stmt->execute();
+}
+
+$stmt->close();
+$conn->close();
+
+echo json_encode(['success' => true]);
 ?>

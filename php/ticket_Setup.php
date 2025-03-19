@@ -13,6 +13,23 @@ $event_id = $_SESSION['selected_event'];
 $vip_price = $_SESSION['vip_price'];
 $regular_price = $_SESSION['regular_price'];
 $economy_price = $_SESSION['economy_price'];
+$selectedSeats = [];
+
+
+$query = "SELECT row_label, seat_number FROM event_seats WHERE event_id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $event_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+while ($row = $result->fetch_assoc())
+{
+    $selectedSeats[] = $row['row_label'] . $row['seat_number']; // e.g., "A1", "B5"
+}
+
+$stmt->close();
+$conn->close();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST')
 {
     // Read JSON input
@@ -45,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket Setup</title>
-    <link rel="stylesheet" href="../css/ticket_setup.css">
+    <link rel="stylesheet" href="../css/ticketSetup.css">
 </head>
 
 <body>
@@ -57,13 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 
     <!-- Ticket Pricing & Category Setup -->
     <h2>Manage Ticket Pricing</h2>
-    <label>
-        <input type="radio" name="selectionType" value="row" onclick="toggleSelection('row')"> Select Row
-    </label>
-    <label>
-        <input type="radio" name="selectionType" value="single" onclick="toggleSelection('single')" checked> Select
-        Single Seat
-    </label>
+    <button id="saveButton" onclick="save()">Save Seats</button>
 
     <table border="1">
         <thead>
@@ -80,7 +91,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         </tbody>
     </table>
 
-    <button id="saveButton" onclick="save()">Save Seats</button>
 
     <!-- Seat Editing Form (Hidden by Default) -->
     <div id="editForm" style="display:none;">
@@ -99,6 +109,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     </div>
 
     <script>
+        let selectedSeatsFromDB = <?= json_encode($selectedSeats) ?>;
+        console.log(<?= json_encode($selectedSeats) ?>);
         let selectionType = 'single';
         let selectedSeats = {}; // Stores individual seats {seatID: {row, seatNumber}}
         let selectedRows = {}; // Stores rows {rowLabel: [seatNumbers]}
@@ -116,37 +128,86 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             let seats = document.querySelectorAll(".seat");
 
             seats.forEach(seat => {
-                seat.addEventListener("click", function () {
-                    let seatNumber = seat.dataset.seatNumber;
-                    let rowLabel = seat.closest(".row").dataset.rowLabel;
+                let seatNumber = seat.dataset.seatNumber;
+                let rowLabel = seat.closest(".row").dataset.rowLabel; // 仍保留 rowLabel 以便后续存储
 
+                // **数据库检测：只检查 seatNumber**
+                if (selectedSeatsFromDB.includes(seatNumber)) {
+                    seat.classList.add("selected-seat"); // 变为已选状态
+                    seat.dataset.selected = "true"; // 让它变成不可选状态
+                }
+
+                // **点击事件**
+                seat.addEventListener("click", function () {
                     if (selectionType === "single") {
                         toggleSeatSelection(seat, rowLabel, seatNumber);
-                    } else if (selectionType === "row") {
-                        selectRow(seat.parentElement, rowLabel);
                     }
                 });
             });
         });
 
         function toggleSeatSelection(seat, rowLabel, seatNumber) {
-            let seatId = seat.dataset.seatId;  // 确保使用 seatId 作为唯一标识符
+            // **确保数据库座位不可更改**
+            if (selectedSeatsFromDB.includes(seatNumber)) {
+                return;
+            }
 
-            if (selectedSeats[seatId]) {
-                // 取消选中
+            if (selectedSeats[seatNumber]) {
+                // **取消选中**
                 seat.classList.remove("selected");
-                delete selectedSeats[seatId];
+                delete selectedSeats[seatNumber];
             } else {
-                // 选中
+                // **选中**
                 seat.classList.add("selected");
-                selectedSeats[seatId] = {
-                    row: rowLabel,
-                    seatNumber: seatNumber,
-                    seatId: seatId
+                selectedSeats[seatNumber] = {
+                    row: rowLabel,  // **存储时仍然记录 rowLabel**
+                    seatNumber: seatNumber
                 };
             }
 
             updateSeatTable();
+        }
+        
+        document.addEventListener("DOMContentLoaded", function () {
+            selectedSeatsFromDB.forEach(seatID => {
+                let seatElement = document.querySelector(`[data-seat-id="${seatID}"]`);
+
+                if (seatElement) {
+                    seatElement.classList.add("selected-seat"); // 加入青色背景
+                    seatElement.dataset.selected = "true"; // 让它变成不可选状态
+                }
+            });
+        });
+
+        function toggleSeat(seatID) {
+            let seat = document.getElementById(seatID);
+
+            // 如果座位已锁定，则解除选中
+            if (seat.dataset.selected === "true") {
+                removeSeatFromDB(seatID);
+            } else {
+                seat.classList.toggle("selected-seat");
+            }
+        }
+
+        function removeSeatFromDB(seatID) {
+            if (!confirm("确定要移除该座位吗？")) return;
+
+            fetch("remove_seat.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ event_id: <?= $_SESSION['selected_event']; ?>, seat_id: seatID })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById(seatID).classList.remove("selected-seat");
+                        document.getElementById(seatID).dataset.selected = "false";
+                    } else {
+                        alert("移除失败：" + data.error);
+                    }
+                })
+                .catch(error => console.error("Error:", error));
         }
 
 
@@ -257,6 +318,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             let seats = document.querySelectorAll(`.row-label:contains('${rowLabel}')`).parentElement.querySelectorAll(".seat");
             seats.forEach(seat => seat.classList.remove("selected"));
         }
+
+
+        function save() {
+            let eventId = <?= $_SESSION['selected_event']; ?>;
+            let seatsData = [];
+
+            // 遍历已选座位并收集数据
+            Object.keys(selectedSeats).forEach(seatID => {
+                let seat = selectedSeats[seatID];
+                let category = document.getElementById(`category-${seatID}`).value;
+                let price = document.getElementById(`price-${seatID}`).innerText;
+
+                seatsData.push({
+                    row: seat.row,
+                    seat_number: seatID,
+                    category: category,
+                    price: parseFloat(price)
+                });
+            });
+
+            if (seatsData.length === 0) {
+                alert("请至少选择一个座位！");
+                return;
+            }
+
+            // 发送 AJAX 请求
+            fetch('save_seats.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ event_id: eventId, seats: seatsData })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("座位已成功保存！");
+                        window.location.reload(); // 刷新页面
+                    } else {
+                        alert("保存失败：" + data.error);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
 
     </script>
 

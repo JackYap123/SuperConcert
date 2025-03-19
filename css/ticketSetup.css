@@ -91,7 +91,8 @@ table {
     background-color: #002855;
 }
 
-th, td {
+th,
+td {
     border: 1px solid gold;
     padding: 10px;
     text-align: center;
@@ -148,15 +149,25 @@ button:hover {
     border: none;
     cursor: pointer;
 }
+
 #saveButton:hover {
     background-color: #218838;
 }
+
 table {
-    margin: 0 auto; /* Centers the table */
-    border-collapse: collapse; /* Ensures borders are properly aligned */
-    text-align: center; /* Centers text inside the table */
+    margin: 0 auto;
+    /* Centers the table */
+    border-collapse: collapse;
+    /* Ensures borders are properly aligned */
+    text-align: center;
+    /* Centers text inside the table */
 }
 
-th, td {
-    padding: 10px; /* Adds spacing inside cells */
+th,
+td {
+    padding: 10px;
+    /* Adds spacing inside cells */
+}
+.selected-seat {
+    background-color: cyan !important; /* 青色 */
 }

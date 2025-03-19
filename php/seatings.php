@@ -66,7 +66,7 @@ include '../inc/config.php';
                 seat.classList.add("seat");
 
                 let seatNum = startNumber + s + 1;
-                let seatId = `${rowLabel}-${seatNum}`;
+                let seatId = `${rowLabel}${seatNum}`;
 
                 seat.innerText = seatNum;
                 seat.dataset.seatId = seatId;
