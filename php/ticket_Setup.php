@@ -1,6 +1,18 @@
 <?php
+session_start();
 include '../inc/config.php';
 
+if (!isset($_SESSION['selected_event']))
+{
+    header("Location: select_event.php");
+    exit();
+}
+
+// 选中的 event_id
+$event_id = $_SESSION['selected_event'];
+$vip_price = $_SESSION['vip_price'];
+$regular_price = $_SESSION['regular_price'];
+$economy_price = $_SESSION['economy_price'];
 if ($_SERVER['REQUEST_METHOD'] === 'POST')
 {
     // Read JSON input
@@ -90,6 +102,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         let selectionType = 'single';
         let selectedSeats = {}; // Stores individual seats {seatID: {row, seatNumber}}
         let selectedRows = {}; // Stores rows {rowLabel: [seatNumbers]}
+        let defaultPrices = {
+            VIP: <?= $vip_price ?>,
+            Regular: <?= $regular_price ?>,
+            Economy: <?= $economy_price ?>
+        };
 
         function toggleSelection(type) {
             selectionType = type;
@@ -175,41 +192,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 let seatNumbers = selectedRows[rowLabel];
                 let seatRange = `${seatNumbers[0]} - ${seatNumbers[seatNumbers.length - 1]}`;
 
+                let defaultCategory = "VIP";
+                let defaultPrice = defaultPrices[defaultCategory];
+
                 let row = `<tr id="row-${rowLabel}">
                 <td>${rowLabel}</td>
                 <td>${seatRange}</td>
                 <td>
-                    <select id="category-${rowLabel}">
+                    <select id="category-${rowLabel}" onchange="updatePrice('${rowLabel}')">
                         <option value="VIP">VIP</option>
                         <option value="Regular">Regular</option>
                         <option value="Economy">Economy</option>
                     </select>
                 </td>
-                <td><input type="number" id="price-${rowLabel}" min="0" placeholder="Set Price"></td>
+                <td id="price-${rowLabel}">${defaultPrice}</td> 
                 <td><button onclick="removeRow('${rowLabel}')">Remove</button></td>
             </tr>`;
                 seatTable.innerHTML += row;
+
+                document.getElementById(`category-${rowLabel}`).value = defaultCategory;
             });
 
             // Add Individual Seat selections (if any)
             Object.keys(selectedSeats).forEach(seatID => {
                 let seat = selectedSeats[seatID];
-                let row = `<tr id="seatRow-${seatID}">
-        <td>${seat.row}</td>
-        <td>${seatID}</td>  // 确保 seatID 正确捕获
-        <td>
-            <select id="category-${seatID}">
-                <option value="VIP">VIP</option>
-                <option value="Regular">Regular</option>
-                <option value="Economy">Economy</option>
-            </select>
-        </td>
-        <td><input type="number" id="price-${seatID}" min="0" placeholder="Set Price"></td>
-        <td><button onclick="removeSeat('${seatID}')">Remove</button></td>
-    </tr>`;
-                seatTable.innerHTML += row;
-            });
+                let defaultCategory = "VIP";
+                let defaultPrice = defaultPrices[defaultCategory];
 
+                let row = `<tr id="seatRow-${seatID}">
+                <td>${seat.row}</td>
+                <td>${seatID}</td>
+                <td>
+                    <select id="category-${seatID}" onchange="updatePrice('${seatID}')">
+                        <option value="VIP">VIP</option>
+                        <option value="Regular">Regular</option>
+                        <option value="Economy">Economy</option>
+                    </select>
+                </td>
+                <td id="price-${seatID}">${defaultPrice}</td> 
+                <td><button onclick="removeSeat('${seatID}')">Remove</button></td>
+            </tr>`;
+                seatTable.innerHTML += row;
+
+                document.getElementById(`category-${seatID}`).value = defaultCategory;
+            });
+        }
+        function updatePrice(seatID) {
+            let category = document.getElementById(`category-${seatID}`).value;
+            document.getElementById(`price-${seatID}`).innerText = defaultPrices[category];
         }
 
         function removeSeat(seatID) {
