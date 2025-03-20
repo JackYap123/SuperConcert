@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: ticket_setup.php"); // 选择完成后跳转
         exit();
     } else {
-        $error = "请选择一个活动并填写所有票价！";
+        $error = "Plese select an event and enter ticket prices.";
     }
 }
 ?>
@@ -37,10 +37,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>选择活动</title>
+    <title>Choose Event</title>
     <link rel="stylesheet" href="../css/ticketSetup.css">
     <style>
         body {
+            color: black;
+            font-size: 12px;
             font-family: Arial, sans-serif;
             display: flex;
             align-items: center;
@@ -80,29 +82,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
 <div class="container">
-    <h2>选择活动</h2>
+    <h2>Choose Event</h2>
 
     <?php if (isset($error)) echo "<p class='error'>$error</p>"; ?>
 
     <form method="post">
-        <label for="event">选择您的活动：</label>
+        <label for="event">Select Event:</label>
         <select name="event_id" id="event" required>
-            <option value="">请选择...</option>
+            <option value="">Please Select...</option>
             <?php while ($row = $result->fetch_assoc()) { ?>
                 <option value="<?= $row['event_id']; ?>"><?= $row['event_name']; ?></option>
             <?php } ?>
         </select>
 
-        <label for="vip_price">VIP 票价：</label>
-        <input type="number" name="vip_price" id="vip_price" placeholder="输入 VIP 票价" required>
+        <label for="vip_price">VIP Ticket Price:</label>
+        <input type="number" name="vip_price" id="vip_price" placeholder="Submit VIP Ticket Price" required>
 
-        <label for="regular_price">Regular 票价：</label>
-        <input type="number" name="regular_price" id="regular_price" placeholder="输入 Regular 票价" required>
+        <label for="regular_price">Regular Ticket Price:</label>
+        <input type="number" name="regular_price" id="regular_price" placeholder="Submit Regular Ticket Price" required>
 
-        <label for="economy_price">Economy 票价：</label>
-        <input type="number" name="economy_price" id="economy_price" placeholder="输入 Economy 票价" required>
+        <label for="economy_price">Economy Ticket Price:</label>
+        <input type="number" name="economy_price" id="economy_price" placeholder="Submit Economy Ticket Price" required>
 
-        <button type="submit">进入座位管理</button>
+        <button type="submit">Move to Seat Management</button>
     </form>
 </div>
 

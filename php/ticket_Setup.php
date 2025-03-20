@@ -191,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         }
 
         function removeSeatFromDB(seatID) {
-            if (!confirm("确定要移除该座位吗？")) return;
+            if (!confirm("You Sure You Want To Remove This Seat!!!")) return;
 
             fetch("remove_seat.php", {
                 method: "POST",
@@ -204,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                         document.getElementById(seatID).classList.remove("selected-seat");
                         document.getElementById(seatID).dataset.selected = "false";
                     } else {
-                        alert("移除失败：" + data.error);
+                        alert("Remove failed" + data.error);
                     }
                 })
                 .catch(error => console.error("Error:", error));
@@ -339,7 +339,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             });
 
             if (seatsData.length === 0) {
-                alert("请至少选择一个座位！");
+                alert("Please select at least one seat.");
                 return;
             }
 
@@ -352,10 +352,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert("座位已成功保存！");
+                        alert("Seats saved successfully");
                         window.location.reload(); // 刷新页面
                     } else {
-                        alert("保存失败：" + data.error);
+                        alert("Save failed" + data.error);
                     }
                 })
                 .catch(error => console.error('Error:', error));
