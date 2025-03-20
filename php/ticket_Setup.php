@@ -66,6 +66,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 </head>
 
 <body>
+    <div class="selected-seats-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Row</th>
+                    <th>Seat Number</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="selectedSeatsTable">
+                <!-- 已存座位将被动态加载 -->
+            </tbody>
+        </table>
+    </div>
+    
+
 
     <!-- Seat Selection Section (Imported from seatings.php) -->
     <div class="seat-selection">
@@ -167,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 
             updateSeatTable();
         }
-        
+
         document.addEventListener("DOMContentLoaded", function () {
             selectedSeatsFromDB.forEach(seatID => {
                 let seatElement = document.querySelector(`[data-seat-id="${seatID}"]`);
@@ -191,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         }
 
         function removeSeatFromDB(seatID) {
-            if (!confirm("You Sure You Want To Remove This Seat!!!")) return;
+            if (!confirm("Are you sure you want to remove this seat?")) return;
 
             fetch("remove_seat.php", {
                 method: "POST",
@@ -201,15 +219,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        document.getElementById(seatID).classList.remove("selected-seat");
-                        document.getElementById(seatID).dataset.selected = "false";
+                        document.getElementById(`selectedSeatRow-${seatID}`).remove(); // 从表格移除
+                        let seatElement = document.querySelector(`[data-seat-id="${seatID}"]`);
+                        if (seatElement) {
+                            seatElement.classList.remove("selected-seat"); // 取消高亮
+                            seatElement.dataset.selected = "false";
+                        }
                     } else {
-                        alert("Remove failed" + data.error);
+                        alert("Remove failed: " + data.error);
                     }
                 })
                 .catch(error => console.error("Error:", error));
         }
-
 
         function selectRow(rowElement, rowLabel) {
             let seats = rowElement.querySelectorAll(".seat");
@@ -298,6 +319,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 document.getElementById(`category-${seatID}`).value = defaultCategory;
             });
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            loadSavedSeats(); // 加载已选座位
+        });
+
+        // **加载数据库中的已存座位**
+        function loadSavedSeats() {
+            let eventId = <?= $_SESSION['selected_event']; ?>;
+
+            fetch('get_saved_seats.php?event_id=' + eventId)
+                .then(response => response.json())
+                .then(data => {
+                    let selectedSeatsTable = document.getElementById("selectedSeatsTable");
+                    selectedSeatsTable.innerHTML = ""; // 清空表格
+
+                    data.seats.forEach(seat => {
+                        let seatID = seat.seat_number;
+                        let rowLabel = seat.row_label;
+                        let category = seat.category;
+                        let price = seat.price;
+
+                        // **在前端高亮已存座位**
+                        let seatElement = document.querySelector(`[data-seat-id="${seatID}"]`);
+                        if (seatElement) {
+                            seatElement.classList.add("selected-seat");
+                            seatElement.dataset.selected = "true";
+                        }
+
+                        // **添加到表格**
+                        selectedSeatsTable.innerHTML += `
+                    <tr id="selectedSeatRow-${seatID}">
+                        <td>${rowLabel}</td>
+                        <td>${seatID}</td>
+                        <td>${category}</td>
+                        <td>${price}</td> 
+                        <td><button onclick="removeSeatFromDB('${seatID}')">Remove</button></td>
+                    </tr>
+                `;
+                    });
+                })
+                .catch(error => console.error("Error:", error));
+        }
+        // **在表格中显示已存座位**
+        function addSavedSeatToTable(rowLabel, seatID, category, price) {
+            let seatTable = document.getElementById("seatTable");
+
+            let row = `<tr id="savedSeatRow-${seatID}">
+        <td>${rowLabel}</td>
+        <td>${seatID}</td>
+        <td>${category}</td>
+        <td>${price}</td> 
+        <td><button onclick="removeSeatFromDB('${seatID}')">Remove</button></td>
+    </tr>`;
+
+            seatTable.innerHTML += row;
+        }
+
+
+
         function updatePrice(seatID) {
             let category = document.getElementById(`category-${seatID}`).value;
             document.getElementById(`price-${seatID}`).innerText = defaultPrices[category];

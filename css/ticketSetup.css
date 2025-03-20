@@ -168,6 +168,38 @@ td {
     padding: 10px;
     /* Adds spacing inside cells */
 }
+
 .selected-seat {
-    background-color: cyan !important; /* 青色 */
+    background-color: cyan !important;
+    /* 青色 */
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.selected-seats-container {
+    max-height: 300px;
+    /* 限制高度 */
+    overflow-y: auto;
+    /* 超出时显示滚动条 */
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+.selected-seats-container table {
+    width: 100%;
+    /* 让表格铺满容器 */
+    border-collapse: collapse;
+}
+
+.selected-seats-container th,
+.selected-seats-container td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    /* 添加表格边框 */
+    text-align: center;
+}
+
+.selected-seats-container:hover {
+    overscroll-behavior: contain;
+    /* 防止滚动影响整个页面 */
 }

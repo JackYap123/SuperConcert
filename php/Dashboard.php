@@ -81,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
                 </div>
             </a>
 
-            <a href="ticket_setup.php" class="card-link">
+            <a href="select_event.php" class="card-link">
                 <div class="card">
                     <i class="fas fa-ticket-alt fa-3x" style="color: black;"></i>
                     <h2>Ticket Setup</h2>
