@@ -63,69 +63,159 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket Setup</title>
     <link rel="stylesheet" href="../css/ticketSetup.css">
+    <style>
+        body {
+            display: flex;
+            background-color: #001f3f;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        body .container {
+            color: black;
+            font-size: 12px;
+        }
+
+        /* 固定 sidebar 在左侧 */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: #222;
+            color: white;
+        }
+
+        /* 让 container 居中 */
+        .content {
+
+            justify-content: center;
+            align-items: center;
+            margin-left: 250px;
+            /* 避开 sidebar */
+            width: calc(100% - 250px);
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        select,
+        input,
+        button {
+            width: 60%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .vip-seat {
+            background-color: cyan !important;
+            /* VIP - 青色 */
+        }
+
+        .regular-seat {
+            background-color: purple !important;
+            /* Regular - 紫色 */
+            color: white;
+        }
+
+        .economy-seat {
+            background-color: yellow !important;
+            /* Economy - 黄色 */
+        }
+    </style>
 </head>
 
 <body>
-    <div class="selected-seats-container">
-        <table>
+    <?php
+    include "../inc/sidebar.php";
+    ?>
+    <div class="content">
+        <div class="selected-seats-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Row</th>
+                        <th>Seat Number</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="selectedSeatsTable">
+                    <!-- 已存座位将被动态加载 -->
+                </tbody>
+            </table>
+        </div>
+
+
+
+        <!-- Seat Selection Section (Imported from seatings.php) -->
+        <div class="seat-selection">
+            <?php include 'seatings.php'; ?>
+        </div>
+
+        <!-- Ticket Pricing & Category Setup -->
+        <h2>Manage Ticket Pricing</h2>
+        <button id="saveButton" onclick="save()" style="width:10%">Save Seats</button>
+
+        <table border="1">
             <thead>
                 <tr>
                     <th>Row</th>
-                    <th>Seat Number</th>
+                    <th>Seat No</th>
                     <th>Category</th>
                     <th>Price</th>
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody id="selectedSeatsTable">
-                <!-- 已存座位将被动态加载 -->
+            <tbody id="seatTable">
+                <!-- Seats will be loaded dynamically -->
             </tbody>
         </table>
+
+
+        <!-- Seat Editing Form (Hidden by Default) -->
+        <div id="editForm" style="display:none;">
+            <h3>Edit Seat</h3>
+            <input type="hidden" id="seatID">
+            <label>Category:</label>
+            <select id="category">
+                <option value="VIP">VIP</option>
+                <option value="Regular">Regular</option>
+                <option value="Economy">Economy</option>
+            </select><br>
+            <label>Price:</label>
+            <input type="number" id="price"><br>
+            <button onclick="saveSeat()">Save</button>
+            <button onclick="cancelEdit()">Cancel</button>
+        </div>
     </div>
-    
-
-
-    <!-- Seat Selection Section (Imported from seatings.php) -->
-    <div class="seat-selection">
-        <?php include 'seatings.php'; ?>
-    </div>
-
-    <!-- Ticket Pricing & Category Setup -->
-    <h2>Manage Ticket Pricing</h2>
-    <button id="saveButton" onclick="save()">Save Seats</button>
-
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Row</th>
-                <th>Seat No</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="seatTable">
-            <!-- Seats will be loaded dynamically -->
-        </tbody>
-    </table>
-
-
-    <!-- Seat Editing Form (Hidden by Default) -->
-    <div id="editForm" style="display:none;">
-        <h3>Edit Seat</h3>
-        <input type="hidden" id="seatID">
-        <label>Category:</label>
-        <select id="category">
-            <option value="VIP">VIP</option>
-            <option value="Regular">Regular</option>
-            <option value="Economy">Economy</option>
-        </select><br>
-        <label>Price:</label>
-        <input type="number" id="price"><br>
-        <button onclick="saveSeat()">Save</button>
-        <button onclick="cancelEdit()">Cancel</button>
-    </div>
-
     <script>
         let selectedSeatsFromDB = <?= json_encode($selectedSeats) ?>;
         console.log(<?= json_encode($selectedSeats) ?>);
@@ -194,6 +284,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                     seatElement.classList.add("selected-seat"); // 加入青色背景
                     seatElement.dataset.selected = "true"; // 让它变成不可选状态
                 }
+                console.log("Seat Element for seatID:", seatID, seatElement);
+
             });
         });
 
@@ -209,27 +301,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         }
 
         function removeSeatFromDB(seatID) {
+            console.log("Removing seat:", seatID); // 调试信息
+
             if (!confirm("Are you sure you want to remove this seat?")) return;
 
             fetch("remove_seat.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ event_id: <?= $_SESSION['selected_event']; ?>, seat_id: seatID })
+                body: JSON.stringify({
+                    event_id: <?= $_SESSION['selected_event']; ?>,
+                    seat_id: seatID
+                })
             })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        document.getElementById(`selectedSeatRow-${seatID}`).remove(); // 从表格移除
-                        let seatElement = document.querySelector(`[data-seat-id="${seatID}"]`);
-                        if (seatElement) {
-                            seatElement.classList.remove("selected-seat"); // 取消高亮
-                            seatElement.dataset.selected = "false";
+                        console.log("Seat removed successfully:", seatID);
+
+                        // **1. 从表格中删除选中座位的行**
+                        let rowElement = document.getElementById(`selectedSeatRow-${seatID}`);
+                        if (rowElement) {
+                            rowElement.remove();
                         }
+
+                        // **2. 更新 UI 颜色**
+                        reloadSeatSection();
                     } else {
                         alert("Remove failed: " + data.error);
                     }
                 })
                 .catch(error => console.error("Error:", error));
+        }
+
+        function reloadSeatSection() {
+            fetch("fetch_seats.php?event_id=<?= $_SESSION['selected_event']; ?>")
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById("seatContainer").innerHTML = html; // 替换座位区域
+                })
+                .catch(error => console.error("Error reloading seats:", error));
         }
 
         function selectRow(rowElement, rowLabel) {
@@ -269,56 +379,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             let seatTable = document.getElementById("seatTable");
             seatTable.innerHTML = "";
 
-            // Add Row-based selections
-            Object.keys(selectedRows).forEach(rowLabel => {
-                let seatNumbers = selectedRows[rowLabel];
-                let seatRange = `${seatNumbers[0]} - ${seatNumbers[seatNumbers.length - 1]}`;
-
-                let defaultCategory = "VIP";
-                let defaultPrice = defaultPrices[defaultCategory];
-
-                let row = `<tr id="row-${rowLabel}">
-                <td>${rowLabel}</td>
-                <td>${seatRange}</td>
-                <td>
-                    <select id="category-${rowLabel}" onchange="updatePrice('${rowLabel}')">
-                        <option value="VIP">VIP</option>
-                        <option value="Regular">Regular</option>
-                        <option value="Economy">Economy</option>
-                    </select>
-                </td>
-                <td id="price-${rowLabel}">${defaultPrice}</td> 
-                <td><button onclick="removeRow('${rowLabel}')">Remove</button></td>
-            </tr>`;
-                seatTable.innerHTML += row;
-
-                document.getElementById(`category-${rowLabel}`).value = defaultCategory;
-            });
-
-            // Add Individual Seat selections (if any)
             Object.keys(selectedSeats).forEach(seatID => {
                 let seat = selectedSeats[seatID];
                 let defaultCategory = "VIP";
                 let defaultPrice = defaultPrices[defaultCategory];
 
                 let row = `<tr id="seatRow-${seatID}">
-                <td>${seat.row}</td>
-                <td>${seatID}</td>
-                <td>
-                    <select id="category-${seatID}" onchange="updatePrice('${seatID}')">
-                        <option value="VIP">VIP</option>
-                        <option value="Regular">Regular</option>
-                        <option value="Economy">Economy</option>
-                    </select>
-                </td>
-                <td id="price-${seatID}">${defaultPrice}</td> 
-                <td><button onclick="removeSeat('${seatID}')">Remove</button></td>
-            </tr>`;
+            <td>${seat.row}</td>
+            <td>${seatID}</td>
+            <td>
+                <select id="category-${seatID}" onchange="updatePrice('${seatID}'); applyCategoryColor(document.querySelector('[data-seat-id=${seatID}]'), this.value)">
+                    <option value="VIP">VIP</option>
+                    <option value="Regular">Regular</option>
+                    <option value="Economy">Economy</option>
+                </select>
+            </td>
+            <td id="price-${seatID}">${defaultPrice}</td> 
+            <td><button onclick="removeSeat('${seatID}')">Remove</button></td>
+        </tr>`
+
                 seatTable.innerHTML += row;
 
                 document.getElementById(`category-${seatID}`).value = defaultCategory;
+
+                // 应用颜色
+                let seatElement = document.querySelector(`[data-seat-id="${seatID}"]`);
+                applyCategoryColor(seatElement, defaultCategory);
             });
         }
+
 
         document.addEventListener("DOMContentLoaded", function () {
             loadSavedSeats(); // 加载已选座位
@@ -331,6 +420,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             fetch('get_saved_seats.php?event_id=' + eventId)
                 .then(response => response.json())
                 .then(data => {
+                    console.log("Data from server:", data);
+
                     let selectedSeatsTable = document.getElementById("selectedSeatsTable");
                     selectedSeatsTable.innerHTML = ""; // 清空表格
 
@@ -340,41 +431,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                         let category = seat.category;
                         let price = seat.price;
 
-                        // **在前端高亮已存座位**
+                        // **获取座位元素**
                         let seatElement = document.querySelector(`[data-seat-id="${seatID}"]`);
                         if (seatElement) {
                             seatElement.classList.add("selected-seat");
                             seatElement.dataset.selected = "true";
+                            seatElement.style.backgroundColor = "red"; // 修改颜色
+                            // **应用分类颜色**
+                            applyCategoryColor(seatElement, category);
                         }
+
 
                         // **添加到表格**
                         selectedSeatsTable.innerHTML += `
-                    <tr id="selectedSeatRow-${seatID}">
-                        <td>${rowLabel}</td>
-                        <td>${seatID}</td>
-                        <td>${category}</td>
-                        <td>${price}</td> 
-                        <td><button onclick="removeSeatFromDB('${seatID}')">Remove</button></td>
-                    </tr>
-                `;
+                <tr id="selectedSeatRow-${seatID}">
+                    <td>${rowLabel}</td>
+                    <td>${seatID}</td>
+                    <td>${category}</td>
+                    <td>${price}</td> 
+                    <td><button onclick="removeSeatFromDB('${seatID}')">Remove</button></td>
+                </tr>`;
                     });
                 })
                 .catch(error => console.error("Error:", error));
         }
+
         // **在表格中显示已存座位**
-        function addSavedSeatToTable(rowLabel, seatID, category, price) {
-            let seatTable = document.getElementById("seatTable");
+        function applyCategoryColor(seatElement, category) {
+            if (!seatElement) return;
 
-            let row = `<tr id="savedSeatRow-${seatID}">
-        <td>${rowLabel}</td>
-        <td>${seatID}</td>
-        <td>${category}</td>
-        <td>${price}</td> 
-        <td><button onclick="removeSeatFromDB('${seatID}')">Remove</button></td>
-    </tr>`;
+            // 先清除所有颜色
+            seatElement.classList.remove("vip-seat", "regular-seat", "economy-seat");
 
-            seatTable.innerHTML += row;
+            // 根据类别添加相应的颜色
+            if (category === "VIP") {
+                seatElement.classList.add("vip-seat");
+            } else if (category === "Regular") {
+                seatElement.classList.add("regular-seat");
+            } else if (category === "Economy") {
+                seatElement.classList.add("economy-seat");
+            }
         }
+
 
 
 

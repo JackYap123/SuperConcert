@@ -4,6 +4,8 @@ include '../inc/config.php';
 
 $event_id = $_GET['event_id'];
 
+header('Content-Type: application/json'); // 确保返回 JSON
+
 $query = "SELECT * FROM event_seats WHERE event_id = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $event_id);
