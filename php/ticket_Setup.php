@@ -277,17 +277,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         }
 
         document.addEventListener("DOMContentLoaded", function () {
+            console.log("selectedSeatsFromDB:", selectedSeatsFromDB);
+
             selectedSeatsFromDB.forEach(seatID => {
                 let seatElement = document.querySelector(`[data-seat-id="${seatID}"]`);
 
                 if (seatElement) {
-                    seatElement.classList.add("selected-seat"); // 加入青色背景
-                    seatElement.dataset.selected = "true"; // 让它变成不可选状态
+                    seatElement.classList.add("selected-seat"); // 设为已选
+                    seatElement.dataset.selected = "true";
+                    seatElement.style.backgroundColor = "red";
+                } else {
+                    console.warn("Seat not found for seatID:", seatID);
                 }
-                console.log("Seat Element for seatID:", seatID, seatElement);
-
             });
         });
+
 
         function toggleSeat(seatID) {
             let seat = document.getElementById(seatID);
@@ -411,6 +415,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 
         document.addEventListener("DOMContentLoaded", function () {
             loadSavedSeats(); // 加载已选座位
+            setTimeout(() => {
+                let seatElement = document.querySelector(`[data-seat-id="${seatID}"]`);
+        console.log("Seat Element:", seatElement);
+    }, 1000);
         });
 
         // **加载数据库中的已存座位**
