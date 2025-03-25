@@ -5,7 +5,7 @@ include '../inc/config.php';
 // 检查是否已登录
 if (!isset($_SESSION['organiser_id']))
 {
-    header("Location: login.php");
+    header("Location: organiser_Login.php");
     exit();
 }
 

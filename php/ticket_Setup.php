@@ -274,6 +274,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             }
 
             updateSeatTable();
+            applyCategoryColor();
         }
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -392,7 +393,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             <td>${seat.row}</td>
             <td>${seatID}</td>
             <td>
-                <select id="category-${seatID}" onchange="updatePrice('${seatID}'); applyCategoryColor(document.querySelector('[data-seat-id=${seatID}]'), this.value)">
+                <select id="category-${seatID}" class="category-select" data-seat-id="${seatID}" 
+                    onchange="updatePrice('${seatID}'); 
+                            applyCategoryColor(document.querySelector('.seat[data-seat-id=\"${seatID}\"]'), this.value)">
                     <option value="VIP">VIP</option>
                     <option value="Regular">Regular</option>
                     <option value="Economy">Economy</option>
@@ -466,12 +469,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 
         // **在表格中显示已存座位**
         function applyCategoryColor(seatElement, category) {
-            if (!seatElement) return;
+            console.log("🔍 Debugging applyCategoryColor");
+            console.log("➡️ Seat element received:", seatElement);
+            console.log("➡️ Category received:", category);
 
-            // 先清除所有颜色
+            if (!seatElement) {
+                console.error("❌ Seat element not found! Check how it is being selected.");
+                console.log("📌 DOM seats:", document.querySelectorAll(".seat")); // Log all seats
+                return;
+            }
+
+            if (!category) {
+                console.error("❌ Category is undefined! Check how it is being passed.");
+                return;
+            }
+
+            console.log(`✅ Applying color for ${category} to`, seatElement);
+
+            // Remove all category classes first
             seatElement.classList.remove("vip-seat", "regular-seat", "economy-seat");
 
-            // 根据类别添加相应的颜色
+            // Apply the new category class
             if (category === "VIP") {
                 seatElement.classList.add("vip-seat");
             } else if (category === "Regular") {
@@ -480,6 +498,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 seatElement.classList.add("economy-seat");
             }
         }
+
+
+
 
 
 
@@ -547,6 +568,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 .catch(error => console.error('Error:', error));
         }
 
+        document.querySelectorAll(".category-select").forEach(select => {
+            select.addEventListener("change", function() {
+                let seatID = this.dataset.seatId;  // Get seatID from data attribute
+                let seatElement = document.querySelector(`[data-seat-id='${seatID}']`);
+                if (seatElement) {
+                    applyCategoryColor(seatElement, this.value);
+                } else {
+                    console.error(`Seat with ID ${seatID} not found`);
+                }
+            });
+        });
 
     </script>
 
