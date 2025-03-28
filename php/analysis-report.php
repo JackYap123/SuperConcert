@@ -26,7 +26,7 @@ $organiser_id = $_SESSION['organiser_id'];
     <?php include "../inc/sidebar.php"; ?>
 
     <div class="main-content">
-            <h1 class="header">Analytics Dashboard</h1>
+        <h1 class="header">Analytics Dashboard</h1>
         <div class="filter-container">
             <label for="dateFilter">Select Time Range:</label>
             <select id="dateFilter">
@@ -80,6 +80,8 @@ $organiser_id = $_SESSION['organiser_id'];
                 fetch("fetch_analytics.php?filter=" + filter)
                     .then(response => response.json())
                     .then(data => {
+                        console.log(data);  // Check if data is received correctly
+
                         updateTable(data);
                         updateChart(data);
                     });
@@ -114,50 +116,75 @@ $organiser_id = $_SESSION['organiser_id'];
                         labels: labels,
                         datasets: [
                             {
-                                label: "Ticket Sales",
+                                label: "🎟 Ticket Sales",
                                 data: ticketSales,
-                                backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                                backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                                borderRadius: 8,
                             },
                             {
-                                label: "Revenue (x100)",
+                                label: "💰 Revenue (x100)",
                                 data: revenue,
-                                backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                                backgroundColor: 'rgba(75, 192, 192, 0.8)',
+                                borderRadius: 8,
                             },
                             {
-                                label: "Seat Occupancy",
+                                label: "📍 Seat Occupancy",
                                 data: seatOccupancy,
-                                backgroundColor: 'rgba(255, 99, 132, 0.6)'
+                                backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                                borderRadius: 8,
                             }
                         ]
                     },
                     options: {
-                        responsive: true,  // 保持响应式
-                        maintainAspectRatio: false, // 允许调整宽高
+                        responsive: true,
+                        maintainAspectRatio: false,
                         layout: {
                             padding: {
                                 left: 20,
-                                right: 50,
+                                right: 20,
                                 top: 20,
                                 bottom: 20,
-                                padding: 20,
                             }
                         },
                         plugins: {
                             legend: {
                                 display: true,
-                                position: "top"
+                                position: "top",
+                                labels: {
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'
+                                    },
+                                    color: "#333"
+                                }
                             }
                         },
                         scales: {
                             x: {
                                 display: true,
                                 grid: { display: false },
-                                ticks: { autoSkip: false }
+                                ticks: {
+                                    autoSkip: false,
+                                    font: {
+                                        size: 12
+                                    },
+                                    color: "#333"
+                                }
                             },
                             y: {
                                 beginAtZero: true,
-                                grid: { display: true }
+                                grid: { color: "rgba(200, 200, 200, 0.5)" },
+                                ticks: {
+                                    font: {
+                                        size: 12
+                                    },
+                                    color: "#333"
+                                }
                             }
+                        },
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeInOutQuart'
                         }
                     }
                 });

@@ -5,12 +5,12 @@
 }
 
 body {
-    background: linear-gradient(135deg, #d3d3d3, #001f3f ); /* Gradient Background */
+    background: linear-gradient(135deg, #d3d3d3, #001f3f);
+    /* Gradient Background */
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    margin: 0;
     font-family: Arial, sans-serif;
 }
 
@@ -48,10 +48,10 @@ body {
     text-decoration: none;
     color: white;
     font-size: 16px;
-    font-weight: bold;
     display: block;
-    transition: 0.3s;
     padding: 10px;
+    border-radius: 8px;
+    transition: 0.3s;
 }
 
 .sidebar ul li a:hover {
@@ -60,14 +60,21 @@ body {
     border-radius: 5px;
 }
 
+
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+    background: #FFD700;
+    color: black;
+}
+
 .container {
     width: 100%;
-    max-width: 800px;
+    max-width: 900px;
     background: rgba(255, 255, 255, 0.9);
     padding: 20px;
     border-radius: 10px;
     text-align: center;
-    margin-left: 300px;
+    margin-left: 280px;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
 

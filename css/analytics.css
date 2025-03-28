@@ -2,46 +2,78 @@
     margin-top: 20px;
 }
 
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #FFD700;
+    color: black;
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-}
-
-.header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #ffd700;
-    color: black;
-    padding: 10px 20px;
     border-radius: 10px;
-    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
 }
 
 th {
-    background-color: #f2f2f2;
+    background-color: #012340;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 th,
 td {
-    padding: 8px;
-    border: 1px solid #ddd;
-    text-align: left;
+    padding: 14px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
 }
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+    transition: 0.3s;
+}
+
+td {
+    font-size: 15px;
+    color: #333;
+}
+
+
 
 .btn-container {
     margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
 }
 
 .btn {
-    padding: 10px;
-    margin-right: 10px;
+    padding: 12px;
     cursor: pointer;
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    transition: background 0.3s;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 .btn:hover {
@@ -50,6 +82,7 @@ td {
 
 body {
     display: flex;
+    background: #f8f9fa;
 }
 
 .sidebar {
@@ -60,15 +93,14 @@ body {
     top: 0;
     background-color: #012340;
     padding-top: 20px;
-    box-shadow: 2px 0 10px rgba(235, 230, 230, 0.868);
-
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15);
 }
 
 .sidebar h2 {
     color: #FFD700;
     text-align: center;
     margin-bottom: 20px;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
 }
 
@@ -78,7 +110,7 @@ body {
 }
 
 .sidebar ul li {
-    padding: 15px;
+    padding: 12px;
     text-align: center;
 }
 
@@ -88,14 +120,14 @@ body {
     font-size: 16px;
     font-weight: bold;
     display: block;
-    transition: 0.3s;
-    padding: 10px;
+    padding: 12px;
+    transition: background 0.3s;
 }
 
 .sidebar ul li a:hover {
     background: #FFD700;
     color: black;
-    border-radius: 5px;
+    border-radius: 8px;
 }
 
 .sidebar .logout {
@@ -107,25 +139,19 @@ body {
     text-decoration: none;
     color: white;
     font-weight: bold;
-    padding: 10px 20px;
+    padding: 12px 20px;
     background-color: #f4d160;
-    border-radius: 5px;
+    border-radius: 8px;
 }
 
 .sidebar .logout a:hover {
     background-color: #e4c150;
-}   
+}
 
 .main-content {
     flex-grow: 1;
     margin-left: 250px;
-    /* 让内容向右移动，避免被遮挡 */
     padding: 20px;
-}
-
-
-.hidden {
-    display: none;
 }
 
 .filter-container {
@@ -138,18 +164,22 @@ body {
 
 #chartSection {
     justify-content: center;
-    /* 居中 */
     align-items: center;
     width: 100%;
-    height: 400px;
-    /* 适当调整高度 */
-    max-width: 800px;
-    /* 限制最大宽度 */
+    height: 450px;
+    max-width: 900px;
     margin: 0 auto;
-    /* 居中对齐 */
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 canvas {
     max-width: 100% !important;
     height: auto !important;
+}
+
+.hidden {
+    display: none !important;
 }

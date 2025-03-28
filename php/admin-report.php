@@ -59,7 +59,8 @@ $utilization_percentage = number_format($data['utilization_percentage'], 2) ?? 0
         <ul>
             <li><a href="../php/admin_Dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
             <li><a href="../php/Register_Organizer.php"><i class="fas fa-user-plus"></i> Create Organizer</a></li>
-            <li><a href="../php/admin-report.php" class="active"><i class="fas fa-chart-bar"></i> Generate Report</a></li>
+            <li><a href="../php/admin-report.php" class="active"><i class="fas fa-chart-bar"></i> Generate Report</a>
+            </li>
         </ul>
     </div>
 
@@ -75,56 +76,151 @@ $utilization_percentage = number_format($data['utilization_percentage'], 2) ?? 0
             </select>
         </form>
         <div class="report-card">
-            <div id="reportSection">
-                <h2>Report Summary (<?= ucfirst($filter) ?> Report)</h2>
-                <p>Showing data from <b><?= $start_date ?></b> to <b><?= $end_date ?></b></p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Total Bookings</th>
-                            <th>Total Events Hosted</th>
-                            <th>Utilization (%)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><?= $total_bookings ?></td>
-                            <td><?= $total_events ?></td>
-                            <td><?= $utilization_percentage ?>%</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <h2>Booking Analysis</h2>
+            <div id="chartSection">
+                <canvas id="bookingChart"></canvas>
             </div>
         </div>
 
-        <div class="report-card">
-            <h2>Booking Trends</h2>
-            <canvas id="bookingChart"></canvas>
+        <div class="btn-container">
+            <button class="btn" id="toggleTableBtn">Show Table</button>
         </div>
-    </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const ctx = document.getElementById('bookingChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                    datasets: [{
-                        label: 'Total Bookings',
-                        data: [10, 20, 15, 30], // Replace with dynamic data
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: true }
+        <div class="report-card hidden" id="reportSection">
+            <h2>Report Summary (<?= ucfirst($filter) ?> Report)</h2>
+            <p>Showing data from <b><?= $start_date ?></b> to <b><?= $end_date ?></b></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Total Bookings</th>
+                        <th>Total Events Hosted</th>
+                        <th>Utilization (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><?= $total_bookings ?></td>
+                        <td><?= $total_events ?></td>
+                        <td><?= $utilization_percentage ?>%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                let adminReportChart;
+                let ctx = document.getElementById("bookingChart").getContext("2d");
+
+                function updateAdminReportChart(data) {
+                    let labels = ['Total Bookings', 'Total Events Hosted', 'Utilization (%)'];
+                    let bookings = data.total_bookings || 0;
+                    let events = data.total_events || 0;
+                    let utilization = data.utilization_percentage || 0;
+
+                    // Destroy existing chart before creating a new one
+                    if (adminReportChart) {
+                        adminReportChart.destroy();
                     }
+
+                    adminReportChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: "📅 Total Bookings",
+                                    data: [bookings, 0, 0],
+                                    backgroundColor: 'rgba(54, 162, 235, 0.9)',
+                                    borderRadius: 12,
+                                    borderSkipped: false
+                                },
+                                {
+                                    label: "🎭 Total Events Hosted",
+                                    data: [0, events, 0],
+                                    backgroundColor: 'rgba(255, 99, 132, 0.9)',
+                                    borderRadius: 12,
+                                    borderSkipped: false
+                                },
+                                {
+                                    label: "📊 Utilization (%)",
+                                    data: [0, 0, utilization],
+                                    backgroundColor: 'rgba(75, 192, 192, 0.9)',
+                                    borderRadius: 12,
+                                    borderSkipped: false
+                                }
+
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            layout: { padding: 20 },
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: "top",
+                                    labels: {
+                                        font: { size: 14, weight: 'bold' },
+                                        color: "#333"
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: "#222",
+                                    titleColor: "#fff",
+                                    bodyColor: "#fff",
+                                    borderWidth: 1,
+                                    borderColor: "#fff",
+                                    cornerRadius: 8
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    display: true,
+                                    grid: { display: false },
+                                    ticks: {
+                                        autoSkip: false,
+                                        font: {
+                                            size: 12
+                                        },
+                                        color: "#333"
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    grid: { color: "rgba(200, 200, 200, 0.5)" },
+                                    ticks: {
+                                        font: {
+                                            size: 12
+                                        },
+                                        color: "#333"
+                                    }
+                                }
+                            },
+                            animation: {
+                                duration: 1000,
+                                easing: 'easeInOutQuart'
+                            }
+                        }
+                    });
                 }
+
+                function fetchAdminReportData(filter = "monthly") {
+                    fetch(`admin-report-data.php?filter=${filter}`)
+                        .then(response => response.json())
+                        .then(data => updateAdminReportChart(data))
+                        .catch(error => console.error("Error fetching report data:", error));
+                }
+
+                fetchAdminReportData(); // Load default data on page load
+
+                document.getElementById("dateFilter").addEventListener("change", function () {
+                    fetchAdminReportData(this.value);
+                });
             });
-        });
-    </script>
+
+        </script>
 </body>
 
 </html>

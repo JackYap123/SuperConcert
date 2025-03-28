@@ -115,8 +115,8 @@ $conn->close();
         <h2>Admin Dashboard</h2>
         <ul>
             <li><a href="../php/admin_Dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="../php/Register_Organizer.php"><i class="fas fa-user-plus"></i> Create Organizer</a></li>
-            <li><a href="../php/admin-report.php" class="active"><i class="fas fa-chart-bar"></i> Generate Report</a></li>
+            <li><a href="../php/Register_Organizer.php" class="active"><i class="fas fa-user-plus"></i> Create Organizer</a></li>
+            <li><a href="../php/admin-report.php"><i class="fas fa-chart-bar"></i> Generate Report</a></li>
         </ul>
     </div>
     <div class="container">
