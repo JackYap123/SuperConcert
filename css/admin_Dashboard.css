@@ -8,6 +8,7 @@ body {
     background: linear-gradient(135deg, #d3d3d3, #001f3f);
     /* Gradient Background */
     width: 100%;
+    font-family: Arial, sans-serif;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -61,24 +62,6 @@ body {
     background: #FFD700;
     color: black;
     border-radius: 5px;
-}
-
-.sidebar .logout {
-    text-align: center;
-    margin-top: auto;
-}
-
-.sidebar .logout a {
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-    padding: 10px 20px;
-    background-color: #f4d160;
-    border-radius: 5px;
-}
-
-.sidebar .logout a:hover {
-    background-color: #e4c150;
 }
 
 /* Main Content */

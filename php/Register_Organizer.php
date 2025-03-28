@@ -104,18 +104,19 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/Register_Organizer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="../img/Logo.webp">
     <title>SuperConcert</title>
 </head>
 
 <body>
-    
+
     <div class="sidebar">
-        <h2>SuperConcert</h2>
+        <h2>Admin Dashboard</h2>
         <ul>
             <li><a href="../php/admin_Dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="../php/Register_Organizer.php"><i class="fas fa-users"></i> Create Organiser</a></li>
-            <li><a href="#"><i class="fas fa-users"></i> Generate Report</a></li>
+            <li><a href="../php/Register_Organizer.php"><i class="fas fa-user-plus"></i> Create Organizer</a></li>
+            <li><a href="../php/admin-report.php" class="active"><i class="fas fa-chart-bar"></i> Generate Report</a></li>
         </ul>
     </div>
     <div class="container">

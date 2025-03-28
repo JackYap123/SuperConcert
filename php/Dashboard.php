@@ -142,6 +142,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
                 </div>
             </a>
 
+            <a href="analysis-report.php" class="card-link">
+                <div class="card">
+                    <i class="fas fa-book fa-3x" style="color: black;"></i>
+                    <h2>Analysis Report</h2>
+                    <p>Check your result in report</p>
+                </div>
+            </a>
+
         </div>
     </div>
     <?php if ($is_first_login): ?>
