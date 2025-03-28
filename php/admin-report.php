@@ -218,7 +218,20 @@ $utilization_percentage = number_format($data['utilization_percentage'], 2) ?? 0
                 document.getElementById("dateFilter").addEventListener("change", function () {
                     fetchAdminReportData(this.value);
                 });
+
+                document.getElementById('toggleTableBtn').addEventListener('click', function () {
+                    const reportSection = document.getElementById('reportSection');
+                    if (reportSection.classList.contains('hidden')) {
+                        reportSection.classList.remove('hidden');
+                        this.textContent = "Hide Table";
+                    } else {
+                        reportSection.classList.add('hidden');
+                        this.textContent = "Show Table";
+                    }
+                });
             });
+
+
 
         </script>
 </body>
