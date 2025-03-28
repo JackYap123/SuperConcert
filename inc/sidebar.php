@@ -10,6 +10,6 @@
         <li><a href="#"><i class="fas fa-magnifying-glass"></i> Browse Events</a></li>
         <li><a href="#"><i class="fas fa-ticket-alt"></i>Ticket Setup</a></li>
         <li><a href="#"><i class="fas fa-users"></i> Waiting List</a></li>
-        <li><a href="#"><i class="fas fa-book"></i> Analysis Report</a></li>
+        <li><a href="../php/analysis-report.php"><i class="fas fa-book"></i> Analysis Report</a></li>
     </ul>
 </div>

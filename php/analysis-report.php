@@ -23,13 +23,10 @@ $organiser_id = $_SESSION['organiser_id'];
 </head>
 
 <body>
-    <div class="sidebar">
-        <?php include "../inc/sidebar.php"; ?>
-    </div>
+    <?php include "../inc/sidebar.php"; ?>
 
     <div class="main-content">
-        <h1>Analytics Dashboard</h1>
-
+            <h1 class="header">Analytics Dashboard</h1>
         <div class="filter-container">
             <label for="dateFilter">Select Time Range:</label>
             <select id="dateFilter">
@@ -137,7 +134,7 @@ $organiser_id = $_SESSION['organiser_id'];
                         responsive: true,  // 保持响应式
                         maintainAspectRatio: false, // 允许调整宽高
                         layout: {
-                            padding:{
+                            padding: {
                                 left: 20,
                                 right: 50,
                                 top: 20,
@@ -155,7 +152,7 @@ $organiser_id = $_SESSION['organiser_id'];
                             x: {
                                 display: true,
                                 grid: { display: false },
-                                ticks: { autoSkip: false}
+                                ticks: { autoSkip: false }
                             },
                             y: {
                                 beginAtZero: true,
