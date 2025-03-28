@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         $_SESSION['vip_price'] = $_POST['vip_price'];
         $_SESSION['regular_price'] = $_POST['regular_price'];
         $_SESSION['economy_price'] = $_POST['economy_price'];
+        $_SESSION['promotion'] = !empty($_POST['promotion']) ? $_POST['promotion'] : null;
 
         header("Location: ticket_setup.php"); // 选择完成后跳转
         exit();
@@ -157,6 +158,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 <label for="economy_price">Economy Ticket Price:</label>
                 <input type="number" name="economy_price" id="economy_price" placeholder="Submit Economy Ticket Price"
                     required>
+
+                <label for="promotion">Promotion (Code or Discount):</label>
+                <input type="text" name="promotion" id="promotion" placeholder="Enter promotion code or discount (optional)">
+
 
                 <button type="submit">Move to Seat Management</button>
             </form>
