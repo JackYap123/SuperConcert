@@ -395,7 +395,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             <td>
                 <select id="category-${seatID}" class="category-select" data-seat-id="${seatID}" 
                     onchange="updatePrice('${seatID}'); 
-                            applyCategoryColor(document.querySelector('.seat[data-seat-id=\"${seatID}\"]'), this.value)">
+                            applyCategoryColor(document.querySelector('.seat[data-seat-id="${seatID}"]'), this.value)">
                     <option value="VIP">VIP</option>
                     <option value="Regular">Regular</option>
                     <option value="Economy">Economy</option>

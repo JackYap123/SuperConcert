@@ -19,24 +19,36 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 // 处理表单提交
-if ($_SERVER['REQUEST_METHOD'] === 'POST')
-{
-    if (!empty($_POST['event_id']) && isset($_POST['vip_price'], $_POST['regular_price'], $_POST['economy_price']))
-    {
-        $_SESSION['selected_event'] = $_POST['event_id'];
-        $_SESSION['vip_price'] = $_POST['vip_price'];
-        $_SESSION['regular_price'] = $_POST['regular_price'];
-        $_SESSION['economy_price'] = $_POST['economy_price'];
-        $_SESSION['promotion'] = !empty($_POST['promotion']) ? $_POST['promotion'] : null;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!empty($_POST['event_id']) && isset($_POST['vip_price'], $_POST['regular_price'], $_POST['economy_price'], $_POST['promotion'])) {
+        $event_id = $_POST['event_id'];
+        $vip_price = $_POST['vip_price'];
+        $regular_price = $_POST['regular_price'];
+        $economy_price = $_POST['economy_price'];
+        $promotion = !empty($_POST['promotion']) ? $_POST['promotion'] : null; // 允许为空
 
-        header("Location: ticket_setup.php"); // 选择完成后跳转
-        exit();
-    }
-    else
-    {
-        $error = "Plese select an event and enter ticket prices.";
+        // 更新数据库，将 promotion 存入 event 表
+        $updateQuery = "UPDATE event SET vip_price = ?, regular_price = ?, economy_price = ?, promotion = ? WHERE event_id = ?";
+        $stmt = $conn->prepare($updateQuery);
+        $stmt->bind_param("dddsi", $vip_price, $regular_price, $economy_price, $promotion, $event_id);
+
+        if ($stmt->execute()) {
+            $_SESSION['selected_event'] = $event_id;
+            $_SESSION['vip_price'] = $vip_price;
+            $_SESSION['regular_price'] = $regular_price;
+            $_SESSION['economy_price'] = $economy_price;
+            $_SESSION['promotion'] = $promotion;
+
+            header("Location: ticket_setup.php"); // 跳转到下一步
+            exit();
+        } else {
+            $error = "Failed to update event promotion.";
+        }
+    } else {
+        $error = "Please select an event and enter ticket prices.";
     }
 }
+
 ?>
 
 
