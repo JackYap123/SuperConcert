@@ -96,7 +96,7 @@ $conn->close();
         <div id="organiser" class="form-section active">
             <h2>Organiser Login</h2>
             <form action="organiser_login.php" method="POST">
-                <input type="hidden" name="login_organiser" value="1">
+                <input type="hidden" name="login_organiser">
                 <div class="form-group">
                     <label for="organiser-email">Email</label>
                     <input type="email" id="organiser-email" name="email" placeholder="Enter your email" required>
