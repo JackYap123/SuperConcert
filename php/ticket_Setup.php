@@ -126,10 +126,24 @@ include '../inc/config.php';
         let selectedSeats = {};
         let selectedSeatsFromDB = [];
         let defaultPrices = {
-            VIP: 120,
-            Regular: 90,
-            Economy: 60
+            VIP: 0,
+            Regular: 0,
+            Economy: 0
         };
+
+        // Try to load from localStorage
+        const stored = localStorage.getItem("defaultPrices");
+        if (stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                defaultPrices.VIP = parseFloat(parsed.VIP) || 0;
+                defaultPrices.Regular = parseFloat(parsed.Regular) || 0;
+                defaultPrices.Economy = parseFloat(parsed.Economy) || 0;
+            } catch (e) {
+                console.warn("Could not parse saved ticket prices from localStorage.");
+            }
+        }
+
 
         const eventId = <?= $_SESSION['selected_event'] ?? 1 ?>;
 
