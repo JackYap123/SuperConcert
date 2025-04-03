@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         $email = $_POST['email'];
         $phone_number = $_POST['phone_number'];
         $organization_name = $_POST['organization_name'] ?? null;
-        $default_password = substr(md5(uniqid()), 0, 8); // 生成8位随机默认密码
+        $default_password = substr(md5(uniqid()), 0, 8);
 
         $checkEmailQuery = "SELECT email FROM Organisers WHERE email = ?";
         $checkStmt = $conn->prepare($checkEmailQuery);
@@ -70,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
                     $mail->send();
                     echo "<script> 
-                            alert('Registration Successful! Your account has been created successfully.</p><p>Please check your email for login details.');
+                            alert('Registration Successful! Your account has been created successfully.Please check your email for login details.');
                             window.location.href='Register_Organizer.php';
                         </script>";
                 }
@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             else
             {
                 echo "<script> 
-                    alert('Error: " . $stmt->error ."');
+                    alert('Error: " . $stmt->error . "');
                     window.location.href='Register_Organizer.php';
                   </script>";
             }
@@ -104,21 +104,20 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/Register_Organizer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="../img/Logo.webp">
     <title>SuperConcert</title>
 </head>
 
 <body>
+
     <div class="sidebar">
-        <h1>Admin Dashboard</h1>
+        <h2>Admin Dashboard</h2>
         <ul>
             <li><a href="../php/admin_Dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="../php/Register_Organizer.php"><i class="fas fa-users"></i> Create Organiser</a></li>
-            <li><a href="#"><i class="fas fa-users"></i> Generate Report</a></li>
+            <li><a href="../php/Register_Organizer.php" class="active"><i class="fas fa-user-plus"></i> Create Organizer</a></li>
+            <li><a href="../php/admin-report.php"><i class="fas fa-chart-bar"></i> Generate Report</a></li>
         </ul>
-        <div class="logout">
-            <a href="../logout.php">Logout</a>
-        </div>
     </div>
     <div class="container">
         <!-- Register Form -->
@@ -149,5 +148,13 @@ $conn->close();
         </div>
     </div>
 </body>
+<script>
+    function confirmLogout() {
+        let confirmAction = confirm("Are you sure you want to logout?");
+        if (confirmAction) {
+            window.location.href = '../php/admin_Login.php';
+        }
+    }
+</script>
 
 </html>

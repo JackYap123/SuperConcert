@@ -25,20 +25,18 @@ $organisers = $result->fetch_all(MYSQLI_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../css/admin_Dashboard.css">
 </head>
 
 <body>
     <div class="sidebar">
-        <h1>Admin Dashboard</h1>
+        <h2>Admin Dashboard</h2>
         <ul>
-            <li><a href="../php/admin_Dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="../php/Register_Organizer.php"><i class="fas fa-users"></i> Create Organiser</a></li>
-            <li><a href="#"><i class="fas fa-users"></i> Generate Report</a></li>
+            <li><a href="../php/admin_Dashboard.php"class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="../php/Register_Organizer.php"><i class="fas fa-user-plus"></i> Create Organizer</a></li>
+            <li><a href="../php/admin-report.php" ><i class="fas fa-chart-bar"></i> Generate Report</a></li>
         </ul>
-        <div class="logout">
-            <a href="../logout.php">Logout</a>
-        </div>
     </div>
 
     <div class="main-content">
@@ -74,6 +72,14 @@ $organisers = $result->fetch_all(MYSQLI_ASSOC);
             </table>
         </div>
     </div>
+    <script>
+        function confirmLogout() {
+            let confirmAction = confirm("Are you sure you want to logout?");
+            if (confirmAction) {
+                window.location.href = '../php/admin_Login.php';
+            }
+        }
+    </script>
 </body>
 
 </html>

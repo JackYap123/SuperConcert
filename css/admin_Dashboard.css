@@ -5,73 +5,69 @@
 }
 
 body {
+    background: linear-gradient(135deg, #d3d3d3, #001f3f);
+    /* Gradient Background */
+    width: 100%;
     font-family: Arial, sans-serif;
-    background-color: #f4f6f9;
-    color: #333;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
 }
 
 /* Sidebar */
+
+
 .sidebar {
-    background-color: #0d1b2a;
-    color: white;
     width: 250px;
     height: 100vh;
     position: fixed;
-    top: 0;
     left: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    top: 0;
+    background-color: #012340;
+    padding-top: 20px;
+    box-shadow: 2px 0 10px rgba(235, 230, 230, 0.868);
+
 }
 
-.sidebar h1 {
-    font-size: 24px;
-    color: #f4d160;
+.sidebar h2 {
+    color: #FFD700;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .sidebar ul {
     list-style: none;
+    padding: 0;
 }
 
 .sidebar ul li {
-    margin: 15px 0;
+    padding: 15px;
+    text-align: center;
 }
 
 .sidebar ul li a {
     text-decoration: none;
     color: white;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-}
-
-.sidebar ul li a i {
-    margin-right: 10px;
+    font-size: 16px;
+    display: block;
+    padding: 10px;
+    border-radius: 8px;
+    transition: 0.3s;
 }
 
 .sidebar ul li a:hover {
-    color: #f4d160;
-}
-
-.sidebar .logout {
-    text-align: center;
-    margin-top: auto;
-}
-
-.sidebar .logout a {
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-    padding: 10px 20px;
-    background-color: #f4d160;
+    background: #FFD700;
+    color: black;
     border-radius: 5px;
 }
 
-.sidebar .logout a:hover {
-    background-color: #e4c150;
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+    background: #FFD700;
+    color: black;
 }
 
 /* Main Content */
@@ -107,78 +103,80 @@ body {
 }
 
 /* Table Section */
+/* Table Section */
 .table-section {
     margin-top: 30px;
+    display: flex;
+    justify-content: center;
 }
 
 .table-section table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .table-section table th,
 .table-section table td {
-    padding: 12px 15px;
+    padding: 14px 20px;
     text-align: left;
-    border-bottom: 1px solid #e4e4e4;
 }
 
 .table-section table th {
-    background-color: #0d1b2a;
+    background-color: #012340;
     color: white;
+    text-transform: uppercase;
+    font-weight: bold;
 }
 
-.table-section table tr:hover {
+.table-section table tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-/* Status Labels */
-/* Status Labels */
-.table-section table .action-btn {
-    padding: 5px 10px;
+.table-section table tr:hover {
+    background-color: #e0f7fa;
+    transition: 0.3s;
+}
+
+/* Table Borders */
+.table-section table th:first-child,
+.table-section table td:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.table-section table th:last-child,
+.table-section table td:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+/* Action Buttons */
+.action-btn {
+    padding: 6px 12px;
     border-radius: 5px;
     font-size: 14px;
     font-weight: bold;
-    display: inline-block;
     text-align: center;
     min-width: 80px;
-    /* Ensures uniform width */
+    display: inline-block;
+    transition: 0.3s ease-in-out;
 }
 
-/* Accepted - Green */
-.table-section table .accepted {
+.accepted {
     background-color: #4CAF50;
     color: white;
 }
 
-/* Pending - Orange */
-.table-section table .pending {
+.pending {
     background-color: #FFA500;
     color: white;
 }
 
-
-/* Ensure text visibility */
-.table-section table td {
-    color: #333;
-    /* Dark text for better contrast */
-}
-
-
-.table-section table .edit-btn {
-    background-color: #4CAF50;
-}
-
-.table-section table .delete-btn {
-    background-color: #f44336;
-}
-
-.table-section table .edit-btn:hover {
-    background-color: #45a049;
-}
-
-.table-section table .delete-btn:hover {
-    background-color: #e53935;
+/* Improve Buttons */
+.action-btn:hover {
+    filter: brightness(1.1);
+    transform: scale(1.05);
 }
