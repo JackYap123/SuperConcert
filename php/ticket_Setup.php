@@ -96,7 +96,7 @@ include '../inc/config.php';
             border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
-            margin-top: 20px;
+            margin: 20px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             transition: background-color 0.3s ease;
         }
@@ -122,9 +122,6 @@ include '../inc/config.php';
     </div>
     <div class="main-content">
         <div class="stage">STAGE</div>
-
-        <div class="stage">STAGE</div>
-
         <div class="seat-container">
             <div class="section-label">Front Stage</div>
             <div class="section" id="frontStage"></div>
@@ -239,12 +236,13 @@ include '../inc/config.php';
 
         function toggleSeatSelection(seat, rowLabel, seatNumber, seatID) {
             if (selectedSeats[seatID]) {
-                seat.classList.remove("selected");
+                seat.classList.remove("selected", "vip-seat", "regular-seat", "economy-seat");
                 delete selectedSeats[seatID];
             } else {
                 seat.classList.add("selected");
                 selectedSeats[seatID] = { row: rowLabel, seatNumber };
             }
+
 
             updateSeatTable();
         }

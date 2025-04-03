@@ -54,28 +54,7 @@ body {
     user-select: none;
     transition: all 0.3s ease;
 }
-.seat:hover {
-    transform: scale(1.1);
-}
-.seat.selected {
-    background-color: green;
-    color: white;
-}
-.seat.reserved {
-    background-color: red;
-    cursor: not-allowed;
-}
-.seat.vip {
-    background-color: gold;
-}
-.seat.general {
-    background-color: blue;
-    color: white;
-}
-.seat.balcony {
-    background-color: purple;
-    color: white;
-}
+
 .row-container {
     display: flex;
     align-items: center;

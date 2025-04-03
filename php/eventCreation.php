@@ -7,18 +7,15 @@ if (!isset($_SESSION['organiser_id'])) {
     exit();
 }
 
-$organizerId = $_SESSION['organiser_id']; // 从Session获取organiser_id
+$organizerId = $_SESSION['organiser_id'];
 
-
-if ($_SERVER["REQUEST_METHOD"] == "POST")
-{
-    $eventName = trim($_POST["eventName"]); // Trim to avoid unnecessary spaces
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $eventName = trim($_POST["eventName"]);
     $eventDate = $_POST["eventDate"];
     $eventTime = $_POST["eventTime"];
     $eventDuration = $_POST["eventDuration"];
     $eventDescription = $_POST["eventDescription"];
 
-    // Check if event name already exists
     $checkQuery = "SELECT COUNT(*) FROM event WHERE event_name = ? AND organizer_id = ?";
     $stmt = $conn->prepare($checkQuery);
     $stmt->bind_param("si", $eventName, $organizerId);
@@ -26,70 +23,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     $stmt->bind_result($count);
     $stmt->fetch();
     $stmt->close();
-    if ($count > 0)
-    {
+
+    if ($count > 0) {
         echo "<script>
             document.addEventListener('DOMContentLoaded', function() {
                 var eventExistsModal = new bootstrap.Modal(document.getElementById('eventExistsModal'));
                 eventExistsModal.show();
             });
         </script>";
-    }
-    else
-    {
-        // Handle Image Upload
-        $targetDir = "../img/"; // Directory to store images
+    } else {
+        $targetDir = "../img/";
         $fileName = basename($_FILES["eventCover"]["name"]);
-        $uniqueFileName = time() . "_" . $fileName; // Unique filename to avoid conflicts
+        $uniqueFileName = time() . "_" . $fileName;
         $targetFilePath = $targetDir . $uniqueFileName;
         $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
 
-        // Allowed file types
         $allowedTypes = array("jpg", "jpeg", "png", "gif");
 
-        if (in_array($fileType, $allowedTypes))
-        {
-            if (move_uploaded_file($_FILES["eventCover"]["tmp_name"], $targetFilePath))
-            {
-                // Insert event into the database
+        if (in_array($fileType, $allowedTypes)) {
+            if (move_uploaded_file($_FILES["eventCover"]["tmp_name"], $targetFilePath)) {
                 $sql = "INSERT INTO event (organizer_id, event_name, event_date, event_time, event_duration, event_description, file_name) 
                         VALUES (?, ?, ?, ?, ?, ?, ?)";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("issssss", $organizerId, $eventName, $eventDate, $eventTime, $eventDuration, $eventDescription, $uniqueFileName);
 
-                if ($stmt->execute())
-                {
+                if ($stmt->execute()) {
                     echo "<script>
                         document.addEventListener('DOMContentLoaded', function() {
                             var successModal = new bootstrap.Modal(document.getElementById('successModal'));
                             successModal.show();
                         });
                     </script>";
-                }
-                else
-                {
+                } else {
                     echo "<script>alert('Error: " . $stmt->error . "');</script>";
                 }
-
-            }
-            else
-            {
+            } else {
                 echo "<script>alert('File upload failed.');</script>";
             }
-        }
-        else
-        {
+        } else {
             echo "<script>alert('Invalid file type. Only JPG, JPEG, PNG, and GIF files are allowed.');</script>";
         }
     }
 }
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -98,7 +77,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
-
 <body>
     <!-- Success Modal -->
     <div id="successModal" class="modal fade" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
@@ -108,27 +86,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     <h5 class="modal-title" id="successModalLabel">Success!</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    Event created successfully!
-                </div>
+                <div class="modal-body">Event created successfully!</div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Event Name Exists Modal -->
-    <div id="eventExistsModal" class="modal fade" tabindex="-1" aria-labelledby="eventExistsModalLabel"
-        aria-hidden="true">
+
+    <!-- Event Exists Modal -->
+    <div id="eventExistsModal" class="modal fade" tabindex="-1" aria-labelledby="eventExistsModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="eventExistsModalLabel">Event Name Taken</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    Error: Event name already exists. Please choose a different name.
-                </div>
+                <div class="modal-body">Event name already exists for your account. Please choose another.</div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">OK</button>
                 </div>
@@ -136,10 +110,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         </div>
     </div>
 
-    <!-- Sidebar Navigation -->
-    <?php
-    include "../inc/sidebar.php";
-    ?>
+    <!-- Sidebar -->
+    <?php include "../inc/sidebar.php"; ?>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -151,7 +123,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             <?php endif; ?>
 
             <form action="eventCreation.php" method="POST" enctype="multipart/form-data">
-
                 <div class="mb-3">
                     <label for="eventName" class="form-label">Event Name:</label>
                     <input type="text" id="eventName" name="eventName" class="form-control" required>
@@ -174,8 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
                 <div class="mb-3">
                     <label for="eventDescription" class="form-label">Description:</label>
-                    <textarea id="eventDescription" name="eventDescription" class="form-control" rows="3"
-                        required></textarea>
+                    <textarea id="eventDescription" name="eventDescription" class="form-control" rows="3" required></textarea>
                 </div>
 
                 <div class="mb-3">
@@ -185,6 +155,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
                 <button type="submit" class="btn btn-primary w-100">Create Event</button>
             </form>
+
             <a href="browseEvent.php" class="btn btn-secondary w-100 mt-3">View Existing Events</a>
         </div>
     </div>
@@ -202,15 +173,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                 altFormat: "F j, Y",
                 theme: "material_blue"
             });
-
-            document.addEventListener("DOMContentLoaded", function () {
-                var successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                if (document.getElementById('successModal')) {
-                    successModal.show();
-                }
-            });
         });
     </script>
 </body>
-
 </html>

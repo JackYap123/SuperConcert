@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
 
 <body>
     <?php
-        include "../inc/sidebar.php";
+    include "../inc/sidebar.php";
     ?>
     <?php if ($show_modal): ?>
         <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
@@ -110,8 +110,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
                 </div>
             </a>
 
-            <a href="select_event.php" class="card-link">
-
             <a href="browseEvent.php" class="card-link">
                 <div class="card">
                     <i class="fas fa-magnifying-glass fa-3x" style="color: black;"></i>
@@ -120,7 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
                 </div>
             </a>
 
-            <a href="ticket_setup.php" class="card-link">
+            <a href="select_event.php" class="card-link">
                 <div class="card">
                     <i class="fas fa-ticket-alt fa-3x" style="color: black;"></i>
                     <h2>Ticket Setup</h2>
@@ -136,13 +134,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
                 </div>
             </a>
 
-            <a href="create_promotion.php" class="card-link">
-                <div class="card">
-                    <i class="fas fa-tags fa-3x" style="color: black;"></i>
-                    <h2>Create Promotion</h2>
-                    <p>Set up promotional campaigns</p>
-                </div>
-            </a>
 
             <a href="analysis-report.php" class="card-link">
                 <div class="card">
@@ -181,12 +172,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        <?php if ($show_modal): ?>
-            var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
-            myModal.show();
-        <?php endif; ?>
-    });
+        document.addEventListener("DOMContentLoaded", function () {
+            <?php if ($show_modal): ?>
+                var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
+                myModal.show();
+            <?php endif; ?>
+        });
     </script>
 
 
