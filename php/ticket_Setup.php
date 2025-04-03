@@ -2,494 +2,308 @@
 session_start();
 include '../inc/config.php';
 
-if (!isset($_SESSION['selected_event']))
-{
-    header("Location: select_event.php");
-    exit();
-}
-
-// 选中的 event_id
-$event_id = $_SESSION['selected_event'];
-$vip_price = $_SESSION['vip_price'];
-$regular_price = $_SESSION['regular_price'];
-$economy_price = $_SESSION['economy_price'];
-$selectedSeats = [];
-
-
-$query = "SELECT row_label, seat_number FROM event_seats WHERE event_id = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("i", $event_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-while ($row = $result->fetch_assoc())
-{
-    $selectedSeats[] = $row['row_label'] . $row['seat_number']; // e.g., "A1", "B5"
-}
-
-$stmt->close();
-$conn->close();
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST')
-{
-    // Read JSON input
-    $data = json_decode(file_get_contents("php://input"), true);
-
-    if (!$data)
-    {
-        echo json_encode(["message" => "Invalid JSON input"]);
-        exit;
-    }
-
-    $stmt = $conn->prepare("INSERT INTO seats (event_id, seat_row, seat_number, category, price) VALUES (?, ?, ?, ?, ?)");
-
-    foreach ($data as $seat)
-    {
-        $stmt->bind_param("isisd", $seat['event_id'], $seat['rowLabel'], $seat['seatID'], $seat['category'], $seat['price']);
-        $stmt->execute();
-    }
-
-    echo json_encode(["message" => "Seats saved successfully!"]);
-    exit;
-}
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket Setup</title>
-    <link rel="stylesheet" href="../css/ticketSetup.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Theater Seat Selection</title>
+    <link rel="stylesheet" href="../css/seatings.css" />
     <style>
-        body {
-            display: flex;
-            background-color: #001f3f;
-            font-family: Arial, sans-serif;
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-        }
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f8f8;
+        margin: 0;
+        padding: 20px;
+    }
 
-        body .container {
-            color: black;
-            font-size: 12px;
-        }
+    .stage {
+        text-align: center;
+        background: #333;
+        color: white;
+        padding: 15px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 8px;
+        margin-bottom: 25px;
+    }
 
-        /* 固定 sidebar 在左侧 */
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-            background: #222;
-            color: white;
-        }
+    .seat-container {
+        margin-bottom: 40px;
+    }
 
-        /* 让 container 居中 */
-        .content {
+    .section-label {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 20px 0 10px;
+    }
 
-            justify-content: center;
-            align-items: center;
-            margin-left: 250px;
-            /* 避开 sidebar */
-            width: calc(100% - 250px);
-        }
+    .row-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 6px;
+    }
 
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            text-align: center;
-        }
+    .row-label {
+        width: 40px;
+        text-align: center;
+        font-weight: bold;
+    }
 
-        select,
-        input,
-        button {
-            width: 60%;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
+    .row {
+        display: flex;
+        gap: 4px;
+    }
 
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
+    .seat {
+        width: 30px;
+        height: 30px;
+        background-color: #ccc;
+        text-align: center;
+        line-height: 30px;
+        border-radius: 4px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+    .seat:hover {
+        background-color: #999;
+    }
 
-        .error {
-            color: red;
-        }
+    .selected {
+        background-color: green !important;
+        color: white;
+    }
 
-        .vip-seat {
-            background-color: cyan !important;
-            /* VIP - 青色 */
-        }
+    .selected-seat {
+        border: 2px solid red !important;
+    }
 
-        .regular-seat {
-            background-color: purple !important;
-            /* Regular - 紫色 */
-            color: white;
-        }
+    .vip-seat {
+        background-color: gold !important;
+        color: black;
+    }
 
-        .economy-seat {
-            background-color: yellow !important;
-            /* Economy - 黄色 */
-        }
-    </style>
+    .regular-seat {
+        background-color: dodgerblue !important;
+        color: white;
+    }
+
+    .economy-seat {
+        background-color: mediumseagreen !important;
+        color: white;
+    }
+
+    table {
+        color:black;
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #eee;
+        text-align: center;
+    }
+
+    th {
+        background-color: #333;
+        color: white;
+        text-transform: uppercase;
+        font-size: 14px;
+    }
+
+    tr:hover {
+        background-color: #f2f2f2;
+    }
+
+    button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+</style>
+
 </head>
 
 <body>
-    <?php
-    include "../inc/sidebar.php";
-    ?>
-    <div class="content">
-        <div class="selected-seats-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Row</th>
-                        <th>Seat Number</th>
-                        <th>Category</th>
-                        <th>Price</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="selectedSeatsTable">
-                    <!-- 已存座位将被动态加载 -->
-                </tbody>
-            </table>
-        </div>
 
+    <div class="stage">STAGE</div>
 
+    <div class="seat-container">
+        <div class="section-label">Front Stage</div>
+        <div class="section" id="frontStage"></div>
 
-        <!-- Seat Selection Section (Imported from seatings.php) -->
-        <div class="seat-selection">
-            <?php include 'seatings.php'; ?>
-        </div>
-
-        <!-- Ticket Pricing & Category Setup -->
-        <h2>Manage Ticket Pricing</h2>
-        <button id="saveButton" onclick="save()" style="width:10%">Save Seats</button>
-
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Row</th>
-                    <th>Seat No</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="seatTable">
-                <!-- Seats will be loaded dynamically -->
-            </tbody>
-        </table>
-
-
-        <!-- Seat Editing Form (Hidden by Default) -->
-        <div id="editForm" style="display:none;">
-            <h3>Edit Seat</h3>
-            <input type="hidden" id="seatID">
-            <label>Category:</label>
-            <select id="category">
-                <option value="VIP">VIP</option>
-                <option value="Regular">Regular</option>
-                <option value="Economy">Economy</option>
-            </select><br>
-            <label>Price:</label>
-            <input type="number" id="price"><br>
-            <button onclick="saveSeat()">Save</button>
-            <button onclick="cancelEdit()">Cancel</button>
-        </div>
+        <div class="section-label">Balcony</div>
+        <div class="section" id="balcony"></div>
     </div>
+
+    <h3>Selected Seats</h3>
+    <table id="seatTable">
+        <thead>
+            <tr>
+                <th>Row</th>
+                <th>Seat</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <button onclick="save()">💾 Save Selection</button>
+
     <script>
-        let selectedSeatsFromDB = <?= json_encode($selectedSeats) ?>;
-        console.log(<?= json_encode($selectedSeats) ?>);
-        let selectionType = 'single';
-        let selectedSeats = {}; // Stores individual seats {seatID: {row, seatNumber}}
-        let selectedRows = {}; // Stores rows {rowLabel: [seatNumbers]}
+        let selectedSeats = {};
+        let selectedSeatsFromDB = [];
         let defaultPrices = {
-            VIP: <?= $vip_price ?>,
-            Regular: <?= $regular_price ?>,
-            Economy: <?= $economy_price ?>
+            VIP: 120,
+            Regular: 90,
+            Economy: 60
         };
 
-        function toggleSelection(type) {
-            selectionType = type;
+        const eventId = <?= $_SESSION['selected_event'] ?? 1 ?>;
+
+        function createSeating(containerId, rows, leftSeats, midSeats, rightSeats, isBalcony) {
+            const container = document.getElementById(containerId);
+            const rowLabels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+            const balconyRowLabels = rowLabels.map(label => label + label);
+
+            for (let r = 0; r < rows; r++) {
+                const rowLabel = isBalcony ? balconyRowLabels[r] : rowLabels[r];
+                const rowContainer = document.createElement("div");
+                rowContainer.classList.add("row-container");
+
+                const labelLeft = document.createElement("div");
+                labelLeft.classList.add("row-label");
+                labelLeft.innerText = rowLabel;
+
+                const left = createSeatRow(leftSeats, r * (leftSeats + midSeats + rightSeats), rowLabel);
+                const mid = createSeatRow(midSeats, r * (leftSeats + midSeats + rightSeats) + leftSeats, rowLabel);
+                const right = createSeatRow(rightSeats, r * (leftSeats + midSeats + rightSeats) + leftSeats + midSeats, rowLabel);
+
+                const labelRight = document.createElement("div");
+                labelRight.classList.add("row-label");
+                labelRight.innerText = rowLabel;
+
+                rowContainer.append(labelLeft, left, mid, right, labelRight);
+                container.appendChild(rowContainer);
+            }
         }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            let seats = document.querySelectorAll(".seat");
+        function createSeatRow(seats, start, rowLabel) {
+            const row = document.createElement("div");
+            row.classList.add("row");
+            row.dataset.rowLabel = rowLabel;
 
-            seats.forEach(seat => {
-                let seatNumber = seat.dataset.seatNumber;
-                let rowLabel = seat.closest(".row").dataset.rowLabel; // 仍保留 rowLabel 以便后续存储
+            for (let i = 0; i < seats; i++) {
+                const seat = document.createElement("div");
+                seat.classList.add("seat");
 
-                // **数据库检测：只检查 seatNumber**
-                if (selectedSeatsFromDB.includes(seatNumber)) {
-                    seat.classList.add("selected-seat"); // 变为已选状态
-                    seat.dataset.selected = "true"; // 让它变成不可选状态
+                const seatNum = start + i + 1;
+                const seatID = `${rowLabel}${seatNum}`;
+
+                seat.innerText = seatNum;
+                seat.dataset.seatId = seatID;
+                seat.dataset.seatNumber = seatNum;
+
+                if (selectedSeatsFromDB.includes(seatID)) {
+                    seat.classList.add("selected-seat");
+                    seat.dataset.selected = "true";
+                    seat.style.backgroundColor = "red";
                 }
 
-                // **点击事件**
                 seat.addEventListener("click", function () {
-                    if (selectionType === "single") {
-                        toggleSeatSelection(seat, rowLabel, seatNumber);
-                    }
+                    if (seat.classList.contains("selected-seat")) return;
+                    toggleSeatSelection(seat, rowLabel, seatNum, seatID);
                 });
-            });
-        });
 
-        function toggleSeatSelection(seat, rowLabel, seatNumber) {
-            // **确保数据库座位不可更改**
-            if (selectedSeatsFromDB.includes(seatNumber)) {
-                return;
+                row.appendChild(seat);
             }
 
-            if (selectedSeats[seatNumber]) {
-                // **取消选中**
+            return row;
+        }
+
+        function toggleSeatSelection(seat, rowLabel, seatNumber, seatID) {
+            if (selectedSeats[seatID]) {
                 seat.classList.remove("selected");
-                delete selectedSeats[seatNumber];
+                delete selectedSeats[seatID];
             } else {
-                // **选中**
                 seat.classList.add("selected");
-                selectedSeats[seatNumber] = {
-                    row: rowLabel,  // **存储时仍然记录 rowLabel**
-                    seatNumber: seatNumber
-                };
-            }
-
-            updateSeatTable();
-            applyCategoryColor();
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            console.log("selectedSeatsFromDB:", selectedSeatsFromDB);
-
-            selectedSeatsFromDB.forEach(seatID => {
-                let seatElement = document.querySelector(`[data-seat-id="${seatID}"]`);
-
-                if (seatElement) {
-                    seatElement.classList.add("selected-seat"); // 设为已选
-                    seatElement.dataset.selected = "true";
-                    seatElement.style.backgroundColor = "red";
-                } else {
-                    console.warn("Seat not found for seatID:", seatID);
-                }
-            });
-        });
-
-
-        function toggleSeat(seatID) {
-            let seat = document.getElementById(seatID);
-
-            // 如果座位已锁定，则解除选中
-            if (seat.dataset.selected === "true") {
-                removeSeatFromDB(seatID);
-            } else {
-                seat.classList.toggle("selected-seat");
-            }
-        }
-
-        function removeSeatFromDB(seatID) {
-            console.log("Removing seat:", seatID); // 调试信息
-
-            if (!confirm("Are you sure you want to remove this seat?")) return;
-
-            fetch("remove_seat.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    event_id: <?= $_SESSION['selected_event']; ?>,
-                    seat_id: seatID
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        console.log("Seat removed successfully:", seatID);
-
-                        // **1. 从表格中删除选中座位的行**
-                        let rowElement = document.getElementById(`selectedSeatRow-${seatID}`);
-                        if (rowElement) {
-                            rowElement.remove();
-                        }
-
-                        // **2. 更新 UI 颜色**
-                        reloadSeatSection();
-                    } else {
-                        alert("Remove failed: " + data.error);
-                    }
-                })
-                .catch(error => console.error("Error:", error));
-        }
-
-        function reloadSeatSection() {
-            fetch("fetch_seats.php?event_id=<?= $_SESSION['selected_event']; ?>")
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById("seatContainer").innerHTML = html; // 替换座位区域
-                })
-                .catch(error => console.error("Error reloading seats:", error));
-        }
-
-        function selectRow(rowElement, rowLabel) {
-            let seats = rowElement.querySelectorAll(".seat");
-            let seatNumbers = [];
-
-            // Check if the row is already selected
-            let isRowSelected = selectedRows[rowLabel] !== undefined;
-
-            if (isRowSelected) {
-                // Unselect row
-                seats.forEach(seat => {
-                    let seatNumber = seat.dataset.seatNumber;
-                    seat.classList.remove("selected");
-                });
-
-                delete selectedRows[rowLabel]; // Remove from selectedRows
-            } else {
-                // Select row
-                seats.forEach(seat => {
-                    let seatNumber = seat.dataset.seatNumber;
-                    if (!seat.classList.contains("selected")) {
-                        seat.classList.add("selected");
-                        seatNumbers.push(seatNumber);
-                    }
-                });
-
-                if (seatNumbers.length > 0) {
-                    selectedRows[rowLabel] = seatNumbers;
-                }
+                selectedSeats[seatID] = { row: rowLabel, seatNumber };
             }
 
             updateSeatTable();
         }
 
         function updateSeatTable() {
-            let seatTable = document.getElementById("seatTable");
-            seatTable.innerHTML = "";
+            const tbody = document.querySelector("#seatTable tbody");
+            tbody.innerHTML = "";
 
-            Object.keys(selectedSeats).forEach(seatID => {
-                let seat = selectedSeats[seatID];
-                let defaultCategory = "VIP";
-                let defaultPrice = defaultPrices[defaultCategory];
+            Object.entries(selectedSeats).forEach(([seatID, seat]) => {
+                const defaultCategory = "VIP";
+                const defaultPrice = defaultPrices[defaultCategory];
 
-                let row = `<tr id="seatRow-${seatID}">
-            <td>${seat.row}</td>
-            <td>${seatID}</td>
-            <td>
-                <select id="category-${seatID}" class="category-select" data-seat-id="${seatID}" 
-                    onchange="updatePrice('${seatID}'); 
-                            applyCategoryColor(document.querySelector('.seat[data-seat-id="${seatID}"]'), this.value)">
-                    <option value="VIP">VIP</option>
-                    <option value="Regular">Regular</option>
-                    <option value="Economy">Economy</option>
-                </select>
-            </td>
-            <td id="price-${seatID}">${defaultPrice}</td> 
-            <td><button onclick="removeSeat('${seatID}')">Remove</button></td>
-        </tr>`
+                const row = document.createElement("tr");
+                row.id = `seatRow-${seatID}`;
+                row.innerHTML = `
+        <td>${seat.row}</td>
+        <td>${seatID}</td>
+        <td>
+          <select id="category-${seatID}" class="category-select" data-seat-id="${seatID}">
+            <option value="VIP">VIP</option>
+            <option value="Regular">Regular</option>
+            <option value="Economy">Economy</option>
+          </select>
+        </td>
+        <td id="price-${seatID}">${defaultPrice}</td>
+        <td><button onclick="removeSeat('${seatID}')">Remove</button></td>
+      `;
 
-                seatTable.innerHTML += row;
+                tbody.appendChild(row);
 
                 document.getElementById(`category-${seatID}`).value = defaultCategory;
+                applyCategoryColor(document.querySelector(`[data-seat-id="${seatID}"]`), defaultCategory);
 
-                // 应用颜色
-                let seatElement = document.querySelector(`[data-seat-id="${seatID}"]`);
-                applyCategoryColor(seatElement, defaultCategory);
+                document.getElementById(`category-${seatID}`).addEventListener("change", function () {
+                    const seatElement = document.querySelector(`[data-seat-id="${seatID}"]`);
+                    updatePrice(seatID);
+                    applyCategoryColor(seatElement, this.value);
+                });
             });
         }
 
-
-        document.addEventListener("DOMContentLoaded", function () {
-            loadSavedSeats(); // 加载已选座位
-            setTimeout(() => {
-                let seatElement = document.querySelector(`[data-seat-id="${seatID}"]`);
-        console.log("Seat Element:", seatElement);
-    }, 1000);
-        });
-
-        // **加载数据库中的已存座位**
-        function loadSavedSeats() {
-            let eventId = <?= $_SESSION['selected_event']; ?>;
-
-            fetch('get_saved_seats.php?event_id=' + eventId)
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Data from server:", data);
-
-                    let selectedSeatsTable = document.getElementById("selectedSeatsTable");
-                    selectedSeatsTable.innerHTML = ""; // 清空表格
-
-                    data.seats.forEach(seat => {
-                        let seatID = seat.seat_number;
-                        let rowLabel = seat.row_label;
-                        let category = seat.category;
-                        let price = seat.price;
-
-                        // **获取座位元素**
-                        let seatElement = document.querySelector(`[data-seat-id="${seatID}"]`);
-                        if (seatElement) {
-                            seatElement.classList.add("selected-seat");
-                            seatElement.dataset.selected = "true";
-                            seatElement.style.backgroundColor = "red"; // 修改颜色
-                            // **应用分类颜色**
-                            applyCategoryColor(seatElement, category);
-                        }
-
-
-                        // **添加到表格**
-                        selectedSeatsTable.innerHTML += `
-                <tr id="selectedSeatRow-${seatID}">
-                    <td>${rowLabel}</td>
-                    <td>${seatID}</td>
-                    <td>${category}</td>
-                    <td>${price}</td> 
-                    <td><button onclick="removeSeatFromDB('${seatID}')">Remove</button></td>
-                </tr>`;
-                    });
-                })
-                .catch(error => console.error("Error:", error));
+        function updatePrice(seatID) {
+            const category = document.getElementById(`category-${seatID}`).value;
+            document.getElementById(`price-${seatID}`).innerText = defaultPrices[category];
         }
 
-        // **在表格中显示已存座位**
         function applyCategoryColor(seatElement, category) {
-            console.log("🔍 Debugging applyCategoryColor");
-            console.log("➡️ Seat element received:", seatElement);
-            console.log("➡️ Category received:", category);
+            if (!seatElement) return;
 
-            if (!seatElement) {
-                console.error("❌ Seat element not found! Check how it is being selected.");
-                console.log("📌 DOM seats:", document.querySelectorAll(".seat")); // Log all seats
-                return;
-            }
-
-            if (!category) {
-                console.error("❌ Category is undefined! Check how it is being passed.");
-                return;
-            }
-
-            console.log(`✅ Applying color for ${category} to`, seatElement);
-
-            // Remove all category classes first
+            // Remove all category colors first
             seatElement.classList.remove("vip-seat", "regular-seat", "economy-seat");
 
-            // Apply the new category class
+            // Apply category color
             if (category === "VIP") {
                 seatElement.classList.add("vip-seat");
             } else if (category === "Regular") {
@@ -500,42 +314,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         }
 
 
-
-
-
-
-
-        function updatePrice(seatID) {
-            let category = document.getElementById(`category-${seatID}`).value;
-            document.getElementById(`price-${seatID}`).innerText = defaultPrices[category];
-        }
-
         function removeSeat(seatID) {
             delete selectedSeats[seatID];
-            document.getElementById(`seatRow-${seatID}`).remove();
-            document.querySelector(`.seat[data-seat-id="${seatID}"]`)?.classList.remove("selected");
+            document.getElementById(`seatRow-${seatID}`)?.remove();
+            document.querySelector(`[data-seat-id="${seatID}"]`)?.classList.remove("selected");
         }
-
-
-        function removeRow(rowLabel) {
-            delete selectedRows[rowLabel];
-            document.getElementById(`row-${rowLabel}`).remove();
-
-            // Unselect all seats in that row
-            let seats = document.querySelectorAll(`.row-label:contains('${rowLabel}')`).parentElement.querySelectorAll(".seat");
-            seats.forEach(seat => seat.classList.remove("selected"));
-        }
-
 
         function save() {
-            let eventId = <?= $_SESSION['selected_event']; ?>;
-            let seatsData = [];
+            const seatsData = [];
 
-            // 遍历已选座位并收集数据
-            Object.keys(selectedSeats).forEach(seatID => {
-                let seat = selectedSeats[seatID];
-                let category = document.getElementById(`category-${seatID}`).value;
-                let price = document.getElementById(`price-${seatID}`).innerText;
+            for (const seatID in selectedSeats) {
+                const seat = selectedSeats[seatID];
+                const category = document.getElementById(`category-${seatID}`).value;
+                const price = document.getElementById(`price-${seatID}`).innerText;
 
                 seatsData.push({
                     row: seat.row,
@@ -543,46 +334,93 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                     category: category,
                     price: parseFloat(price)
                 });
-            });
+            }
 
             if (seatsData.length === 0) {
                 alert("Please select at least one seat.");
                 return;
             }
 
-            // 发送 AJAX 请求
             fetch('save_seats.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ event_id: eventId, seats: seatsData })
             })
-                .then(response => response.json())
+                .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        alert("Seats saved successfully");
-                        window.location.reload(); // 刷新页面
+                        alert("Seats saved successfully!");
+                        window.location.reload();
                     } else {
-                        alert("Save failed" + data.error);
+                        alert("Save failed: " + data.error);
                     }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(console.error);
         }
 
-        document.querySelectorAll(".category-select").forEach(select => {
-            select.addEventListener("change", function() {
-                let seatID = this.dataset.seatId;  // Get seatID from data attribute
-                let seatElement = document.querySelector(`[data-seat-id='${seatID}']`);
-                if (seatElement) {
-                    applyCategoryColor(seatElement, this.value);
-                } else {
-                    console.error(`Seat with ID ${seatID} not found`);
-                }
-            });
-        });
+        function removeSeatFromDB(seatID) {
+            if (!confirm("Are you sure you want to remove this seat?")) return;
 
+            fetch("remove_seat.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ event_id: eventId, seat_id: seatID })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Seat removed.");
+                        document.getElementById(`selectedSeatRow-${seatID}`)?.remove();
+                        document.querySelector(`[data-seat-id="${seatID}"]`)?.classList.remove("selected-seat");
+                    } else {
+                        alert("Remove failed: " + data.error);
+                    }
+                })
+                .catch(console.error);
+        }
+
+        function loadSavedSeats() {
+            fetch(`get_saved_seats.php?event_id=${eventId}`)
+                .then(res => res.json())
+                .then(data => {
+                    selectedSeatsFromDB = data.seats.map(seat => seat.seat_number);
+
+                    data.seats.forEach(seat => {
+                        const seatID = seat.seat_number;
+                        const category = seat.category;
+                        const rowLabel = seat.row_label;
+                        const price = seat.price;
+
+                        const seatElement = document.querySelector(`[data-seat-id="${seatID}"]`);
+
+                        if (seatElement) {
+                            seatElement.classList.add("selected-seat");
+                            seatElement.dataset.selected = "true";
+                            applyCategoryColor(seatElement, category); // ⭐ Apply color based on category
+                        }
+
+                        const table = document.querySelector("#seatTable tbody");
+                        table.innerHTML += `
+                <tr id="selectedSeatRow-${seatID}">
+                    <td>${rowLabel}</td>
+                    <td>${seatID}</td>
+                    <td>${category}</td>
+                    <td>${price}</td>
+                    <td><button onclick="removeSeatFromDB('${seatID}')">Remove</button></td>
+                </tr>`;
+                    });
+                })
+                .catch(error => {
+                    console.error("Error loading saved seats:", error);
+                });
+        }
+
+
+        // Load seats
+        createSeating("frontStage", 8, 10, 12, 10, false);
+        createSeating("balcony", 6, 10, 12, 10, true);
+        window.onload = loadSavedSeats;
     </script>
-
-
 
 </body>
 
