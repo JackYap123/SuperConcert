@@ -12,135 +12,82 @@ include '../inc/config.php';
     <title>Theater Seat Selection</title>
     <link rel="stylesheet" href="../css/seatings.css" />
     <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f8f8f8;
-        margin: 0;
-        padding: 20px;
-    }
+        .selected {
+            background-color: green !important;
+            color: white;
+        }
 
-    .stage {
-        text-align: center;
-        background: #333;
-        color: white;
-        padding: 15px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        margin-bottom: 25px;
-    }
+        .selected-seat {
+            border: 2px solid red !important;
+        }
 
-    .seat-container {
-        margin-bottom: 40px;
-    }
+        .vip-seat {
+            background-color: gold !important;
+            color: black;
+        }
 
-    .section-label {
-        font-size: 20px;
-        font-weight: bold;
-        margin: 20px 0 10px;
-    }
+        .regular-seat {
+            background-color: dodgerblue !important;
+            color: white;
+        }
 
-    .row-container {
-        display: flex;
-        align-items: center;
-        margin-bottom: 6px;
-    }
+        .economy-seat {
+            background-color: mediumseagreen !important;
+            color: white;
+        }
 
-    .row-label {
-        width: 40px;
-        text-align: center;
-        font-weight: bold;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: 001f3f;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+        }
 
-    .row {
-        display: flex;
-        gap: 4px;
-    }
+        th,
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
 
-    .seat {
-        width: 30px;
-        height: 30px;
-        background-color: #ccc;
-        text-align: center;
-        line-height: 30px;
-        border-radius: 4px;
-        font-size: 13px;
-        cursor: pointer;
-        transition: 0.3s;
-    }
+        th {
+            background-color: #333;
+            color: white;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
 
-    .seat:hover {
-        background-color: #999;
-    }
+        tr:hover {
+            background-color: rgb(68, 156, 207);
+        }
 
-    .selected {
-        background-color: green !important;
-        color: white;
-    }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
 
-    .selected-seat {
-        border: 2px solid red !important;
-    }
+        button:hover {
+            background-color: #45a049;
+        }
 
-    .vip-seat {
-        background-color: gold !important;
-        color: black;
-    }
-
-    .regular-seat {
-        background-color: dodgerblue !important;
-        color: white;
-    }
-
-    .economy-seat {
-        background-color: mediumseagreen !important;
-        color: white;
-    }
-
-    table {
-        color:black;
-        width: 100%;
-        border-collapse: collapse;
-        background-color: white;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 6px;
-        overflow: hidden;
-    }
-
-    th, td {
-        padding: 12px 15px;
-        border-bottom: 1px solid #eee;
-        text-align: center;
-    }
-
-    th {
-        background-color: #333;
-        color: white;
-        text-transform: uppercase;
-        font-size: 14px;
-    }
-
-    tr:hover {
-        background-color: #f2f2f2;
-    }
-
-    button {
-        background-color: #4CAF50;
-        color: white;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 16px;
-        margin-top: 20px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-        background-color: #45a049;
-    }
-</style>
+        .table-container {
+            max-height: 460px;
+            /* roughly 10 rows (46px per row incl. padding) */
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+    </style>
 
 </head>
 
@@ -157,18 +104,21 @@ include '../inc/config.php';
     </div>
 
     <h3>Selected Seats</h3>
-    <table id="seatTable">
-        <thead>
-            <tr>
-                <th>Row</th>
-                <th>Seat</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+
+    <div class="table-container">
+        <table id="seatTable">
+            <thead>
+                <tr>
+                    <th>Row</th>
+                    <th>Seat</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
     <button onclick="save()">💾 Save Selection</button>
 
