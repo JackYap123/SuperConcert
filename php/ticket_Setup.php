@@ -12,6 +12,31 @@ include '../inc/config.php';
     <title>Theater Seat Selection</title>
     <link rel="stylesheet" href="../css/seatings.css" />
     <style>
+        body {
+            display: flex;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #222;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            width: calc(100% - 250px);
+            box-sizing: border-box;
+        }
+
         .selected {
             background-color: green !important;
             color: white;
@@ -92,36 +117,41 @@ include '../inc/config.php';
 </head>
 
 <body>
-
-    <div class="stage">STAGE</div>
-
-    <div class="seat-container">
-        <div class="section-label">Front Stage</div>
-        <div class="section" id="frontStage"></div>
-
-        <div class="section-label">Balcony</div>
-        <div class="section" id="balcony"></div>
+    <div class="sidebar">
+        <?php include "../inc/sidebar.php"; ?>
     </div>
+    <div class="main-content">
+        <div class="stage">STAGE</div>
 
-    <h3>Selected Seats</h3>
+        <div class="stage">STAGE</div>
 
-    <div class="table-container">
-        <table id="seatTable">
-            <thead>
-                <tr>
-                    <th>Row</th>
-                    <th>Seat</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <div class="seat-container">
+            <div class="section-label">Front Stage</div>
+            <div class="section" id="frontStage"></div>
+
+            <div class="section-label">Balcony</div>
+            <div class="section" id="balcony"></div>
+        </div>
+
+        <h3>Selected Seats</h3>
+
+        <div class="table-container">
+            <table id="seatTable">
+                <thead>
+                    <tr>
+                        <th>Row</th>
+                        <th>Seat</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <button onclick="save()">💾 Save Selection</button>
     </div>
-
-    <button onclick="save()">💾 Save Selection</button>
-
     <script>
         let selectedSeats = {};
         let selectedSeatsFromDB = [];
