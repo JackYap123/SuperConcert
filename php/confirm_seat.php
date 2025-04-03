@@ -57,7 +57,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         $insert->execute();
     }
 
-    echo "<script>alert('Your seats have been successfully booked! Total: RM" . number_format($total_price, 2) . "'); window.location.href = 'attendee_dashboard.php';</script>";
+    $_SESSION['pending_payment'] = [
+        'event_id' => $event_id,
+        'selected_seats' => implode(',', $selected_seats),
+        'total' => $total_price
+    ];
+    header("Location: payment.php");
     exit();
 }
 else
