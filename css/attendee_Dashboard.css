@@ -1,119 +1,106 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+ body {
+     display: flex;
+     margin: 0;
+     font-family: Arial, sans-serif;
+     background-color: #f0f2f5;
+ }
 
-body {
-    background-color: #121212;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    text-align: center;
-}
+ .sidebar {
+     width: 250px;
+     background-color: #222;
+     color: white;
+     height: 100vh;
+     position: fixed;
+     left: 0;
+     top: 0;
+     padding: 20px;
+     box-sizing: border-box;
+ }
 
-.container {
-    display: block;
-    width: 60%;
-    margin-left: auto;
-    margin-right: 200px;
-    padding-top: 50px;
-}
+ .sidebar h1 {
+     font-size: 24px;
+     margin-bottom: 30px;
+     color: gold;
+     text-align: center;
+ }
 
-header {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
+ .sidebar ul {
+     list-style: none;
+     padding: 0;
+ }
 
-.promo-bar {
-    background: #ffcc00;
-    color: #000;
-    padding: 10px;
-    font-size: 18px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-}
+ .sidebar ul li {
+     margin: 20px 0;
+ }
 
-.nav-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
+ .sidebar ul li a {
+     text-decoration: none;
+     color: white;
+     font-size: 16px;
+     display: flex;
+     align-items: center;
+     gap: 10px;
+ }
 
-.btn {
-    background-color: #ffcc00;
-    color: #121212;
-    text-decoration: none;
-    padding: 15px 30px;
-    font-size: 18px;
-    border-radius: 8px;
-    transition: 0.3s;
-}
+ .sidebar ul li a:hover {
+     color: gold;
+ }
 
-.btn:hover {
-    background-color: #e6b800;
-}
+ .logout {
+     margin-top: 30px;
+     text-align: center;
+ }
 
-.sidebar {
-    background-color: #0d1b2a;
-    color: white;
-    width: 250px;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    z-index: 1;
-}
+ .logout a {
+     color: #ff4d4d;
+     text-decoration: none;
+     font-weight: bold;
+ }
 
-.sidebar h1 {
-    font-size: 24px;
-    color: #f4d160;
-    text-align: center;
-    margin-bottom: 30px;
-}
+ .logout a:hover {
+     text-decoration: underline;
+ }
 
-.sidebar ul {
-    list-style: none;
-}
+ .container {
+     margin-left: 250px;
+     padding: 40px;
+     width: calc(100% - 250px);
+ }
 
-.sidebar ul li {
-    margin: 15px 0;
-}
+ header h1 {
+     font-size: 32px;
+     margin-bottom: 20px;
+     color: #333;
+ }
 
-.sidebar ul li a {
-    text-decoration: none;
-    color: white;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-}
+ .promo-bar {
+     background-color: #001f3f;
+     color: white;
+     padding: 10px 15px;
+     border-radius: 8px;
+     margin-bottom: 20px;
+     font-size: 16px;
+ }
 
-.sidebar ul li a i {
-    margin-right: 10px;
-}
+ .nav-buttons {
+     display: flex;
+     gap: 20px;
+     flex-wrap: wrap;
+ }
 
-.sidebar ul li a:hover {
-    color: #f4d160;
-}
+ .btn {
+     padding: 15px 25px;
+     font-size: 16px;
+     background-color: #4CAF50;
+     color: white;
+     border: none;
+     border-radius: 6px;
+     text-decoration: none;
+     text-align: center;
+     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+     transition: background-color 0.3s ease;
+ }
 
-.sidebar .logout {
-    text-align: center;
-    margin-top: auto;
-}
-
-.sidebar .logout a {
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-    padding: 10px 20px;
-    background-color: #f4d160;
-    border-radius: 5px;
-}
-
-.sidebar .logout a:hover {
-    background-color: #e4c150;
-}
+ .btn:hover {
+     background-color: #45a049;
+ }
