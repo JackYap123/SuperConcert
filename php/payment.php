@@ -1,20 +1,23 @@
 <?php
+// payment.php
 session_start();
 include '../inc/config.php';
 
-if (!isset($_SESSION['attendee_logged_in']) || !$_SESSION['attendee_logged_in']) {
-    header("Location: organiser_login.php");
+if (!isset($_SESSION['attendee_logged_in']) || !$_SESSION['attendee_logged_in'])
+{
+    echo "<script>alert('Please login first.'); window.location.href='organiser_login.php';</script>";
     exit();
 }
-if (!isset($_SESSION['pending_payment'])) {
-    echo "<script>alert('Missing seat selection.'); window.location.href = 'attendee_dashboard.php';</script>";
+
+if (!isset($_SESSION['pending_payment']))
+{
+    echo "<script>alert('Missing seat selection.'); window.location.href='attendee_dashboard.php';</script>";
     exit();
 }
 
 $event_id = $_SESSION['pending_payment']['event_id'];
 $seatIDs = explode(',', $_SESSION['pending_payment']['selected_seats']);
 
-// Fetch seats from event_seats for validation and pricing
 $placeholders = implode(',', array_fill(0, count($seatIDs), '?'));
 $types = str_repeat('s', count($seatIDs));
 
@@ -27,11 +30,38 @@ $result = $stmt->get_result();
 
 $seats = [];
 $total = 0;
-while ($row = $result->fetch_assoc()) {
+while ($row = $result->fetch_assoc())
+{
     $seats[] = $row;
     $total += $row['price'];
 }
 $stmt->close();
+
+$total_before_discount = $total;
+$discount = 0;
+$discount_code = isset($_POST['discount_code']) ? trim($_POST['discount_code']) : '';
+$discount_error = '';
+
+// Fetch promo code and discount percentage from event table
+$promoQuery = $conn->prepare("SELECT promo_code, promo_discount FROM event WHERE event_id = ?");
+$promoQuery->bind_param("i", $event_id);
+$promoQuery->execute();
+$promoResult = $promoQuery->get_result();
+$promoData = $promoResult->fetch_assoc();
+$promoQuery->close();
+
+if (!empty($discount_code))
+{
+    if (strcasecmp($discount_code, $promoData['promo_code']) === 0)
+    {
+        $discount = $promoData['promo_discount'];
+        $total = $total * ((100 - $discount) / 100);
+    }
+    else
+    {
+        $discount_error = "❌ Invalid discount code.";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -128,8 +158,8 @@ $stmt->close();
 
 <body>
     <div class="container">
-        <h2 class="text-center glow-text">✨ Review Your Seats & Make Payment ✨</h2>
-        <table class="table table-striped table-bordered mt-4">
+        <h2 class="text-center text-warning">Review & Pay</h2>
+        <table class="table table-bordered mt-4">
             <thead>
                 <tr>
                     <th>Row</th>
@@ -148,24 +178,55 @@ $stmt->close();
                     </tr>
                 <?php endforeach; ?>
             </tbody>
+            <tfoot>
+                <?php if ($discount > 0): ?>
+                    <tr>
+                        <th colspan="3">Discount (<?= $discount ?>%)</th>
+                        <th>- RM <?= number_format($total_before_discount * $discount / 100, 2) ?></th>
+                    </tr>
+                <?php endif; ?>
+                <tr>
+                    <th colspan="3">Total</th>
+                    <th>RM <?= number_format($total, 2) ?></th>
+                </tr>
+            </tfoot>
         </table>
 
-        <div class="total-box">
-            <strong>Total to Pay:</strong> RM <?= number_format($total, 2) ?>
-        </div>
+        <?php if ($discount_error): ?>
+            <div class="error"><?= $discount_error ?></div>
+        <?php endif; ?>
 
-        <form action="process_payment.php" method="post" class="text-center mt-4">
+        <form action="payment.php" method="post" class="mb-4">
             <input type="hidden" name="event_id" value="<?= $event_id ?>">
-            <input type="hidden" name="selected_seats" value="<?= htmlspecialchars($_SESSION['pending_payment']['selected_seats']) ?>">
-            <input type="hidden" name="total" value="<?= $total ?>">
+            <input type="hidden" name="selected_seats"
+                value="<?= htmlspecialchars($_SESSION['pending_payment']['selected_seats']) ?>">
+            <div class="mb-3">
+                <label for="discount_code" class="form-label">Enter Discount Code</label>
+                <input type="text" class="form-control" id="discount_code" name="discount_code"
+                    value="<?= htmlspecialchars($discount_code) ?>">
+            </div>
+            <button type="submit" class="btn btn-primary">Apply Code</button>
+        </form>
 
-            <div class="payment-methods">
-                <h5 class="text-warning">Select Payment Method:</h5>
-                <label><input type="radio" name="payment_method" value="Visa" required> Visa</label>
-                <label><input type="radio" name="payment_method" value="TNG"> TNG</label>
+        <form action="process_payment.php" method="post">
+            <input type="hidden" name="event_id" value="<?= $event_id ?>">
+            <input type="hidden" name="selected_seats"
+                value="<?= htmlspecialchars($_SESSION['pending_payment']['selected_seats']) ?>">
+            <input type="hidden" name="total" value="<?= $total ?>">
+            <input type="hidden" name="discount_code" value="<?= htmlspecialchars($discount_code) ?>">
+
+            <div class="mb-3">
+                <label for="payment_method" class="form-label">Select Payment Method</label>
+                <select class="form-control" id="payment_method" name="payment_method" required>
+                    <option value="">-- Select --</option>
+                    <option value="Visa">Visa</option>
+                    <option value="TNG">Touch 'n Go</option>
+                </select>
             </div>
 
-            <button type="submit" class="btn btn-pay">Proceed to Payment</button>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success btn-lg">Pay Now</button>
+            </div>
         </form>
     </div>
 </body>

@@ -1,5 +1,7 @@
 <?php
 session_start();
+include '../inc/config.php';
+
 if (!isset($_SESSION['attendee_logged_in']) || !$_SESSION['attendee_logged_in'])
 {
     header("Location: organiser_login.php");
@@ -7,6 +9,11 @@ if (!isset($_SESSION['attendee_logged_in']) || !$_SESSION['attendee_logged_in'])
 }
 
 $attendee_id = $_SESSION['attendee_id'];
+$query = "SELECT b.*, e.event_date FROM bookings b JOIN event e ON b.event_id = e.event_id WHERE b.attendee_id = ? AND b.status = 'active' ORDER BY b.booking_time DESC";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $attendee_id);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -108,6 +115,15 @@ $attendee_id = $_SESSION['attendee_id'];
         .nav-buttons .btn:hover {
             background-color: #45a049;
         }
+
+        table {
+            background-color: #112;
+        }
+
+        .table th {
+            background-color: #007bff;
+            color: white;
+        }
     </style>
 </head>
 
@@ -140,6 +156,54 @@ $attendee_id = $_SESSION['attendee_id'];
             <a href="choose_event.php" class="btn">🎟️ Choose Event</a>
             <a href="waiting_list.php" class="btn">⏳ Waiting List</a>
             <a href="payment.php" class="btn">💳 Payment</a>
+        </div>
+
+        <div class="mt-5">
+            <h3>Your Active Bookings</h3>
+            <table class="table table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th>Event ID</th>
+                        <th>Seat</th>
+                        <th>Price (RM)</th>
+                        <th>Booking Date</th>
+                        <th>Event Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $today = date('Y-m-d');
+                    if ($result->num_rows === 0): ?>
+                        <tr>
+                            <td colspan="7" class="text-center text-warning">No active bookings found.</td>
+                        </tr>
+                    <?php else:
+                        while ($row = $result->fetch_assoc()):
+                            $cancelAllowed = ($row['event_date'] >= $today);
+                            ?>
+                            <tr>
+                                <td><?= $row['event_id'] ?></td>
+                                <td><?= $row['seat_number'] ?></td>
+                                <td><?= number_format($row['price'], 2) ?></td>
+                                <td><?= date('Y-m-d', strtotime($row['booking_time'])) ?></td>
+                                <td><?= $row['event_date'] ?></td>
+                                <td>
+                                    <?php if ($cancelAllowed): ?>
+                                        <form method="POST" action="cancel_booking.php"
+                                            onsubmit="return confirm('Cancel this seat?');">
+                                            <input type="hidden" name="event_id" value="<?= $row['event_id'] ?>">
+                                            <input type="hidden" name="seat_number" value="<?= $row['seat_number'] ?>">
+                                            <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                                        </form>
+                                    <?php else: ?>
+                                        <span class="text-muted">Cancellation closed</span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endwhile; endif; ?>
+                </tbody>
+            </table>
         </div>
     </div>
 </body>

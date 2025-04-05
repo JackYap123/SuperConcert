@@ -16,21 +16,55 @@ $attendee_id = $_SESSION['attendee_id'] ?? null;
 $attendee_email = $_SESSION['attendee_email'] ?? 'user@example.com';
 $attendee_name = $_SESSION['attendee_name'] ?? 'Attendee';
 $event_id = intval($_POST['event_id']);
-$selected_seats = explode(',', $_POST['selected_seats']);
+$selected_seats = array_unique(explode(',', $_POST['selected_seats']));
 $total = floatval($_POST['total']);
 $payment_method = $_POST['payment_method'];
 $timestamp = date('Y-m-d H:i:s');
 
-function simulatePayment($method, $amount)
+if ($payment_method === 'Visa' && isset($_POST['card_number'], $_POST['expiry'], $_POST['cvv']))
 {
-    return [
+    $card_number = $_POST['card_number'];
+    $expiry = $_POST['expiry'];
+    $cvv = $_POST['cvv'];
+    $response = [
         'status' => 'success',
-        'message' => ucfirst($method) . ' payment successful',
-        'reference' => strtoupper($method) . '_' . uniqid(),
+        'message' => 'Visa payment processed (mock)',
+        'reference' => 'VISA_' . uniqid(),
+    ];
+}
+elseif ($payment_method === 'TNG')
+{
+    $response = [
+        'status' => 'success',
+        'message' => 'TNG payment simulated (mock)',
+        'reference' => 'TNG_' . uniqid(),
+    ];
+}
+else
+{
+    $response = [
+        'status' => 'success',
+        'message' => ucfirst($payment_method) . ' payment simulated',
+        'reference' => strtoupper($payment_method) . '_' . uniqid(),
     ];
 }
 
-$response = simulatePayment($payment_method, $total);
+$discount = 0;
+if (!empty($_POST['promo_code']))
+{
+    $code = $_POST['promo_code'];
+    $check = $conn->prepare("SELECT promo_code, promo_discount FROM event WHERE event_id = ?");
+    $check->bind_param("is", $event_id, $code);
+    $check->execute();
+    $res = $check->get_result();
+    if ($res->num_rows > 0)
+    {
+        $row = $res->fetch_assoc();
+        $discount = $row['promo_discount'];
+        $total = $total * ((100 - $discount) / 100);
+    }
+}
+
 
 if ($response['status'] === 'success')
 {
@@ -38,34 +72,31 @@ if ($response['status'] === 'success')
 
     foreach ($selected_seats as $seat)
     {
-        // Check if seat already booked
-        $check_stmt = $conn->prepare("SELECT COUNT(*) FROM bookings WHERE event_id = ? AND seat_number = ?");
-        $check_stmt->bind_param("is", $event_id, $seat);
-        $check_stmt->execute();
-        $check_stmt->bind_result($count);
-        $check_stmt->fetch();
-        $check_stmt->close();
-
         $seat_query = $conn->prepare("SELECT price FROM event_seats WHERE event_id = ? AND seat_number = ?");
         $seat_query->bind_param("is", $event_id, $seat);
         $seat_query->execute();
         $seat_result = $seat_query->get_result();
         $seat_data = $seat_result->fetch_assoc();
+
+        if (!$seat_data)
+            continue; // Skip if seat not found
         $seat_price = $seat_data['price'];
 
         $stmt->bind_param("iisssds", $attendee_id, $event_id, $seat, $payment_method, $response['reference'], $seat_price, $timestamp);
         $stmt->execute();
+
+        // If no rows inserted, that means the seat was taken already
+
     }
 
-    // === Send Confirmation Email to Attendee ===
     $mail = new PHPMailer(true);
     try
     {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'yapfongkiat53@gmail.com';  // Your email
-        $mail->Password = 'momfaxlauusnbnvl';        // App password (not regular password)
+        $mail->Username = 'yapfongkiat53@gmail.com';
+        $mail->Password = 'momfaxlauusnbnvl';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
 
