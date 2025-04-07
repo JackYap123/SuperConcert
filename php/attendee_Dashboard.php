@@ -39,6 +39,9 @@ $result = $stmt->get_result();
             background-color: #222;
             height: 100vh;
             padding: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
         }
 
         .sidebar h1 {
@@ -77,6 +80,8 @@ $result = $stmt->get_result();
         .container {
             flex: 1;
             padding: 30px;
+            margin-left: 250px;
+            /* 👈 Prevent overlap */
         }
 
         header h1 {
@@ -159,52 +164,62 @@ $result = $stmt->get_result();
         </div>
 
         <div class="mt-5">
-            <h3>Your Active Bookings</h3>
-            <table class="table table-bordered mt-3">
-                <thead>
-                    <tr>
-                        <th>Event ID</th>
-                        <th>Seat</th>
-                        <th>Price (RM)</th>
-                        <th>Booking Date</th>
-                        <th>Event Date</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $today = date('Y-m-d');
-                    if ($result->num_rows === 0): ?>
-                        <tr>
-                            <td colspan="7" class="text-center text-warning">No active bookings found.</td>
-                        </tr>
-                    <?php else:
-                        while ($row = $result->fetch_assoc()):
-                            $cancelAllowed = ($row['event_date'] >= $today);
-                            ?>
-                            <tr>
-                                <td><?= $row['event_id'] ?></td>
-                                <td><?= $row['seat_number'] ?></td>
-                                <td><?= number_format($row['price'], 2) ?></td>
-                                <td><?= date('Y-m-d', strtotime($row['booking_time'])) ?></td>
-                                <td><?= $row['event_date'] ?></td>
-                                <td>
-                                    <?php if ($cancelAllowed): ?>
-                                        <form method="POST" action="cancel_booking.php"
-                                            onsubmit="return confirm('Cancel this seat?');">
-                                            <input type="hidden" name="event_id" value="<?= $row['event_id'] ?>">
-                                            <input type="hidden" name="seat_number" value="<?= $row['seat_number'] ?>">
-                                            <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
-                                        </form>
-                                    <?php else: ?>
-                                        <span class="text-muted">Cancellation closed</span>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                        <?php endwhile; endif; ?>
-                </tbody>
-            </table>
+            <h3 class="text-warning mb-4">🧾 Your Ticket Receipts</h3>
+
+            <?php
+            $today = date('Y-m-d');
+            if ($result->num_rows === 0): ?>
+                <div class="alert alert-info">You have no active bookings at the moment.</div>
+            <?php else:
+                // Group bookings by event
+                $grouped = [];
+                while ($row = $result->fetch_assoc())
+                {
+                    $grouped[$row['event_id']]['event_date'] = $row['event_date'];
+                    $grouped[$row['event_id']]['seats'][] = $row;
+                }
+
+                foreach ($grouped as $event_id => $data):
+                    $seats = $data['seats'];
+                    $event_date = $data['event_date'];
+                    $total_price = array_sum(array_column($seats, 'price'));
+                    ?>
+                    <div class="card mb-4" style="background-color: #112; border-left: 5px solid #ffc107; color: white;">
+                        <div class="card-body">
+                            <h5 class="card-title text-info">🎫 Event #<?= $event_id ?></h5>
+                            <p><strong>Event Date:</strong> <?= date('F j, Y', strtotime($event_date)) ?></p>
+                            <p><strong>Total Paid:</strong> RM <?= number_format($total_price, 2) ?></p>
+                            <hr>
+
+                            <div class="row">
+                                <?php foreach ($seats as $seat):
+                                    $cancelAllowed = ($seat['event_date'] >= $today);
+                                    ?>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="p-3 border rounded" style="background-color: #223;">
+                                            <p><strong>Seat:</strong> <?= $seat['seat_number'] ?></p>
+                                            <p><strong>Price:</strong> RM <?= number_format($seat['price'], 2) ?></p>
+                                            <p><strong>Booked On:</strong> <?= date('F j, Y', strtotime($seat['booking_time'])) ?>
+                                            </p>
+                                            <?php if ($cancelAllowed): ?>
+                                                <form method="POST" action="cancel_booking.php"
+                                                    onsubmit="return confirm('Cancel this seat?');">
+                                                    <input type="hidden" name="event_id" value="<?= $seat['event_id'] ?>">
+                                                    <input type="hidden" name="seat_number" value="<?= $seat['seat_number'] ?>">
+                                                    <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                                                </form>
+                                            <?php else: ?>
+                                                <span class="badge bg-secondary">Cancellation closed</span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; endif; ?>
         </div>
+
     </div>
 </body>
 
