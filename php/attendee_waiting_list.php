@@ -167,7 +167,6 @@ $result = $stmt->get_result();
             <li><a href="choose_event.php"><i class="fas fa-calendar-alt"></i> Choose Event</a></li>
             <li><a href="waiting_list.php"><i class="fas fa-clock"></i> Join Waiting List</a></li>
             <li><a href="attendee_waiting_list.php"><i class="fas fa-bell"></i> View Waiting List</a></li>
-            <li><a href="payment.php"><i class="fas fa-credit-card"></i> Payment</a></li>
         </ul>
         <div class="logout">
             <a href="../logout.php">Logout</a>

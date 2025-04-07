@@ -135,7 +135,6 @@ $result = $stmt->get_result();
             <li><a href="choose_event.php"><i class="fas fa-calendar-alt"></i> Choose Event</a></li>
             <li><a href="waiting_list.php"><i class="fas fa-clock"></i> Join Waiting List</a></li>
             <li><a href="attendee_waiting_list.php"><i class="fas fa-bell"></i> View Waiting List</a></li>
-            <li><a href="payment.php"><i class="fas fa-credit-card"></i> Payment</a></li>
         </ul>
         <div class="logout">
             <a href="../logout.php">Logout</a>
@@ -155,8 +154,8 @@ $result = $stmt->get_result();
 
         <div class="nav-buttons">
             <a href="choose_event.php" class="btn">🎟️ Choose Event</a>
-            <a href="waiting_list.php" class="btn">⏳ Waiting List</a>
-            <a href="payment.php" class="btn">💳 Payment</a>
+            <a href="waiting_list.php" class="btn">⏳ Join Waiting List</a>
+            <a href="waiting_list.php" class="btn">⏳ Check Waiting List</a>
         </div>
 
         <div class="mt-5">
