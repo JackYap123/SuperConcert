@@ -1,11 +1,10 @@
 <?php
 session_start();
-require '../inc/config.php';
-
+require '../../inc/config.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require '../vendor/autoload.php';
+require '../../vendor/autoload.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
@@ -27,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         {
             echo "<script> 
                 alert('The email address is already registered. Please use a different email or log in.');
-                window.location.href='Register_Organizer.php';
+                window.location.href='register-organizer.php';
             </script>";
         }
         else
@@ -37,7 +36,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
             if ($stmt->execute())
             {
-                // 发送邮件给用户
                 $mail = new PHPMailer(true);
                 try
                 {
@@ -56,29 +54,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     $mail->Subject = 'Welcome to SuperConcert!';
                     $mail->Body = "
                         <html>
-                        <body>
-                        <h1>Welcome to SuperConcert!</h1>
+                        <body style='font-family: Arial, sans-serif;'>
+                        <h1 style='color: #007bff;'>Welcome to SuperConcert!</h1>
                         <p>Dear $name,</p>
                         <p>Your account has been created successfully. Below are your login details:</p>
                         <p>Email: $email</p>
                         <p>Password: <strong>$default_password</strong></p>
                         <p>Please log in and change your password for security purposes.</p>
-                        <p><a href='http://localhost/SuperConcert/php/organiser_Login.php'>Login Now</a></p>
+                        <p><a href='http://localhost/SuperConcert/php/organiser_Login.php' style='color: #007bff;'>Login Now</a></p>
                         </body>
                         </html>
                     ";
 
                     $mail->send();
                     echo "<script> 
-                            alert('Registration Successful! Your account has been created successfully.Please check your email for login details.');
-                            window.location.href='Register_Organizer.php';
+                            alert('Registration Successful! Your account has been created successfully. Please check your email for login details.');
+                            window.location.href='register-organizer.php';
                         </script>";
                 }
                 catch (Exception $e)
                 {
                     echo "<script> 
                     alert('Error in sending email: {$mail->ErrorInfo}');
-                    window.location.href='Register_Organizer.php';
+                    window.location.href='register-organizer.php';
                   </script>";
                 }
             }
@@ -86,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             {
                 echo "<script> 
                     alert('Error: " . $stmt->error . "');
-                    window.location.href='Register_Organizer.php';
+                    window.location.href='register-organizer.php';
                   </script>";
             }
             $stmt->close();
@@ -103,58 +101,61 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/Register_Organizer.css">
+    <link rel="stylesheet" href="../../css/admin/admin-sidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/admin/register-organizer.css">
     <link rel="icon" type="image/x-icon" href="../img/Logo.webp">
-    <title>SuperConcert</title>
+    <title>Register Organizer - SuperConcert</title>
+    <style>
+
+    </style>
 </head>
 
 <body>
-
     <div class="sidebar">
         <h2>Admin Dashboard</h2>
         <ul>
-            <li><a href="../php/admin_Dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="../php/Register_Organizer.php" class="active"><i class="fas fa-user-plus"></i> Create Organizer</a></li>
-            <li><a href="../php/admin-report.php"><i class="fas fa-chart-bar"></i> Generate Report</a></li>
+            <li><a href="../admin/admin-dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="../admin/register-organizer.php" class="active"><i class="fas fa-user-plus"></i> Create Organizer</a></li>
+            <li><a href="../admin/admin-report.php"><i class="fas fa-chart-bar"></i> Generate Report</a></li>
         </ul>
     </div>
-    <div class="container">
-        <!-- Register Form -->
-        <div id="register-section" class="form-section">
-            <h2>Register Organiser</h2>
-            <form id="register-form" action="Register_Organizer.php" method="POST">
+
+    <div class="main-content">
+        <header class="main-header">
+            <h2>Register Organizer</h2>
+        </header>
+
+        <div class="form-section">
+            <form id="register-form" action="register-organizer.php" method="POST">
                 <input type="hidden" name="register" value="1">
+
                 <div class="form-group">
                     <label for="register-name">Full Name</label>
                     <input type="text" id="register-name" name="name" placeholder="Enter your full name" required>
                 </div>
+
                 <div class="form-group">
                     <label for="register-email">Email</label>
                     <input type="email" id="register-email" name="email" placeholder="Enter your email" required>
                 </div>
+
                 <div class="form-group">
                     <label for="register-phone">Phone Number</label>
                     <input type="text" id="register-phone" name="phone_number" placeholder="Enter your phone number"
                         required>
                 </div>
+
                 <div class="form-group">
                     <label for="register-organization">Organization Name</label>
                     <input type="text" id="register-organization" name="organization_name"
                         placeholder="Enter organization name">
                 </div>
+
                 <button type="submit">Register</button>
             </form>
         </div>
     </div>
 </body>
-<script>
-    function confirmLogout() {
-        let confirmAction = confirm("Are you sure you want to logout?");
-        if (confirmAction) {
-            window.location.href = '../php/admin_Login.php';
-        }
-    }
-</script>
 
 </html>

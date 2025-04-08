@@ -1,14 +1,14 @@
 <?php
 session_start();
-require '../inc/config.php';
+require '../../inc/config.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require '../vendor/autoload.php';
+require '../../vendor/autoload.php';
 
 if (!isset($_SESSION['is_admin']))
 {
-    header("Location: admin_Login.php");
+    header("Location: ../admin_Login.php");
     exit();
 }
 
@@ -26,16 +26,17 @@ $organisers = $result->fetch_all(MYSQLI_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/admin_Dashboard.css">
+    <link rel="stylesheet" href="../../css/admin/admin-dashboard.css">
+    <link rel="stylesheet" href="../../css/admin/admin-sidebar.css">
 </head>
 
 <body>
     <div class="sidebar">
         <h2>Admin Dashboard</h2>
         <ul>
-            <li><a href="../php/admin_Dashboard.php"class="active"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="../php/Register_Organizer.php"><i class="fas fa-user-plus"></i> Create Organizer</a></li>
-            <li><a href="../php/admin-report.php" ><i class="fas fa-chart-bar"></i> Generate Report</a></li>
+            <li><a href="../admin/admin-dashboard.php"class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="../admin/register-organizer.php"><i class="fas fa-user-plus"></i> Create Organizer</a></li>
+            <li><a href="../admin/admin-report.php" ><i class="fas fa-chart-bar"></i> Generate Report</a></li>
         </ul>
     </div>
 
