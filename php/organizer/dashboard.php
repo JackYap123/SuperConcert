@@ -126,15 +126,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
                 </div>
             </a>
 
-            <a href="../organizer/waiting-list.php" class="card-link">
-                <div class="card">
-                    <i class="fas fa-users fa-3x" style="color: black;"></i>
-                    <h2>Waiting List</h2>
-                    <p>Manage event waiting lists</p>
-                </div>
-            </a>
-
-
             <a href="../organizer/analysis-report.php" class="card-link">
                 <div class="card">
                     <i class="fas fa-book fa-3x" style="color: black;"></i>

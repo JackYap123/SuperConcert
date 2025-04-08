@@ -77,23 +77,21 @@ textarea:focus {
 button {
     margin-top: 10px;
     padding: 12px;
-    background: linear-gradient(135deg, #FFD700, #FFA500);
+    background-color: #007bff;
     /* Gold to Deep Orange */
     border: none;
-    color: black !important;
+    color: white;
     /* Force black text */
     font-size: 16px;
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
     transition: 0.3s;
-    box-shadow: 0px 4px 10px rgba(255, 215, 0, 0.4);
     /* Gold glow */
 }
 
 button:hover {
-    background: linear-gradient(135deg, #FFA500, #FFD700);
-    box-shadow: 0px 5px 15px rgba(255, 215, 0, 0.6);
+    background-color: #0056b3;
 }
 
 

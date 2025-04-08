@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../inc/config.php';
+include '../../inc/config.php';
 
 if (!isset($_SESSION['organiser_id']))
 {
@@ -64,133 +64,57 @@ $stmt->close();
 <head>
     <meta charset="UTF-8">
     <title>Analysis Report</title>
+    <link rel="stylesheet" href="../../css/organizer/analysis-report.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            font-family: Arial;
-            background: #001f3f;
-            color: white;
-        }
-        .container h2{
-            margin-bottom: 20px;
-        }
-
-        .chart-container,
-        .table-container {
-            background: #112;
-            padding: 20px;
-            border-radius: 10px;
-            display: none;
-        }
-
-        canvas {
-            background-color: white;
-            border-radius: 10px;
-        }
-
-        .filter-links a {
-            color: white;
-            text-decoration: none;
-            margin-right: 15px;
-            font-weight: bold;
-            padding: 5px 10px;
-            background: #007bff;
-            border-radius: 6px;
-        }
-
-        .filter-links a.active {
-            background: #ffc107;
-            color: black;
-        }
-
-        form {
-            margin-bottom: 20px;
-        }
-
-       
-        label,
-        input {
-            margin-right: 10px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            color: white;
-        }
-
-        th,
-        td {
-            border: 1px solid #444;
-            padding: 10px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #007bff;
-        }
-
-        .toggle-btn {
-            margin: 10px 0;
-            background-color: #ffc107;
-            color: black;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .container {
-            flex: 1;
-            padding: 30px;
-            margin-left: 250px;
-            /* 👈 Prevent overlap */
-        }
-    </style>
 </head>
 
 <body>
     <?php
-    include "../inc/sidebar.php";
+    include "../../inc/sidebar.php";
     ?>
 
-    <div class="container">
-
-        <h2>📊 Ticket Sales Report (<?= ucfirst($type) ?>)</h2>
-
-        <div class="filter-links mb-4">
-            <a href="?type=daily" class="<?= $type === 'daily' ? 'active' : '' ?>">Daily</a>
-            <a href="?type=weekly" class="<?= $type === 'weekly' ? 'active' : '' ?>">Weekly</a>
-            <a href="?type=monthly" class="<?= $type === 'monthly' ? 'active' : '' ?>">Monthly</a>
+    <div class="content">
+        <div class="header">
+            <h1>📊 Ticket Sales Report (<?= ucfirst($type) ?>)</h1>
         </div>
 
-        <button class="toggle-btn" onclick="toggleView()">📊 Toggle View</button>
+        <div class="container">
+            <div class="filter-links mb-4">
+                <a href="?type=daily" class="<?= $type === 'daily' ? 'active' : '' ?>">Daily</a>
+                <a href="?type=weekly" class="<?= $type === 'weekly' ? 'active' : '' ?>">Weekly</a>
+                <a href="?type=monthly" class="<?= $type === 'monthly' ? 'active' : '' ?>">Monthly</a>
+            </div>
 
-        <div class="chart-container" id="chartContainer">
-            <canvas id="ticketChart"></canvas>
-        </div>
+            <button class="toggle-btn" onclick="toggleView()">📊 Table View</button>
 
-        <div class="table-container" id="tableContainer">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Period</th>
-                        <th>Tickets Sold</th>
-                        <th>Revenue (x100 RM)</th>
-                        <th>Occupancy (%)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($data as $row): ?>
+            <div class="chart-container" id="chartContainer">
+                <canvas id="ticketChart"></canvas>
+            </div>
+
+            <div class="table-container" id="tableContainer">
+                <table>
+                    <thead>
                         <tr>
-                            <td><?= $row['period'] ?></td>
-                            <td><?= $row['tickets'] ?></td>
-                            <td>RM <?= number_format($row['revenue'], 2) ?></td>
-                            <td><?= number_format($row['occupancy'], 2) ?>%</td>
+                            <th>Period</th>
+                            <th>Tickets Sold</th>
+                            <th>Revenue (x100 RM)</th>
+                            <th>Occupancy (%)</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($data as $row): ?>
+                            <tr>
+                                <td><?= $row['period'] ?></td>
+                                <td><?= $row['tickets'] ?></td>
+                                <td>RM <?= number_format($row['revenue'], 2) ?></td>
+                                <td><?= number_format($row['occupancy'], 2) ?>%</td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -241,7 +165,7 @@ $stmt->close();
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Tickets / Revenue / Occupancy (%)'
+                            text: 'Value or %'
                         },
                         ticks: {
                             color: 'black'
@@ -278,11 +202,11 @@ $stmt->close();
             if (chartContainer.style.display === 'none') {
                 chartContainer.style.display = 'block';
                 tableContainer.style.display = 'none';
-                document.querySelector('.toggle-btn').innerText = 'Switch to Table View';
+                document.querySelector('.toggle-btn').innerText = '📊 Table View';
             } else {
                 chartContainer.style.display = 'none';
                 tableContainer.style.display = 'block';
-                document.querySelector('.toggle-btn').innerText = 'Switch to Chart View';
+                document.querySelector('.toggle-btn').innerText = '📊 Toggle View';
             }
         }
     </script>

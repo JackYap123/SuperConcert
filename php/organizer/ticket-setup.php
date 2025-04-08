@@ -333,7 +333,7 @@ include '../../inc/config.php';
                 return;
             }
 
-            fetch('../save_seats.php', {
+            fetch('save_seats.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ event_id: eventId, seats: seatsData })
@@ -353,7 +353,7 @@ include '../../inc/config.php';
         function removeSeatFromDB(seatID) {
             if (!confirm("Are you sure you want to remove this seat?")) return;
 
-            fetch("../remove_seat.php", {
+            fetch("remove_seat.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ event_id: eventId, seat_id: seatID })
@@ -372,7 +372,7 @@ include '../../inc/config.php';
         }
 
         function loadSavedSeats() {
-            fetch(`../get_saved_seats.php?event_id=${eventId}`)
+            fetch(`get_saved_seats.php?event_id=${eventId}`)
                 .then(res => res.json())
                 .then(data => {
                     selectedSeatsFromDB = data.seats.map(seat => seat.seat_number);

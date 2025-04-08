@@ -77,78 +77,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/organizer/select-event.css">
     <title>Choose Event</title>
-    <style>
-        h2 {
-            color: gold;
-        }
-
-        body {
-            display: flex;
-            background-color: #001f3f;
-            font-family: Arial, sans-serif;
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-        }
-
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-            background: #222;
-            color: white;
-        }
-
-        .content {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-left: 250px;
-            width: calc(100% - 250px);
-        }
-
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
-            width: 360px;
-            text-align: center;
-        }
-
-        select,
-        input,
-        button {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .error {
-            color: red;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-    </style>
+    
 </head>
 
 <body>
@@ -156,8 +89,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         <?php include "../../inc/sidebar.php"; ?>
     </div>
     <div class="content">
+        <div class="header">
+            <h1>Choose Event</h1>
+        </div>
         <div class="container">
-            <h2>Choose Event</h2>
             <?php if (!empty($error))
                 echo "<p class='error'>$error</p>"; ?>
             <form method="post">
