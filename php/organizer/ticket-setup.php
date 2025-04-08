@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../inc/config.php';
+include '../../inc/config.php';
 
 ?>
 <!DOCTYPE html>
@@ -10,7 +10,7 @@ include '../inc/config.php';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Theater Seat Selection</title>
-    <link rel="stylesheet" href="../css/seatings.css" />
+    <link rel="stylesheet" href="../../css/organizer/seatings.css" />
     <style>
         body {
             display: flex;
@@ -118,7 +118,7 @@ include '../inc/config.php';
 
 <body>
     <div class="sidebar">
-        <?php include "../inc/sidebar.php"; ?>
+        <?php include "../../inc/sidebar.php"; ?>
     </div>
     <div class="main-content">
         <div class="stage">STAGE</div>
@@ -333,7 +333,7 @@ include '../inc/config.php';
                 return;
             }
 
-            fetch('save_seats.php', {
+            fetch('../save_seats.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ event_id: eventId, seats: seatsData })
@@ -353,7 +353,7 @@ include '../inc/config.php';
         function removeSeatFromDB(seatID) {
             if (!confirm("Are you sure you want to remove this seat?")) return;
 
-            fetch("remove_seat.php", {
+            fetch("../remove_seat.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ event_id: eventId, seat_id: seatID })
@@ -372,7 +372,7 @@ include '../inc/config.php';
         }
 
         function loadSavedSeats() {
-            fetch(`get_saved_seats.php?event_id=${eventId}`)
+            fetch(`../get_saved_seats.php?event_id=${eventId}`)
                 .then(res => res.json())
                 .then(data => {
                     selectedSeatsFromDB = data.seats.map(seat => seat.seat_number);

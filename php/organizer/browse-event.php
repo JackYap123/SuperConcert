@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../inc/config.php';
+include '../../inc/config.php';
 
 if (!isset($_SESSION['organiser_id']))
 {
@@ -40,8 +40,7 @@ $result = $stmt->get_result();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/browseEvent.css">
+    <link rel="stylesheet" href="../../css/organizer/browse-event.css">
 
     <script>
         function confirmDelete(eventId) {
@@ -54,19 +53,21 @@ $result = $stmt->get_result();
 
 <body>
     <?php
-    include "../inc/sidebar.php";
+    include "../../inc/sidebar.php";
     ?>
 
     <?php if ($result->num_rows > 0): ?>
 
         <div class="main-content">
-            <h1 class="text-center mb-4">Event Dashboard</h1>
+            <div class="header">
+                <h1>Event Dashboard</h1>
+            </div>
 
             <div class="event-grid">
                 <?php while ($row = $result->fetch_assoc())
                 { ?>
                     <div class="card event-card">
-                        <img src="../img/<?php echo htmlspecialchars($row['file_name']); ?>" class="event-image"
+                        <img src="../../img/<?php echo htmlspecialchars($row['file_name']); ?>" class="event-image"
                             alt="Event Image">
                         <div class="card-body">
                             <h5 class="card-title"><?php echo htmlspecialchars($row['event_name']); ?></h5>

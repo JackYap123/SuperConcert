@@ -1,10 +1,10 @@
 <?php
 session_start();
-require '../inc/config.php';
+require '../../inc/config.php';
 
 if (!isset($_SESSION['organiser_email']))
 {
-    header("Location: organiser_login.php");
+    header("Location: ../organiser_login.php");
     exit();
 }
 $organiser_id = $_SESSION['organiser_id'];
@@ -62,8 +62,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/Dashboard.css">
-    <link rel="icon" type="image/x-icon" href="../img/Logo.webp">
+    <link rel="stylesheet" href="../../css/organizer/dashboard.css">
+    <link rel="icon" type="image/x-icon" href="../../img/Logo.webp">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Dashboard</title>
@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
 
 <body>
     <?php
-    include "../inc/sidebar.php";
+    include "../../inc/sidebar.php";
     ?>
     <?php if ($show_modal): ?>
         <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
@@ -102,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
         </div>
 
         <div class="dashboard">
-            <a href="eventCreation.php" class="card-link">
+            <a href="../organizer/event-creation.php" class="card-link">
                 <div class="card">
                     <i class="fas fa-calendar-plus fa-3x" style="color: black;"></i>
                     <h2>Create Events</h2>
@@ -110,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
                 </div>
             </a>
 
-            <a href="browseEvent.php" class="card-link">
+            <a href="../organizer/browse-event.php" class="card-link">
                 <div class="card">
                     <i class="fas fa-magnifying-glass fa-3x" style="color: black;"></i>
                     <h2>Browse Events</h2>
@@ -118,7 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
                 </div>
             </a>
 
-            <a href="select_event.php" class="card-link">
+            <a href="../organizer/select-event.php" class="card-link">
                 <div class="card">
                     <i class="fas fa-ticket-alt fa-3x" style="color: black;"></i>
                     <h2>Ticket Setup</h2>
@@ -126,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
                 </div>
             </a>
 
-            <a href="waiting_list.php" class="card-link">
+            <a href="../organizer/waiting-list.php" class="card-link">
                 <div class="card">
                     <i class="fas fa-users fa-3x" style="color: black;"></i>
                     <h2>Waiting List</h2>
@@ -135,7 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
             </a>
 
 
-            <a href="analysis-report.php" class="card-link">
+            <a href="../organizer/analysis-report.php" class="card-link">
                 <div class="card">
                     <i class="fas fa-book fa-3x" style="color: black;"></i>
                     <h2>Analysis Report</h2>

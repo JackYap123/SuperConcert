@@ -1,10 +1,10 @@
 <?php
 session_start();
-include '../inc/config.php';
+include '../../inc/config.php';
 
 if (!isset($_SESSION['organiser_id']))
 {
-    header("Location: organiser_Login.php");
+    header("Location: ../organiser_Login.php");
     exit();
 }
 
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             $_SESSION['regular_price'] = $regular_price;
             $_SESSION['economy_price'] = $economy_price;
 
-            header("Location: ticket_setup.php");
+            header("Location: ticket-setup.php");
             exit();
         }
         else
@@ -153,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 
 <body>
     <div class="sidebar">
-        <?php include "../inc/sidebar.php"; ?>
+        <?php include "../../inc/sidebar.php"; ?>
     </div>
     <div class="content">
         <div class="container">

@@ -1,15 +1,17 @@
 <?php
 session_start();
-include '../inc/config.php';
+include '../../inc/config.php';
 
-if (!isset($_SESSION['organiser_id'])) {
-    header("Location: organiser_login.php");
+if (!isset($_SESSION['organiser_id']))
+{
+    header("Location: ../organiser_login.php");
     exit();
 }
 
 $organizerId = $_SESSION['organiser_id'];
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
     $eventName = trim($_POST["eventName"]);
     $eventDate = $_POST["eventDate"];
     $eventTime = $_POST["eventTime"];
@@ -24,15 +26,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->fetch();
     $stmt->close();
 
-    if ($count > 0) {
+    if ($count > 0)
+    {
         echo "<script>
             document.addEventListener('DOMContentLoaded', function() {
                 var eventExistsModal = new bootstrap.Modal(document.getElementById('eventExistsModal'));
                 eventExistsModal.show();
             });
         </script>";
-    } else {
-        $targetDir = "../img/";
+    }
+    else
+    {
+        $targetDir = "../../img/";
         $fileName = basename($_FILES["eventCover"]["name"]);
         $uniqueFileName = time() . "_" . $fileName;
         $targetFilePath = $targetDir . $uniqueFileName;
@@ -40,27 +45,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $allowedTypes = array("jpg", "jpeg", "png", "gif");
 
-        if (in_array($fileType, $allowedTypes)) {
-            if (move_uploaded_file($_FILES["eventCover"]["tmp_name"], $targetFilePath)) {
+        if (in_array($fileType, $allowedTypes))
+        {
+            if (move_uploaded_file($_FILES["eventCover"]["tmp_name"], $targetFilePath))
+            {
                 $sql = "INSERT INTO event (organizer_id, event_name, event_date, event_time, event_duration, event_description, file_name) 
                         VALUES (?, ?, ?, ?, ?, ?, ?)";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("issssss", $organizerId, $eventName, $eventDate, $eventTime, $eventDuration, $eventDescription, $uniqueFileName);
 
-                if ($stmt->execute()) {
+                if ($stmt->execute())
+                {
                     echo "<script>
                         document.addEventListener('DOMContentLoaded', function() {
                             var successModal = new bootstrap.Modal(document.getElementById('successModal'));
                             successModal.show();
                         });
                     </script>";
-                } else {
+                }
+                else
+                {
                     echo "<script>alert('Error: " . $stmt->error . "');</script>";
                 }
-            } else {
+            }
+            else
+            {
                 echo "<script>alert('File upload failed.');</script>";
             }
-        } else {
+        }
+        else
+        {
             echo "<script>alert('Invalid file type. Only JPG, JPEG, PNG, and GIF files are allowed.');</script>";
         }
     }
@@ -69,14 +83,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Event</title>
-    <link rel="stylesheet" href="../css/event_creation.css">
+    <link rel="stylesheet" href="../../css/organizer/event-creation.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 </head>
+
 <body>
     <!-- Success Modal -->
     <div id="successModal" class="modal fade" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
@@ -95,7 +112,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <!-- Event Exists Modal -->
-    <div id="eventExistsModal" class="modal fade" tabindex="-1" aria-labelledby="eventExistsModalLabel" aria-hidden="true">
+    <div id="eventExistsModal" class="modal fade" tabindex="-1" aria-labelledby="eventExistsModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -111,18 +129,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <!-- Sidebar -->
-    <?php include "../inc/sidebar.php"; ?>
+    <?php include "../../inc/sidebar.php"; ?>
 
     <!-- Main Content -->
     <div class="main-content">
-        <div class="container">
+        <div class="header">
             <h1 class="text-center">Create Event</h1>
-
+        </div>
+        <div class="container">
             <?php if (isset($errorMsg)): ?>
                 <div class="alert alert-danger"><?php echo $errorMsg; ?></div>
             <?php endif; ?>
 
-            <form action="eventCreation.php" method="POST" enctype="multipart/form-data">
+            <form action="event-creation.php" method="POST" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="eventName" class="form-label">Event Name:</label>
                     <input type="text" id="eventName" name="eventName" class="form-control" required>
@@ -145,7 +164,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <div class="mb-3">
                     <label for="eventDescription" class="form-label">Description:</label>
-                    <textarea id="eventDescription" name="eventDescription" class="form-control" rows="3" required></textarea>
+                    <textarea id="eventDescription" name="eventDescription" class="form-control" rows="3"
+                        required></textarea>
                 </div>
 
                 <div class="mb-3">
@@ -156,7 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button type="submit" class="btn btn-primary w-100">Create Event</button>
             </form>
 
-            <a href="browseEvent.php" class="btn btn-secondary w-100 mt-3">View Existing Events</a>
+            <a href="browse-event.php" class="btn btn-secondary w-100 mt-3">View Existing Events</a>
         </div>
     </div>
 
@@ -176,4 +196,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         });
     </script>
 </body>
+
 </html>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../inc/config.php';
+include '../../inc/config.php';
 
 // Set response header to JSON
 header('Content-Type: application/json');

@@ -35,12 +35,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 if ($is_first_login == 1) {
                     session_write_close();
-                    header("Location: Dashboard.php"); 
+                    header("Location: organizer/dashboard.php"); 
                     exit();
                 }
 
                 session_write_close();
-                header("Location: Dashboard.php");
+                header("Location: organizer/dashboard.php");
                 exit();
             } elseif (isset($_POST['login_attendee'])) {
                 $_SESSION['attendee_logged_in'] = true;

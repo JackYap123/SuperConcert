@@ -1,46 +1,37 @@
 body {
-    background-color: #001f3f;
-    color: white;
-    font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #001f3f;
 }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffd700;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+
+.header h1 {
+    margin: 0;
+}
+
 
 /* Sidebar */
-.sidebar {
-    width: 250px;
-    position: fixed;
-    height: 100%;
-    background-color: #1a237e;
-    padding-top: 20px;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-}
-
-.sidebar a {
-    padding: 15px;
-    text-decoration: none;
-    font-size: 18px;
-    font-weight: bold;
-    color: gold;
-    display: block;
-    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
-}
-
-.sidebar a:hover {
-    background-color: #3949ab;
-    color: white;
-}
-
 /* Main Content */
 .main-content {
-    margin-left: 260px;
+    margin-left: 250px;
     padding: 20px;
 }
 
 /* Event Cards */
 .event-card {
-    width: 300px; /* Fixed width for uniformity */
-    height: 420px; /* Fixed height to maintain consistency */
+    width: 300px;
+    /* Fixed width for uniformity */
+    height: 420px;
+    /* Fixed height to maintain consistency */
     background-color: #1e3a5f;
     border: 2px solid gold;
     color: white;
@@ -49,32 +40,37 @@ body {
     box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     display: flex;
-    flex-direction: column; /* Ensure image and content stack properly */
+    flex-direction: column;
+    /* Ensure image and content stack properly */
     align-items: center;
 }
 
 /* Event Images */
 .event-image {
     width: 100%;
-    height: 200px; /* Fixed height for images */
-    object-fit: cover; /* Ensures image fills the space without distortion */
+    height: 200px;
+    /* Fixed height for images */
+    object-fit: cover;
+    /* Ensures image fills the space without distortion */
     border-bottom: 2px solid gold;
 }
 
 /* Grid Layout */
 .event-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Ensures uniform sizing */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    /* Ensures uniform sizing */
     gap: 20px;
     justify-content: center;
-    padding: 20px;
+    padding-top: 20px;
 }
 
 /* Card Content */
 .card-body {
     text-align: center;
     padding: 15px;
-    flex-grow: 1; /* Ensures consistent spacing */
+    flex-grow: 1;
+    /* Ensures consistent spacing */
 }
 
 
@@ -106,15 +102,31 @@ body {
     transform: scale(1.05);
 }
 
-/* Grid Layout
-.event-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    padding: 20px;
-} */
+.sidebar {
+    width: 250px;
+    position: fixed;
+    height: 100%;
+    background-color: #1a237e;
+    padding-top: 20px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
 
-/* Responsive Design */
+.sidebar a {
+    padding: 15px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: gold;
+    display: block;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.sidebar a:hover {
+    background-color: #3949ab;
+    color: white;
+}
+
+
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;
