@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../inc/config.php';
+include '../../inc/config.php';
 
 if (!isset($_SESSION['organiser_id']))
 {
