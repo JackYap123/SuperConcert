@@ -53,44 +53,103 @@ $bookingStmt->close();
 <head>
     <meta charset="UTF-8">
     <title>Select Seat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/seatings.css">
     <style>
         body {
-            background-color: #001f3f;
-            color: white;
+            padding: 0;
+            margin: 0;
             font-family: Arial, sans-serif;
+            display: flex;
+            background-color: #001f3f;
+            color: #fff;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #222;
+            height: 100vh;
+            padding: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar h1 {
+            font-size: 20px;
+            color: gold;
+            margin-bottom: 30px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+
+        .sidebar ul li a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .sidebar ul li a:hover {
+            color: #fff;
+        }
+
+        .sidebar .logout a {
+            margin-top: 50px;
+            display: block;
+            color: red;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+
+        .container {
+            text-align: center;
+            flex: 1;
+            padding: 30px;
+            margin-left: 250px;
+            /* 👈 Prevent overlap */
         }
 
         .row-container {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+        }
+
+
+        .row {
+            display: flex;
+            align-items: center;
+            margin: 2px;
         }
 
         .row-label {
-            width: 40px;
+            width: 30px;
             text-align: center;
             font-weight: bold;
         }
 
-        .row {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-            flex-grow: 1;
-        }
-
         .seat {
-            width: 40px;
+            width: 45px;
             height: 40px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
+            background-color: white;
+            border: 2px solid gold;
+            line-height: 40px;
             font-weight: bold;
+            color: #001f3f;
+            border-radius: 5px;
+            margin: 3px;
+            padding: 0;
             cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+
         }
 
         .vip {
@@ -165,7 +224,20 @@ $bookingStmt->close();
 </head>
 
 <body>
-    <div class="container mt-4">
+    <div class="sidebar">
+        <h1>Attendee Panel</h1>
+        <ul>
+            <li><a href="attendee_dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="choose_event.php"><i class="fas fa-calendar-alt"></i> Choose Event</a></li>
+            <li><a href="waiting_list.php"><i class="fas fa-clock"></i> Join Waiting List</a></li>
+            <li><a href="attendee_waiting_list.php"><i class="fas fa-bell"></i> View Waiting List</a></li>
+        </ul>
+        <div class="logout">
+            <a href="../logout.php">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
         <h2 class="text-center" style="color: gold;">Select Your Seats</h2>
         <form method="post" action="confirm_seat.php">
             <input type="hidden" name="event_id" value="<?= $event_id ?>">

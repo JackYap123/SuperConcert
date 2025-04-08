@@ -20,17 +20,68 @@ $result = $conn->query($query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Choose Event</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #001f3f;
-            color: white;
+            margin: 0;
             font-family: Arial, sans-serif;
+            display: flex;
+            background-color: #001f3f;
+            color: #fff;
         }
 
+        .sidebar {
+            width: 250px;
+            background-color: #222;
+            height: 100vh;
+            padding: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+
+
+        .sidebar h1 {
+            font-size: 20px;
+            color: gold;
+            margin-bottom: 30px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+
+        .sidebar ul li a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .sidebar ul li a:hover {
+            color: #fff;
+        }
+
+        .sidebar .logout a {
+            margin-top: 50px;
+            display: block;
+            color: red;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+
         .container {
-            max-width: 1000px;
-            margin: 50px auto;
+            flex: 1;
+            padding: 30px;
+            margin-left: 250px;
+            /* 👈 Prevent overlap */
         }
 
         .event-card {
@@ -72,6 +123,18 @@ $result = $conn->query($query);
 </head>
 
 <body>
+    <div class="sidebar">
+        <h1>Attendee Panel</h1>
+        <ul>
+            <li><a href="attendee_dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="choose_event.php"><i class="fas fa-calendar-alt"></i> Choose Event</a></li>
+            <li><a href="waiting_list.php"><i class="fas fa-clock"></i> Join Waiting List</a></li>
+            <li><a href="attendee_waiting_list.php"><i class="fas fa-bell"></i> View Waiting List</a></li>
+        </ul>
+        <div class="logout">
+            <a href="../logout.php">Logout</a>
+        </div>
+    </div>
     <div class="container">
         <h2 class="text-center mb-4" style="color: gold;">Available Events</h2>
 
@@ -82,7 +145,8 @@ $result = $conn->query($query);
                     <div class="event-details">
                         <h4><?= htmlspecialchars($event['event_name']) ?></h4>
                         <p><strong>Date:</strong> <?= htmlspecialchars($event['event_date']) ?> @
-                            <?= htmlspecialchars($event['event_time']) ?></p>
+                            <?= htmlspecialchars($event['event_time']) ?>
+                        </p>
                         <p><?= htmlspecialchars($event['event_description']) ?></p>
                         <form action="select_seat.php" method="GET">
                             <input type="hidden" name="event_id" value="<?= $event['event_id'] ?>">
