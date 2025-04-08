@@ -80,13 +80,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/organizer/select-event.css">
+    <link rel="stylesheet" href="../../css/organizer/organizer-sidebar.css">
     <title>Choose Event</title>
-    
 </head>
 
 <body>
     <div class="sidebar">
-        <?php include "../../inc/sidebar.php"; ?>
+        <h2>SuperConcert</h2>
+        <ul>
+
+            <li><a href="../organizer/dashboard.php"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="../organizer/event-creation.php"><i class="fas fa-calendar-plus"></i> Create Event</a></li>
+            <li><a href="../organizer/browse-event.php" ><i class="fas fa-magnifying-glass"></i> Browse Events</a></li>
+            <li><a href="../organizer/select-event.php" class="active"><i class="fas fa-ticket-alt"></i> Ticket Setup</a></li>
+            <li><a href="../organizer/analysis-report.php"><i class="fas fa-book"></i> Analysis Report</a></li>
+        </ul>
     </div>
     <div class="content">
         <div class="header">

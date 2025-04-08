@@ -1,10 +1,10 @@
 <?php
 session_start();
-include '../inc/config.php';
+include '../../inc/config.php';
 
 if (!isset($_SESSION['attendee_logged_in']) || !$_SESSION['attendee_logged_in'])
 {
-    header("Location: organiser_login.php");
+    header("Location: ../organiser_login.php");
     exit();
 }
 
@@ -25,121 +25,18 @@ $result = $stmt->get_result();
     <title>Attendee Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            background-color: #001f3f;
-            color: #fff;
-        }
-
-        .sidebar {
-            width: 250px;
-            background-color: #222;
-            height: 100vh;
-            padding: 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
-        }
-
-        .sidebar h1 {
-            font-size: 20px;
-            color: gold;
-            margin-bottom: 30px;
-        }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .sidebar ul li {
-            margin: 15px 0;
-        }
-
-        .sidebar ul li a {
-            color: #ccc;
-            text-decoration: none;
-            font-size: 16px;
-        }
-
-        .sidebar ul li a:hover {
-            color: #fff;
-        }
-
-        .sidebar .logout a {
-            margin-top: 50px;
-            display: block;
-            color: red;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .container {
-            flex: 1;
-            padding: 30px;
-            margin-left: 250px;
-            /* 👈 Prevent overlap */
-        }
-
-        header h1 {
-            font-size: 32px;
-            color: gold;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .promo-bar {
-            background-color: #ffc107;
-            color: black;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 30px;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .nav-buttons .btn {
-            background-color: #4CAF50;
-            color: white;
-            font-size: 18px;
-            padding: 14px 24px;
-            border: none;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
-        }
-
-        .nav-buttons .btn:hover {
-            background-color: #45a049;
-        }
-
-        table {
-            background-color: #112;
-        }
-
-        .table th {
-            background-color: #007bff;
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/attendee/attendee-dashboard.css">
+    <link rel="stylesheet" href="../../css/attendee/attendee-sidebar.css">
 </head>
 
 <body>
     <div class="sidebar">
         <h1>Attendee Panel</h1>
         <ul>
-            <li><a href="attendee_dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="choose_event.php"><i class="fas fa-calendar-alt"></i> Choose Event</a></li>
-            <li><a href="waiting_list.php"><i class="fas fa-clock"></i> Join Waiting List</a></li>
-            <li><a href="attendee_waiting_list.php"><i class="fas fa-bell"></i> View Waiting List</a></li>
+            <li><a href="attendee-dashboard.php" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="choose-event.php"><i class="fas fa-calendar-alt"></i> Choose Event</a></li>
+            <li><a href="waiting-list.php"><i class="fas fa-clock"></i> Join Waiting List</a></li>
+            <li><a href="attendee-waitinglist.php"><i class="fas fa-bell"></i> View Waiting List</a></li>
         </ul>
         <div class="logout">
             <a href="../logout.php">Logout</a>
@@ -158,9 +55,9 @@ $result = $stmt->get_result();
         </div>
 
         <div class="nav-buttons">
-            <a href="choose_event.php" class="btn">🎟️ Choose Event</a>
-            <a href="waiting_list.php" class="btn">⏳ Join Waiting List</a>
-            <a href="waiting_list.php" class="btn">⏳ Check Waiting List</a>
+            <a href="choose-event.php" class="btn">🎟️ Choose Event</a>
+            <a href="waiting-list.php" class="btn">⏳ Join Waiting List</a>
+            <a href="attendee-waitinglist.php" class="btn">⏳ Check Waiting List</a>
         </div>
 
         <div class="mt-5">
@@ -202,7 +99,7 @@ $result = $stmt->get_result();
                                             <p><strong>Booked On:</strong> <?= date('F j, Y', strtotime($seat['booking_time'])) ?>
                                             </p>
                                             <?php if ($cancelAllowed): ?>
-                                                <form method="POST" action="cancel_booking.php"
+                                                <form method="POST" action="cancel-booking.php"
                                                     onsubmit="return confirm('Cancel this seat?');">
                                                     <input type="hidden" name="event_id" value="<?= $seat['event_id'] ?>">
                                                     <input type="hidden" name="seat_number" value="<?= $seat['seat_number'] ?>">

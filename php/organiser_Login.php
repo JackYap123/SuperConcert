@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['attendee_id'] = $user_id;
                 $_SESSION['attendee_email'] = $email;
                 session_write_close();
-                header("Location: Attendee_Dashboard.php");
+                header("Location: attendee/attendee-dashboard.php");
                 exit();
             }
         } else {
@@ -63,13 +63,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 $conn->close();
 ?>
-
-
-
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">

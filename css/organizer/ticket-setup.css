@@ -1,0 +1,82 @@
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+    width: calc(100% - 250px);
+    box-sizing: border-box;
+}
+
+.selected {
+    background-color: green !important;
+    color: white;
+}
+
+.selected-seat {
+    border: 2px solid red !important;
+}
+
+.vip-seat {
+    background-color: gold !important;
+    color: black;
+}
+
+.regular-seat {
+    background-color: dodgerblue !important;
+    color: white;
+}
+
+.economy-seat {
+    background-color: mediumseagreen !important;
+    color: white;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: 001f3f;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+th,
+td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+th {
+    background-color: #333;
+    color: white;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+tr:hover {
+    background-color: rgb(68, 156, 207);
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.table-container {
+    max-height: 460px;
+    /* roughly 10 rows (46px per row incl. padding) */
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}

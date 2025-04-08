@@ -1,10 +1,10 @@
 <?php
 session_start();
-include '../inc/config.php';
+include '../../inc/config.php';
 
 if (!isset($_SESSION['attendee_logged_in']) || !$_SESSION['attendee_logged_in'])
 {
-    echo "<script>alert('Please log in first.'); window.location.href = 'organiser_login.php';</script>";
+    echo "<script>alert('Please log in first.'); window.location.href = '../organiser_Login.php';</script>";
     exit();
 }
 
@@ -13,7 +13,7 @@ $event_id = isset($_GET['event_id']) ? intval($_GET['event_id']) : 0;
 
 if ($event_id <= 0)
 {
-    echo "<script>alert('Invalid event ID.'); window.location.href='attendee_dashboard.php';</script>";
+    echo "<script>alert('Invalid event ID.'); window.location.href='attendee-dashboard.php';</script>";
     exit();
 }
 
@@ -25,7 +25,7 @@ $event_result = $check_event->get_result();
 
 if ($event_result->num_rows === 0)
 {
-    echo "<script>alert('This event does not exist.'); window.location.href='attendee_dashboard.php';</script>";
+    echo "<script>alert('This event does not exist.'); window.location.href='attendee-dashboard.php';</script>";
     exit();
 }
 $check_event->close();
@@ -50,7 +50,7 @@ $booked_query->close();
 
 if ($booked_seats < $total_seats)
 {
-    echo "<script>alert('This event still has available seats. Please book directly.'); window.location.href='select_seat.php?event_id=$event_id';</script>";
+    echo "<script>alert('This event still has available seats. Please book directly.'); window.location.href='select-seat.php?event_id=$event_id';</script>";
     exit();
 }
 
@@ -62,7 +62,7 @@ $existing_result = $check_existing->get_result();
 
 if ($existing_result->num_rows > 0)
 {
-    echo "<script>alert('You are already on the waiting list for this event.'); window.location.href='attendee_dashboard.php';</script>";
+    echo "<script>alert('You are already on the waiting list for this event.'); window.location.href='attendee-dashboard.php';</script>";
     exit();
 }
 $check_existing->close();
@@ -73,11 +73,11 @@ $insert_wait->bind_param("ii", $attendee_id, $event_id);
 
 if ($insert_wait->execute())
 {
-    echo "<script>alert('You have successfully joined the waiting list. You will be notified if any seat becomes available.'); window.location.href='attendee_dashboard.php';</script>";
+    echo "<script>alert('You have successfully joined the waiting list. You will be notified if any seat becomes available.'); window.location.href='attendee-dashboard.php';</script>";
 }
 else
 {
-    echo "<script>alert('Something went wrong. Please try again later.'); window.location.href='attendee_dashboard.php';</script>";
+    echo "<script>alert('Something went wrong. Please try again later.'); window.location.href='attendee-dashboard.php';</script>";
 }
 $insert_wait->close();
 ?>

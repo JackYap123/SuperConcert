@@ -41,7 +41,9 @@ $result = $stmt->get_result();
     <title>Event Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../../css/organizer/browse-event.css">
+    <link rel="stylesheet" href="../../css/organizer/organizer-sidebar.css">
 
     <script>
         function confirmDelete(eventId) {
@@ -53,9 +55,18 @@ $result = $stmt->get_result();
 </head>
 
 <body>
-    <?php
-    include "../../inc/sidebar.php";
-    ?>
+
+    <div class="sidebar">
+        <h2>SuperConcert</h2>
+        <ul>
+
+            <li><a href="../organizer/dashboard.php"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="../organizer/event-creation.php"><i class="fas fa-calendar-plus"></i> Create Event</a></li>
+            <li><a href="../organizer/browse-event.php"class="active"><i class="fas fa-magnifying-glass"></i> Browse Events</a></li>
+            <li><a href="../organizer/select-event.php"><i class="fas fa-ticket-alt"></i> Ticket Setup</a></li>
+            <li><a href="../organizer/analysis-report.php"><i class="fas fa-book"></i> Analysis Report</a></li>
+        </ul>
+    </div>
 
     <?php if ($result->num_rows > 0): ?>
 
@@ -78,7 +89,7 @@ $result = $stmt->get_result();
                                 <strong>Duration:</strong> <?php echo $row['event_duration']; ?> hours<br>
                                 <strong>Description:</strong> <?php echo htmlspecialchars($row['event_description']); ?>
                             </p>
-                            <a href="#" class="btn btn-primary">Set Up Tickets</a>
+                            <a href="select-event.php" class="btn btn-primary">Set Up Tickets</a>
                             <form method="POST" id="delete-form-<?php echo $row['event_id']; ?>" style="display:inline;">
                                 <input type="hidden" name="delete_event_id" value="<?php echo $row['event_id']; ?>">
                                 <button type="button" class="btn btn-danger"

@@ -1,0 +1,79 @@
+.container {
+    flex: 1;
+    padding: 30px;
+    margin-left: 250px;
+}
+
+h2 {
+    color: gold;
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: bold;
+}
+
+.card {
+    background: rgba(17, 17, 34, 0.95);
+    border: none;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: scale(1.015);
+}
+
+.event-title {
+    color: #00d9ff;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.badge-date,
+.badge-time {
+    display: inline-block;
+    margin-top: 10px;
+    margin-right: 10px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 20px;
+}
+
+.badge-date {
+    background-color: #ffc107;
+    color: black;
+}
+
+.badge-time {
+    background-color: #17a2b8;
+}
+
+.empty {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 50px;
+    text-align: center;
+    border: 2px dashed #777;
+    border-radius: 12px;
+    margin-top: 40px;
+}
+
+.btn-back {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 8px;
+    margin-top: 30px;
+    transition: background 0.3s ease;
+}
+
+.btn-back:hover {
+    background-color: #0056b3;
+}
+
+.icon {
+    margin-right: 10px;
+}

@@ -1,0 +1,42 @@
+.container {
+    flex: 1;
+    padding: 30px;
+    margin-left: 250px;
+    /* 👈 Prevent overlap */
+}
+
+.event-card {
+    background-color: #333;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.event-card img {
+    width: 180px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.event-details h4 {
+    color: gold;
+}
+
+.btn-choose {
+    background-color: #007bff;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-choose:hover {
+    background-color: #0056b3;
+}

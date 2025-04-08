@@ -73,9 +73,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
 </head>
 
 <body>
-    <?php
-    include "../../inc/sidebar.php";
-    ?>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="../../css/organizer/organizer-sidebar.css">
+
+    <div class="sidebar">
+        <h2>SuperConcert</h2>
+        <ul>
+
+            <li><a href="../organizer/dashboard.php" class="active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="../organizer/event-creation.php"><i class="fas fa-calendar-plus"></i> Create Event</a></li>
+            <li><a href="../organizer/browse-event.php"><i class="fas fa-magnifying-glass"></i> Browse Events</a></li>
+            <li><a href="../organizer/select-event.php"><i class="fas fa-ticket-alt"></i> Ticket Setup</a></li>
+            <li><a href="../organizer/analysis-report.php"><i class="fas fa-book"></i> Analysis Report</a></li>
+        </ul>
+    </div>
     <?php if ($show_modal): ?>
         <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -88,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
                         <p>You have not created any events yet. Please create an event to continue.</p>
                     </div>
                     <div class="modal-footer">
-                        <a href="eventCreation.php" class="btn btn-primary">Create Event</a>
+                        <a href="event-creation.php" class="btn btn-primary">Create Event</a>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -158,7 +169,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password']))
             </div>
         </div>
     <?php endif; ?>
-    <script src="../javascript/Dashboard.js"></script>
+    <script src="../../javascript/Dashboard.js"></script>
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 

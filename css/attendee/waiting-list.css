@@ -1,0 +1,39 @@
+.container {
+    flex: 1;
+    padding: 30px;
+    margin-left: 250px;
+    /* 👈 Prevent overlap */
+}
+
+
+
+.card {
+    background-color: #112;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    padding: 20px;
+    color: white;
+}
+
+.btn {
+    border-radius: 6px;
+}
+
+.btn-suc{
+    background-color: #007bff;
+    color:white;
+}
+
+.status {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.full {
+    background-color: crimson;
+}
+
+.available {
+    background-color: green;
+}

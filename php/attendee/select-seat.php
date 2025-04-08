@@ -1,10 +1,10 @@
 <?php
 session_start();
-include '../inc/config.php';
+include '../../inc/config.php';
 
 if (!isset($_SESSION['attendee_logged_in']) || !$_SESSION['attendee_logged_in'])
 {
-    header("Location: organiser_login.php");
+    header("Location: ../organiser_login.php");
     exit();
 }
 
@@ -55,182 +55,18 @@ $bookingStmt->close();
     <title>Select Seat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            padding: 0;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            background-color: #001f3f;
-            color: #fff;
-        }
-
-        .sidebar {
-            width: 250px;
-            background-color: #222;
-            height: 100vh;
-            padding: 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
-        }
-
-        .sidebar h1 {
-            font-size: 20px;
-            color: gold;
-            margin-bottom: 30px;
-        }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .sidebar ul li {
-            margin: 15px 0;
-        }
-
-        .sidebar ul li a {
-            color: #ccc;
-            text-decoration: none;
-            font-size: 16px;
-        }
-
-        .sidebar ul li a:hover {
-            color: #fff;
-        }
-
-        .sidebar .logout a {
-            margin-top: 50px;
-            display: block;
-            color: red;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-
-        .container {
-            text-align: center;
-            flex: 1;
-            padding: 30px;
-            margin-left: 250px;
-            /* 👈 Prevent overlap */
-        }
-
-        .row-container {
-            display: flex;
-            align-items: center;
-        }
-
-
-        .row {
-            display: flex;
-            align-items: center;
-            margin: 2px;
-        }
-
-        .row-label {
-            width: 30px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .seat {
-            width: 45px;
-            height: 40px;
-            background-color: white;
-            border: 2px solid gold;
-            line-height: 40px;
-            font-weight: bold;
-            color: #001f3f;
-            border-radius: 5px;
-            margin: 3px;
-            padding: 0;
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.3s ease;
-
-        }
-
-        .vip {
-            background-color: gold;
-            color: black;
-        }
-
-        .regular {
-            background-color: dodgerblue;
-            color: white;
-        }
-
-        .economy {
-            background-color: mediumseagreen;
-            color: white;
-        }
-
-        .disabled {
-            background-color: grey !important;
-            cursor: not-allowed;
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        .selected {
-            outline: 3px solid red;
-        }
-
-        .selected-seat {
-            background-color: red !important;
-            color: white;
-            pointer-events: none;
-        }
-
-        .legend {
-            margin-top: 30px;
-        }
-
-        .legend span {
-            display: inline-block;
-            padding: 8px 14px;
-            border-radius: 6px;
-            margin-right: 10px;
-            font-weight: bold;
-        }
-
-        .legend .vip {
-            background: gold;
-            color: black;
-        }
-
-        .legend .regular {
-            background: dodgerblue;
-            color: white;
-        }
-
-        .legend .economy {
-            background: mediumseagreen;
-            color: white;
-        }
-
-        .legend .disabled {
-            background: grey;
-            color: white;
-        }
-
-        .legend .selected-seat {
-            background: red;
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/attendee/attendee-sidebar.css">
+    <link rel="stylesheet" href="../../css/attendee/select-seat.css">
 </head>
 
 <body>
     <div class="sidebar">
         <h1>Attendee Panel</h1>
         <ul>
-            <li><a href="attendee_dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="choose_event.php"><i class="fas fa-calendar-alt"></i> Choose Event</a></li>
-            <li><a href="waiting_list.php"><i class="fas fa-clock"></i> Join Waiting List</a></li>
-            <li><a href="attendee_waiting_list.php"><i class="fas fa-bell"></i> View Waiting List</a></li>
+            <li><a href="attendee-dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="choose-event.php" class="active"><i class="fas fa-calendar-alt"></i> Choose Event</a></li>
+            <li><a href="waiting-list.php"><i class="fas fa-clock"></i> Join Waiting List</a></li>
+            <li><a href="attendee-waitinglist.php"><i class="fas fa-bell"></i> View Waiting List</a></li>
         </ul>
         <div class="logout">
             <a href="../logout.php">Logout</a>
@@ -239,7 +75,7 @@ $bookingStmt->close();
 
     <div class="container">
         <h2 class="text-center" style="color: gold;">Select Your Seats</h2>
-        <form method="post" action="confirm_seat.php">
+        <form method="post" action="confirm-seat.php">
             <input type="hidden" name="event_id" value="<?= $event_id ?>">
 
             <h4 class="mt-4">Front Stage</h4>

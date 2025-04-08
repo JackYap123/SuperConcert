@@ -10,115 +10,24 @@ include '../../inc/config.php';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Theater Seat Selection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../../css/organizer/seatings.css" />
-    <style>
-        body {
-            display: flex;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .sidebar {
-            width: 250px;
-            background-color: #222;
-            color: white;
-            height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .main-content {
-            margin-left: 250px;
-            padding: 20px;
-            width: calc(100% - 250px);
-            box-sizing: border-box;
-        }
-
-        .selected {
-            background-color: green !important;
-            color: white;
-        }
-
-        .selected-seat {
-            border: 2px solid red !important;
-        }
-
-        .vip-seat {
-            background-color: gold !important;
-            color: black;
-        }
-
-        .regular-seat {
-            background-color: dodgerblue !important;
-            color: white;
-        }
-
-        .economy-seat {
-            background-color: mediumseagreen !important;
-            color: white;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: 001f3f;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 6px;
-            overflow: hidden;
-        }
-
-        th,
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-            text-align: center;
-        }
-
-        th {
-            background-color: #333;
-            color: white;
-            text-transform: uppercase;
-            font-size: 14px;
-        }
-
-        tr:hover {
-            background-color: rgb(68, 156, 207);
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .table-container {
-            max-height: 460px;
-            /* roughly 10 rows (46px per row incl. padding) */
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/organizer/ticket-setup.css">
+    <link rel="stylesheet" href="../../css/organizer/organizer-sidebar.css">
 
 </head>
 
 <body>
     <div class="sidebar">
-        <?php include "../../inc/sidebar.php"; ?>
+        <h2>SuperConcert</h2>
+        <ul>
+
+            <li><a href="../organizer/dashboard.php"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="../organizer/event-creation.php"><i class="fas fa-calendar-plus"></i> Create Event</a></li>
+            <li><a href="../organizer/browse-event.php"><i class="fas fa-magnifying-glass"></i> Browse Events</a></li>
+            <li><a href="../organizer/select-event.php" class="active"><i class="fas fa-ticket-alt"></i> Ticket Setup</a></li>
+            <li><a href="../organizer/analysis-report.php"><i class="fas fa-book"></i> Analysis Report</a></li>
+        </ul>
     </div>
     <div class="main-content">
         <div class="stage">STAGE</div>

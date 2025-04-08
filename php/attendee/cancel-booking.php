@@ -1,18 +1,18 @@
 <?php
 session_start();
-include '../inc/config.php';
+include '../../inc/config.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-require '../vendor/autoload.php';
+require '../../vendor/autoload.php';
 
 if (!isset($_SESSION['attendee_logged_in']) || !$_SESSION['attendee_logged_in']) {
-    echo "<script>alert('Please login first.'); window.location.href='organiser_login.php';</script>";
+    echo "<script>alert('Please login first.'); window.location.href='../organiser_login.php';</script>";
     exit();
 }
 
 if (!isset($_POST['event_id'], $_POST['seat_number'])) {
-    echo "<script>alert('Missing event or seat data.'); window.location.href='attendee_dashboard.php';</script>";
+    echo "<script>alert('Missing event or seat data.'); window.location.href='../attendee_dashboard.php';</script>";
     exit();
 }
 
@@ -27,7 +27,7 @@ $check_stmt->execute();
 $result = $check_stmt->get_result();
 
 if ($result->num_rows === 0) {
-    echo "<script>alert('Booking not found or already cancelled.'); window.location.href='attendee_dashboard.php';</script>";
+    echo "<script>alert('Booking not found or already cancelled.'); window.location.href='../attendee_dashboard.php';</script>";
     exit();
 }
 
@@ -74,13 +74,13 @@ if ($waitResult->num_rows > 0) {
         $mail->setFrom('yapfongkiat53@gmail.com', 'SuperConcert');
         $mail->addAddress($email, $name);
         $mail->isHTML(true);
-        $mail->Subject = '🎟️ Seat Now Available for SuperConcert';
+        $mail->Subject = 'Seat Now Available for SuperConcert';
         $mail->Body = "
             <html>
             <body style='font-family: Arial;'>
                 <h2>Hi $name!</h2>
                 <p>A seat has opened up for the event you were waiting for!</p>
-                <p><a href='http://localhost/SuperConcert/php/select_seat.php?event_id=$event_id'>👉 Click here to grab your seat now</a></p>
+                <p><a href='http://localhost/SuperConcert/php/select_seat.php?event_id=$event_id'>Click here to grab your seat now</a></p>
                 <p>Don't miss your chance to attend. Act fast before it's taken again!</p>
                 <hr>
                 <small>This message was sent automatically. If you've already bought a ticket, please ignore this email.</small>
@@ -88,7 +88,7 @@ if ($waitResult->num_rows > 0) {
             </html>
         ";
         $mail->send();
-        error_log("✅ Notification sent to waiting list user: $email");
+        error_log("Notification sent to waiting list user: $email");
 
         // Only remove from waiting list after successful email
         $deleteWL = $conn->prepare("DELETE FROM waiting_list WHERE attendee_id = ? AND event_id = ?");
@@ -96,11 +96,11 @@ if ($waitResult->num_rows > 0) {
         $deleteWL->execute();
         $deleteWL->close();
     } catch (Exception $e) {
-        error_log("❌ PHPMailer Error: " . $mail->ErrorInfo);
+        error_log("PHPMailer Error: " . $mail->ErrorInfo);
     }
 } else {
-    error_log("ℹ️ No one in the waiting list for event ID $event_id.");
+    error_log("No one in the waiting list for event ID $event_id.");
 }
 
-echo "<script>window.location.href='attendee_dashboard.php';</script>";
+echo "<script>window.location.href='attendee-dashboard.php';</script>";
 ?>

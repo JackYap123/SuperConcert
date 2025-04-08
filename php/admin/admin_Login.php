@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../inc/config.php';
+require '../../inc/config.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login']))
 {
@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login']))
         {
             $_SESSION['is_admin'] = true;  
             $_SESSION['admin_email'] = $email; 
-            header("Location: admin_Dashboard.php");
+            header("Location: admin-dashboard.php");
             exit();
         }
         else
@@ -48,7 +48,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/Register_Login.css">
+    <link rel="stylesheet" href="../../css/Register_Login.css">
     <link rel="icon" type="image/x-icon" href="../img/Logo.webp">
     <title>SuperConcert</title>
 </head>

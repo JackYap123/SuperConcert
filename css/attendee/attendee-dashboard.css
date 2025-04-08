@@ -1,0 +1,53 @@
+
+.container {
+    flex: 1;
+    padding: 30px;
+    margin-left: 250px;
+    /* 👈 Prevent overlap */
+}
+
+header h1 {
+    font-size: 32px;
+    color: gold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.promo-bar {
+    background-color: #ffc107;
+    color: black;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 30px;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.nav-buttons .btn {
+    background-color: #007bff;
+    color: white;
+    font-size: 18px;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.nav-buttons .btn:hover {
+    background-color: #0056b3;
+}
+
+table {
+    background-color: rgb(10, 10, 11);
+}
+
+.table th {
+    background-color: #007bff;
+    color: white;
+}

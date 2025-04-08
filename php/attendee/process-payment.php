@@ -1,10 +1,10 @@
 <?php
 session_start();
-include '../inc/config.php';
+include '../../inc/config.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-require '../vendor/autoload.php';
+require '../../vendor/autoload.php';
 
 if (!isset($_POST['event_id'], $_POST['selected_seats'], $_POST['total'], $_POST['payment_method']))
 {
@@ -104,7 +104,7 @@ if ($response['status'] === 'success')
         $mail->addAddress($attendee_email, $attendee_name ?? 'Attendee');
 
         $mail->isHTML(true);
-        $mail->Subject = '🎟️ Your SuperConcert Booking is Confirmed!';
+        $mail->Subject = 'Your SuperConcert Booking is Confirmed!';
         $mail->Body = "
             <html>
             <body style='font-family: Arial, sans-serif;'>
@@ -116,9 +116,9 @@ if ($response['status'] === 'success')
                 <p><strong>Payment Method:</strong> $payment_method</p>
                 <p><strong>Reference No:</strong> {$response['reference']}</p>
                 <br>
-                <p>Enjoy the show! 🎤🎶</p>
+                <p>Enjoy the show! </p>
                 <hr>
-                <p style='font-size: 12px; color: #666;'>If you didn’t make this purchase, please contact us immediately.</p>
+                <p style='font-size: 12px; color: #666;'>If you didn't make this purchase, please contact us immediately.</p>
             </body>
             </html>
         ";
@@ -132,7 +132,7 @@ if ($response['status'] === 'success')
 
     unset($_SESSION['pending_payment']);
 
-    echo "<script>alert('Payment successful! Confirmation sent to your email.'); window.location.href = 'attendee_dashboard.php';</script>";
+    echo "<script>alert('Payment successful! Confirmation sent to your email.'); window.location.href = 'attendee-dashboard.php';</script>";
 }
 else
 {

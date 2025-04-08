@@ -1,10 +1,10 @@
 <?php
 session_start();
-include '../inc/config.php';
+include '../../inc/config.php';
 
 if (!isset($_SESSION['attendee_logged_in']) || !$_SESSION['attendee_logged_in'])
 {
-    header("Location: organiser_login.php");
+    header("Location: ../organiser_login.php");
     exit();
 }
 
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 }
 else
 {
-    echo "<script>alert('Invalid access.'); window.location.href = 'choose_event.php';</script>";
+    echo "<script>alert('Invalid access.'); window.location.href = 'choose-event.php';</script>";
     exit();
 }
 ?>
