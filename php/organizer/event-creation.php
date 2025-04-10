@@ -179,6 +179,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     <label for="eventDescription" class="form-label">Description:</label>
                     <textarea id="eventDescription" name="eventDescription" class="form-control" rows="3"
                         required></textarea>
+                    <div id="wordCount" class="form-text">0 / 100 words</div>
                 </div>
 
                 <div class="mb-3">
@@ -197,16 +198,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            flatpickr("#eventDate", {
-                dateFormat: "Y-m-d",
-                disableMobile: "true",
-                static: true,
-                altInput: true,
-                altFormat: "F j, Y",
-                theme: "material_blue"
-            });
-        });
+        const textarea = document.getElementById('eventDescription');
+        const wordCountDisplay = document.getElementById('wordCount');
+        const maxWords = 100;
+
+        textarea.addEventListener('input', () => {
+        let words = textarea.value.trim().split(/\s+/);
+        let wordCount = words.filter(word => word.length > 0).length;
+
+        if (wordCount > maxWords) {
+            // Prevent typing beyond word limit
+            words = words.slice(0, maxWords);
+            textarea.value = words.join(" ");
+            wordCount = maxWords;
+        }
+
+        wordCountDisplay.textContent = `${wordCount} / ${maxWords} words`;
+    });
     </script>
 </body>
 
