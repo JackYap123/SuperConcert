@@ -47,7 +47,7 @@ while ($row = $events->fetch_assoc()) {
             $mail->isHTML(true);
             $mail->Subject = "🎟️ A seat just opened for your event!";
             $mail->Body = "<p>Hi $name,</p><p>A seat has just become available for your event.</p>
-                           <p><a href='http://localhost/SuperConcert/php/select_seat.php?event_id=$event_id'>Click here to book now!</a></p>";
+                           <p><a href='http://localhost/SuperConcert/php/select-seat.php?event_id=$event_id'>Click here to book now!</a></p>";
 
             $mail->send();
 
