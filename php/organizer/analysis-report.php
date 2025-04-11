@@ -2,36 +2,26 @@
 session_start();
 include '../../inc/config.php';
 
-if (!isset($_SESSION['organiser_id']))
-{
+$organiser_id = $_SESSION['organiser_id'] ?? null;
+if (!$organiser_id) {
     header("Location: organiser_login.php");
     exit();
 }
 
-$organiser_id = $_SESSION['organiser_id'];
 $type = $_GET['type'] ?? 'daily'; // daily, weekly, monthly
 
-// Prepare query
-if ($type === 'weekly')
-{
-    $groupBy = "%Y-%u"; // Week number
-    $labelFormat = "Week %u, %Y";
-}
-elseif ($type === 'monthly')
-{
-    $groupBy = "%Y-%m"; // Month
-    $labelFormat = "%b %Y";
-}
-else
-{
-    $groupBy = "%Y-%m-%d"; // Daily
-    $labelFormat = "%d %b";
+if ($type === 'weekly') {
+    $groupBy = "%Y-%u";
+} elseif ($type === 'monthly') {
+    $groupBy = "%Y-%m";
+} else {
+    $groupBy = "%Y-%m-%d";
 }
 
 $query = "
     SELECT DATE_FORMAT(b.booking_time, ?) AS period,
            COUNT(*) AS tickets_sold,
-           SUM(price) / 100 AS revenue, -- Adjusted revenue scale
+           SUM(price) / 100 AS revenue,
            COUNT(*) / (SELECT COUNT(*) FROM event_seats es WHERE es.event_id = b.event_id) * 100 AS occupancy
     FROM bookings b
     JOIN event e ON b.event_id = e.event_id
@@ -46,8 +36,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 $data = [];
-while ($row = $result->fetch_assoc())
-{
+while ($row = $result->fetch_assoc()) {
     $data[] = [
         'period' => $row['period'],
         'tickets' => $row['tickets_sold'],
@@ -56,11 +45,9 @@ while ($row = $result->fetch_assoc())
     ];
 }
 $stmt->close();
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>Analysis Report</title>
@@ -70,32 +57,33 @@ $stmt->close();
     <link rel="stylesheet" href="../../css/organizer/organizer-sidebar.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
-    <div class="sidebar">
-        <h2>SuperConcert</h2>
-        <ul>
+<div class="sidebar">
+    <h2>SuperConcert</h2>
+    <ul>
+        <li><a href="../organizer/dashboard.php"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="../organizer/event-creation.php"><i class="fas fa-calendar-plus"></i> Create Event</a></li>
+        <li><a href="../organizer/browse-event.php"><i class="fas fa-magnifying-glass"></i> Browse Events</a></li>
+        <li><a href="../organizer/select-event.php"><i class="fas fa-ticket-alt"></i> Ticket Setup</a></li>
+        <li><a href="../organizer/analysis-report.php" class="active"><i class="fas fa-book"></i> Analysis Report</a></li>
+    </ul>
+</div>
 
-            <li><a href="../organizer/dashboard.php"><i class="fas fa-chart-line"></i> Dashboard</a></li>
-            <li><a href="../organizer/event-creation.php"><i class="fas fa-calendar-plus"></i> Create Event</a></li>
-            <li><a href="../organizer/browse-event.php"><i class="fas fa-magnifying-glass"></i> Browse Events</a></li>
-            <li><a href="../organizer/select-event.php" ><i class="fas fa-ticket-alt"></i> Ticket Setup</a></li>
-            <li><a href="../organizer/analysis-report.php" class="active"><i class="fas fa-book"></i> Analysis Report</a></li>
-        </ul>
+<div class="content">
+    <div class="header">
+        <h1>📊 Ticket Sales Report (<?= ucfirst($type) ?>)</h1>
     </div>
 
-    <div class="content">
-        <div class="header">
-            <h1>📊 Ticket Sales Report (<?= ucfirst($type) ?>)</h1>
+    <div class="container">
+        <div class="filter-links mb-4">
+            <a href="?type=daily" class="<?= $type === 'daily' ? 'active' : '' ?>">Daily</a>
+            <a href="?type=weekly" class="<?= $type === 'weekly' ? 'active' : '' ?>">Weekly</a>
+            <a href="?type=monthly" class="<?= $type === 'monthly' ? 'active' : '' ?>">Monthly</a>
         </div>
 
-        <div class="container">
-            <div class="filter-links mb-4">
-                <a href="?type=daily" class="<?= $type === 'daily' ? 'active' : '' ?>">Daily</a>
-                <a href="?type=weekly" class="<?= $type === 'weekly' ? 'active' : '' ?>">Weekly</a>
-                <a href="?type=monthly" class="<?= $type === 'monthly' ? 'active' : '' ?>">Monthly</a>
-            </div>
-
+        <?php if (empty($data)): ?>
+            <div class="alert alert-warning">No ticket sales data available for the selected period.</div>
+        <?php else: ?>
             <button class="toggle-btn" onclick="toggleView()">📊 Table View</button>
 
             <div class="chart-container" id="chartContainer">
@@ -124,74 +112,47 @@ $stmt->close();
                     </tbody>
                 </table>
             </div>
-        </div>
+        <?php endif; ?>
     </div>
+</div>
 
-    <script>
-        const data = <?= json_encode($data) ?>;
-        const labels = data.map(d => d.period);
-        const ticketData = data.map(d => d.tickets);
-        const revenueData = data.map(d => d.revenue);
-        const occupancyData = data.map(d => d.occupancy);
+<script>
+    const data = <?= json_encode($data) ?>;
+    const labels = data.map(d => d.period);
+    const ticketData = data.map(d => d.tickets);
+    const revenueData = data.map(d => d.revenue);
+    const occupancyData = data.map(d => d.occupancy);
 
-        const chartContainer = document.getElementById('chartContainer');
-        const tableContainer = document.getElementById('tableContainer');
+    const chartContainer = document.getElementById('chartContainer');
+    const tableContainer = document.getElementById('tableContainer');
+    if (data.length > 0) chartContainer.style.display = 'block';
 
-        chartContainer.style.display = 'block';
-
-        const ctx = document.getElementById('ticketChart').getContext('2d');
-        const chart = new Chart(ctx, {
+    const ctx = document.getElementById('ticketChart')?.getContext('2d');
+    if (ctx) {
+        new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: labels,
                 datasets: [
-                    {
-                        label: 'Tickets Sold',
-                        data: ticketData,
-                        backgroundColor: 'dodgerblue'
-                    },
-                    {
-                        label: 'Revenue (x100 RM)',
-                        data: revenueData,
-                        backgroundColor: 'orange'
-                    },
-                    {
-                        label: 'Occupancy (%)',
-                        data: occupancyData,
-                        backgroundColor: 'limegreen'
-                    }
+                    { label: 'Tickets Sold', data: ticketData, backgroundColor: 'dodgerblue' },
+                    { label: 'Revenue (x100 RM)', data: revenueData, backgroundColor: 'orange' },
+                    { label: 'Occupancy (%)', data: occupancyData, backgroundColor: 'limegreen' }
                 ]
             },
             options: {
                 responsive: true,
-                interaction: {
-                    mode: 'index',
-                    intersect: false,
-                },
+                interaction: { mode: 'index', intersect: false },
                 stacked: false,
                 scales: {
                     y: {
                         beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Value or %'
-                        },
-                        ticks: {
-                            color: 'black'
-                        }
+                        title: { display: true, text: 'Value or %' },
+                        ticks: { color: 'black' }
                     },
-                    x: {
-                        ticks: {
-                            color: 'black'
-                        }
-                    }
+                    x: { ticks: { color: 'black' } }
                 },
                 plugins: {
-                    legend: {
-                        labels: {
-                            color: 'black'
-                        }
-                    },
+                    legend: { labels: { color: 'black' } },
                     tooltip: {
                         callbacks: {
                             label: function (context) {
@@ -206,19 +167,19 @@ $stmt->close();
                 }
             }
         });
+    }
 
-        function toggleView() {
-            if (chartContainer.style.display === 'none') {
-                chartContainer.style.display = 'block';
-                tableContainer.style.display = 'none';
-                document.querySelector('.toggle-btn').innerText = '📊 Table View';
-            } else {
-                chartContainer.style.display = 'none';
-                tableContainer.style.display = 'block';
-                document.querySelector('.toggle-btn').innerText = '📊 Toggle View';
-            }
+    function toggleView() {
+        if (chartContainer.style.display === 'none') {
+            chartContainer.style.display = 'block';
+            tableContainer.style.display = 'none';
+            document.querySelector('.toggle-btn').innerText = '📊 Table View';
+        } else {
+            chartContainer.style.display = 'none';
+            tableContainer.style.display = 'block';
+            document.querySelector('.toggle-btn').innerText = '📈 Chart View';
         }
-    </script>
+    }
+</script>
 </body>
-
 </html>
