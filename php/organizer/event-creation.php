@@ -179,7 +179,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     <label for="eventDescription" class="form-label">Description:</label>
                     <textarea id="eventDescription" name="eventDescription" class="form-control" rows="3"
                         required></textarea>
-                    <div id="wordCount" class="form-text">0 / 100 words</div>
+                    <div id="wordCount" class="form-text">0 / 200 words</div>
                 </div>
 
                 <div class="mb-3">
@@ -200,7 +200,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     <script>
         const textarea = document.getElementById('eventDescription');
         const wordCountDisplay = document.getElementById('wordCount');
-        const maxWords = 100;
+        const maxWords = 200;
 
         textarea.addEventListener('input', () => {
         let words = textarea.value.trim().split(/\s+/);
