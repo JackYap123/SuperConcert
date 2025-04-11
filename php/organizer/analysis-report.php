@@ -56,6 +56,8 @@ $stmt->close();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/organizer/organizer-sidebar.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
 <div class="sidebar">
@@ -85,13 +87,14 @@ $stmt->close();
             <div class="alert alert-warning">No ticket sales data available for the selected period.</div>
         <?php else: ?>
             <button class="toggle-btn" onclick="toggleView()">📊 Table View</button>
+            <button class="btn btn-secondary mb-3" onclick="downloadPDF()">📥 Download PDF</button>
 
             <div class="chart-container" id="chartContainer">
                 <canvas id="ticketChart"></canvas>
             </div>
 
             <div class="table-container" id="tableContainer">
-                <table>
+                <table id="reportTable">
                     <thead>
                         <tr>
                             <th>Period</th>
@@ -179,6 +182,19 @@ $stmt->close();
             tableContainer.style.display = 'block';
             document.querySelector('.toggle-btn').innerText = '📈 Chart View';
         }
+    }
+
+    function downloadPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFontSize(18);
+        doc.text("Ticket Sales Report", 14, 22);
+
+        const headers = [["Period", "Tickets Sold", "Revenue (x100 RM)", "Occupancy (%)"]];
+        const rows = data.map(row => [row.period, row.tickets, `RM ${row.revenue.toFixed(2)}`, `${row.occupancy.toFixed(2)}%`]);
+
+        doc.autoTable({ startY: 30, head: headers, body: rows });
+        doc.save("ticket_sales_report.pdf");
     }
 </script>
 </body>

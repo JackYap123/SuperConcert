@@ -6,7 +6,6 @@
 
 body {
     background: linear-gradient(135deg, #d3d3d3, #001f3f);
-    display:flex;
     width: 100%;
     font-family: Arial, sans-serif;
     justify-content: center;
