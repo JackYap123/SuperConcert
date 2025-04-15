@@ -183,7 +183,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                 </div>
 
                 <div class="mb-3">
-                    <label for="eventCover" class="form-label">Event Cover Image:</label>
+                    <label for="eventCover" class="form-label">Event Cover Image (JPG, JPEG, PNG, and GIF files):</label>
                     <input type="file" id="eventCover" name="eventCover" class="form-control" accept="image/*" required>
                 </div>
 
